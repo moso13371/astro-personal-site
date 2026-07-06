@@ -1,0 +1,47 @@
+---
+import '../styles/global.css';
+
+interface Props {
+	title: string;
+}
+
+const { title } = Astro.props;
+
+// Use Astro.url.pathname to handle active links
+const currentPath = Astro.url.pathname;
+---
+
+<!doctype html>
+<html lang="zh-TW">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="description" content="WONGLING - 超心理學研究工作者" />
+		<meta name="viewport" content="width=device-width" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="generator" content={Astro.generator} />
+		<title>{title} | WONGLING</title>
+		<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+	</head>
+	<body>
+		<div class="container">
+			<header>
+				<div class="logo">
+					<a href="/" style="font-size: 1.2rem; font-weight: 600; color: #fff; letter-spacing: 2px;">W.</a>
+				</div>
+				<nav>
+					<ul>
+						<li><a href="/" class={currentPath === '/' ? 'active' : ''}>關於</a></li>
+						<li><a href="/articles" class={currentPath.startsWith('/articles') ? 'active' : ''}>文章</a></li>
+						<li><a href="/contact" class={currentPath.startsWith('/contact') ? 'active' : ''}>聯絡</a></li>
+					</ul>
+				</nav>
+			</header>
+			<main>
+				<slot />
+			</main>
+            <footer style="margin-top: 6rem; padding-top: 2rem; border-top: 1px solid #333; text-align: center; color: #555; font-size: 0.8rem; letter-spacing: 1px;">
+                &copy; {new Date().getFullYear()} WONGLING. Parapsychology Research.
+            </footer>
+		</div>
+	</body>
+</html>

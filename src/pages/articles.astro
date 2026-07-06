@@ -1,0 +1,32 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../layouts/Layout.astro';
+
+const posts = await getCollection('posts');
+// 按日期降序排序
+posts.sort((a, b) => b.data.publishDate.getTime() - a.data.publishDate.getTime());
+
+const formatDate = (date: Date) => {
+  return date.toISOString().split('T')[0].replace(/-/g, '.');
+};
+---
+
+<Layout title="研究文章 (Articles)">
+	<h1 style="margin-bottom: 2rem;">研究文章</h1>
+	
+	{posts.length === 0 ? (
+		<p style="color: #888;">目前尚無發佈的文章。</p>
+	) : (
+		posts.map((post) => (
+			<div class="content-block">
+				<div style="font-size: 0.8rem; color: #888; margin-bottom: 0.5rem; letter-spacing: 1px;">
+					{formatDate(post.data.publishDate)}
+				</div>
+				<h3 style="margin-top: 0; margin-bottom: 0.5rem;">
+					<a href={`/articles/${post.slug}`}>{post.data.title}</a>
+				</h3>
+				<p style="color: #bbb; font-size: 0.95rem; margin-bottom: 0;">{post.data.summary}</p>
+			</div>
+		))
+	)}
+</Layout>

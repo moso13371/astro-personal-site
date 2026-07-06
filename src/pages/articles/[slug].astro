@@ -1,0 +1,35 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('posts');
+  return posts.map(post => ({
+    params: { slug: post.slug },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await post.render();
+
+const formatDate = (date: Date) => {
+  return date.toISOString().split('T')[0].replace(/-/g, '.');
+};
+---
+
+<Layout title={post.data.title}>
+  <div style="margin-bottom: 2rem;">
+    <a href="/articles" style="font-size: 0.9rem; color: #888;">&larr; 返回文章列表</a>
+  </div>
+  
+  <article>
+    <div style="font-size: 0.9rem; color: #888; margin-bottom: 1rem; letter-spacing: 1px;">
+      發佈日期：{formatDate(post.data.publishDate)}
+    </div>
+    <h1 style="margin-bottom: 3rem; font-weight: 300; line-height: 1.4; color: #fff; letter-spacing: 1px;">{post.data.title}</h1>
+    <div class="content-block" style="background: transparent; border-left: none; padding: 0; line-height: 1.9;">
+      <Content />
+    </div>
+  </article>
+</Layout>
