@@ -23,7 +23,7 @@ const formatDate = (date: Date) => {
 					{formatDate(post.data.publishDate)}
 				</div>
 				<h3 style="margin-top: 0; margin-bottom: 0.5rem;">
-					<a href={`/articles/${post.slug}`}>{post.data.title}</a>
+					<a href={`/articles/${post.id}`}>{post.data.title}</a>
 				</h3>
 				<p style="color: #bbb; font-size: 0.95rem; margin-bottom: 0;">{post.data.summary}</p>
 			</div>
