@@ -2,7 +2,11 @@
 import { getCollection } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
 
-const posts = await getCollection('posts');
+// 在開發環境顯示所有文章（包含草稿），在正式環境過濾掉草稿
+const posts = await getCollection('posts', ({ data }) => {
+  return import.meta.env.DEV ? true : !data.isDraft;
+});
+
 // 按日期降序排序
 posts.sort((a, b) => b.data.publishDate.getTime() - a.data.publishDate.getTime());
 
@@ -12,21 +16,174 @@ const formatDate = (date: Date) => {
 ---
 
 <Layout title="研究文章 (Articles)">
-	<h1 style="margin-bottom: 2rem;">研究文章</h1>
+	<h1 class="page-title">研究日誌與學術文章</h1>
 	
-	{posts.length === 0 ? (
-		<p style="color: #888;">目前尚無發佈的文章。</p>
-	) : (
-		posts.map((post) => (
-			<div class="content-block">
-				<div style="font-size: 0.8rem; color: #888; margin-bottom: 0.5rem; letter-spacing: 1px;">
-					{formatDate(post.data.publishDate)}
-				</div>
-				<h3 style="margin-top: 0; margin-bottom: 0.5rem;">
-					<a href={`/articles/${post.id}`}>{post.data.title}</a>
-				</h3>
-				<p style="color: #bbb; font-size: 0.95rem; margin-bottom: 0;">{post.data.summary}</p>
-			</div>
-		))
-	)}
+	<div class="articles-container">
+		{posts.length === 0 ? (
+			<p class="no-posts">目前尚無發佈的文章。</p>
+		) : (
+			posts.map((post) => (
+				<article class="content-block post-card">
+					{post.data.heroImage && (
+						<img src={post.data.heroImage} class="post-hero-image" alt={post.data.title} />
+					)}
+					<div class="post-date">
+						{formatDate(post.data.publishDate)}
+						{post.data.isDraft && <span class="draft-badge">草稿</span>}
+					</div>
+					<h3 class="post-title">
+						<a href={`/articles/${post.id}`}>{post.data.title}</a>
+					</h3>
+					<p class="post-summary">{post.data.summary}</p>
+					
+					{post.data.tags && post.data.tags.length > 0 && (
+						<div class="post-tags">
+							{post.data.tags.map(tag => (
+								<span class="tag">#{tag}</span>
+							))}
+						</div>
+					)}
+
+					<a href={`/articles/${post.id}`} class="read-more">
+						閱讀全文 <span class="arrow">&rarr;</span>
+					</a>
+				</article>
+			))
+		)}
+	</div>
 </Layout>
+
+<style>
+	.page-title {
+		margin-bottom: 4rem;
+		font-family: var(--font-serif);
+		font-size: 2.2rem;
+		font-weight: 300;
+		position: relative;
+	}
+
+	.page-title::after {
+		content: '';
+		display: block;
+		width: 40px;
+		height: 1px;
+		background-color: var(--accent-color);
+		margin-top: 1rem;
+		opacity: 0.6;
+	}
+
+	.articles-container {
+		display: flex;
+		flex-direction: column;
+		gap: 2rem;
+	}
+
+	.no-posts {
+		color: var(--text-muted);
+		font-style: italic;
+		font-family: var(--font-serif);
+	}
+
+	.post-card {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+	}
+
+	.post-date {
+		font-size: 0.8rem;
+		color: var(--text-muted);
+		margin-bottom: 0.75rem;
+		letter-spacing: 2px;
+		font-family: var(--font-serif);
+	}
+
+	.post-title {
+		margin-top: 0;
+		margin-bottom: 1rem;
+		font-size: 1.5rem;
+		font-weight: 300;
+		line-height: 1.35;
+	}
+
+	.post-title a:hover {
+		color: var(--accent-color);
+	}
+
+	.post-summary {
+		color: var(--text-muted);
+		font-size: 0.95rem;
+		line-height: 1.8;
+		margin-bottom: 1.5rem;
+	}
+
+	.read-more {
+		font-size: 0.85rem;
+		color: var(--accent-color);
+		letter-spacing: 1px;
+		display: inline-flex;
+		align-items: center;
+		gap: 0.5rem;
+		font-weight: 400;
+	}
+
+	.read-more .arrow {
+		transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+	}
+
+	.post-card:hover .read-more .arrow {
+		transform: translateX(6px);
+	}
+
+	.draft-badge {
+		font-size: 0.7rem;
+		background: rgba(192, 176, 153, 0.12);
+		color: var(--accent-color);
+		border: 1px dashed var(--accent-color);
+		padding: 2px 8px;
+		border-radius: 2px;
+		margin-left: 1rem;
+		font-family: var(--font-sans);
+		vertical-align: middle;
+	}
+
+	.post-tags {
+		display: flex;
+		gap: 0.75rem;
+		margin-bottom: 1.5rem;
+		flex-wrap: wrap;
+	}
+
+	.tag {
+		font-size: 0.8rem;
+		color: var(--text-muted);
+		background: rgba(255, 255, 255, 0.01);
+		padding: 1px 8px;
+		border: 1px solid var(--border-color);
+		font-family: var(--font-serif);
+		transition: all 0.3s ease;
+	}
+
+	.post-card:hover .tag {
+		border-color: var(--border-hover);
+		color: var(--text-color);
+	}
+
+	.post-hero-image {
+		width: calc(100% + 6rem);
+		height: 200px;
+		object-fit: cover;
+		margin-top: -3rem;
+		margin-left: -3rem;
+		margin-right: -3rem;
+		margin-bottom: 2rem;
+		border-bottom: 1px solid var(--border-color);
+		filter: grayscale(0.5) contrast(1.05);
+		transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+	}
+
+	.post-card:hover .post-hero-image {
+		filter: grayscale(0) contrast(1);
+	}
+</style>
+

@@ -1,19 +1,115 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import contactData from '../content/contact.json';
 ---
 
 <Layout title="聯絡 (Contact)">
-	<h1 style="margin-bottom: 2rem;">學術交流與聯絡</h1>
+	<h1 class="page-title">學術交流與聯絡</h1>
 	
-	<div class="content-block">
-		<p style="color: #bbb;">歡迎學術界同行、研究單位或對超心理學具備嚴謹研究精神的專家進行交流與探討。</p>
+	<div class="content-block contact-block-layout">
+		<p class="contact-intro">
+			{contactData.intro}
+		</p>
 		
-		<div style="margin-top: 2rem;">
-			<p><strong>Email</strong><br>
-			<a href="mailto:research@wongling.example.com" style="color: #fff;">research@wongling.example.com</a></p>
+		<div class="contact-methods">
+			{contactData.email && (
+				<div class="contact-item">
+					<span class="contact-label">Email</span>
+					<a href={`mailto:${contactData.email}`} class="contact-link">
+						{contactData.email}
+					</a>
+				</div>
+			)}
 			
-			<p style="margin-top: 1.5rem;"><strong>Academic Profile</strong><br>
-			<a href="#" style="color: #fff;">ResearchGate - WONGLING</a></p>
+			{contactData.academicLabel && (
+				<div class="contact-item">
+					<span class="contact-label">Academic Profile</span>
+					<a href={contactData.academicUrl || '#'} class="contact-link">
+						{contactData.academicLabel}
+					</a>
+				</div>
+			)}
 		</div>
 	</div>
 </Layout>
+
+<style>
+	.page-title {
+		margin-bottom: 4rem;
+		font-family: var(--font-serif);
+		font-size: 2.2rem;
+		font-weight: 300;
+		position: relative;
+	}
+
+	.page-title::after {
+		content: '';
+		display: block;
+		width: 40px;
+		height: 1px;
+		background-color: var(--accent-color);
+		margin-top: 1rem;
+		opacity: 0.6;
+	}
+
+	.contact-block-layout {
+		display: flex;
+		flex-direction: column;
+		gap: 2.5rem;
+	}
+
+	.contact-intro {
+		color: var(--text-muted);
+		font-size: 1.05rem;
+		line-height: 1.95;
+		font-weight: 300;
+	}
+
+	.contact-methods {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+		gap: 2rem;
+		margin-top: 1rem;
+		border-top: 1px solid var(--border-color);
+		padding-top: 2rem;
+	}
+
+	.contact-item {
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+	}
+
+	.contact-label {
+		font-size: 0.8rem;
+		color: var(--text-muted);
+		text-transform: uppercase;
+		letter-spacing: 2px;
+		font-family: var(--font-serif);
+	}
+
+	.contact-link {
+		font-size: 1.1rem;
+		color: var(--text-color);
+		font-weight: 300;
+		border-bottom: 1px solid transparent;
+		padding-bottom: 2px;
+		display: inline-block;
+		width: fit-content;
+		transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+	}
+
+	.contact-link:hover {
+		color: var(--accent-color);
+		border-bottom-color: var(--accent-color);
+		padding-left: 4px;
+	}
+
+	@media (max-width: 576px) {
+		.contact-methods {
+			grid-template-columns: 1fr;
+			gap: 1.5rem;
+		}
+	}
+</style>
+

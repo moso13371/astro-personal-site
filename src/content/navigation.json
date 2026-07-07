@@ -1,0 +1,20 @@
+{
+  "links": [
+    {
+      "label": "關於 / ABOUT",
+      "href": "/"
+    },
+    {
+      "label": "文章 / ARTICLES",
+      "href": "/articles"
+    },
+    {
+      "label": "服務 / SERVICES",
+      "href": "/service"
+    },
+    {
+      "label": "聯絡 / CONTACT",
+      "href": "/contact"
+    }
+  ]
+}

@@ -1,47 +1,285 @@
 ---
 import '../styles/global.css';
+import navData from '../content/navigation.json';
+import themeData from '../content/theme.json';
 
 interface Props {
 	title: string;
+	description?: string;
+	articlePublishDate?: Date;
 }
 
-const { title } = Astro.props;
+const { 
+	title, 
+	description = "WONGLING — 超心理學與非常規意識狀態研究個人網站。致力於探討異常感知、心物交互作用的實證與科學分析。", 
+	articlePublishDate 
+} = Astro.props;
 
 // Use Astro.url.pathname to handle active links
 const currentPath = Astro.url.pathname;
+const isArticle = currentPath.startsWith('/articles/') && currentPath !== '/articles';
+
+// Dynamic Schema.org JSON-LD for AI crawlers
+const schemaData = isArticle ? {
+	"@context": "https://schema.org",
+	"@type": "ScholarlyArticle",
+	"headline": title,
+	"description": description,
+	"author": {
+		"@type": "Person",
+		"name": "WONGLING"
+	},
+	"datePublished": articlePublishDate ? articlePublishDate.toISOString() : undefined,
+	"publisher": {
+		"@type": "Organization",
+		"name": "WONGLING Research Lab"
+	}
+} : {
+	"@context": "https://schema.org",
+	"@type": "WebSite",
+	"name": "WONGLING",
+	"alternateName": "WONGLING - 超心理學研究工作者",
+	"url": "http://localhost:4321/",
+	"description": description
+};
 ---
 
 <!doctype html>
 <html lang="zh-TW">
 	<head>
 		<meta charset="UTF-8" />
-		<meta name="description" content="WONGLING - 超心理學研究工作者" />
+		<meta name="description" content={description} />
 		<meta name="viewport" content="width=device-width" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="generator" content={Astro.generator} />
 		<title>{title} | WONGLING</title>
-		<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+		
+		<!-- Google Fonts: Cormorant Garamond (English Serif), Noto Serif TC (Chinese Serif), and Inter (Sans-serif) -->
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Inter:wght@300;400;500&family=Noto+Serif+TC:wght@300;400;600&display=swap" rel="stylesheet">
+		
+		<!-- Structured Data for Search Engines & AI Crawlers -->
+		<script type="application/ld+json" set:html={JSON.stringify(schemaData)} />
+
+		<!-- Dynamic typography styles controlled by Keystatic backend -->
+		<style define:vars={{
+			titleSize: themeData.titleSize || '2.8rem',
+			professionSize: themeData.professionSize || '1.15rem'
+		}}>
+			:root {
+				--title-font-size: var(--titleSize);
+				--profession-font-size: var(--professionSize);
+			}
+		</style>
 	</head>
 	<body>
+		<!-- Wabi-Sabi tactile paper grain overlay -->
+		<div class="grain"></div>
+		
+		<!-- Interactive Quantum/Dust Particles Canvas -->
+		<canvas id="wabi-particles"></canvas>
+
 		<div class="container">
 			<header>
 				<div class="logo">
-					<a href="/" style="font-size: 1.2rem; font-weight: 600; color: #fff; letter-spacing: 2px;">W.</a>
+					<a href="/">WONGLING</a>
 				</div>
 				<nav>
 					<ul>
-						<li><a href="/" class={currentPath === '/' ? 'active' : ''}>關於</a></li>
-						<li><a href="/articles" class={currentPath.startsWith('/articles') ? 'active' : ''}>文章</a></li>
-						<li><a href="/contact" class={currentPath.startsWith('/contact') ? 'active' : ''}>聯絡</a></li>
+						{navData.links.map((link) => {
+							const isActive = link.href === '/' 
+								? currentPath === '/' 
+								: currentPath === link.href || currentPath.startsWith(link.href + '/');
+							return (
+								<li>
+									<a href={link.href} class={isActive ? 'active' : ''}>
+										{link.label}
+									</a>
+								</li>
+							);
+						})}
 					</ul>
 				</nav>
 			</header>
 			<main>
 				<slot />
 			</main>
-            <footer style="margin-top: 6rem; padding-top: 2rem; border-top: 1px solid #333; text-align: center; color: #555; font-size: 0.8rem; letter-spacing: 1px;">
+            <footer style="margin-top: 8rem; padding-top: 2.5rem; border-top: 1px solid var(--border-color); text-align: center; color: var(--text-muted); font-size: 0.8rem; letter-spacing: 2px; font-family: var(--font-serif);">
                 &copy; {new Date().getFullYear()} WONGLING. Parapsychology Research.
             </footer>
 		</div>
+
+		<!-- Client script for particle effects -->
+		<script>
+			class DustParticle {
+				x: number = 0;
+				y: number = 0;
+				size: number = 0;
+				vx: number = 0;
+				vy: number = 0;
+				alpha: number = 0;
+				baseAlpha: number = 0;
+				speedFactor: number = 0;
+				decay: number = 0;
+				isFadingIn: boolean = true;
+				canvasWidth: number;
+				canvasHeight: number;
+
+				constructor(w: number, h: number) {
+					this.canvasWidth = w;
+					this.canvasHeight = h;
+					this.reset(true);
+				}
+
+				reset(initiallyRandomY = false) {
+					this.x = Math.random() * this.canvasWidth;
+					this.y = initiallyRandomY ? Math.random() * this.canvasHeight : this.canvasHeight + 20;
+					
+					// Particle size ranges from 1.5px to 24px (some large out-of-focus particles for depth)
+					const rand = Math.random();
+					if (rand > 0.85) {
+						this.size = 8 + Math.random() * 16; // Big bokeh dust
+						this.baseAlpha = 0.03 + Math.random() * 0.06;
+					} else {
+						this.size = 1.5 + Math.random() * 5; // Tiny sharp dust
+						this.baseAlpha = 0.08 + Math.random() * 0.16;
+					}
+					
+					this.alpha = 0;
+					this.isFadingIn = true;
+					
+					// Gentle drifting velocity
+					this.vx = (Math.random() - 0.5) * 0.12;
+					this.vy = -(0.05 + Math.random() * 0.15); // Upward movement
+					this.speedFactor = 0.02 + Math.random() * 0.04;
+					this.decay = 0.005 + Math.random() * 0.005;
+				}
+
+				update(mouseX: number, mouseY: number, mouseActive: boolean) {
+					// Add small brownian random fluctuations
+					this.vx += (Math.random() - 0.5) * 0.008;
+					this.vy += (Math.random() - 0.5) * 0.008;
+
+					// Cap horizontal speed
+					this.vx = Math.max(-0.25, Math.min(0.25, this.vx));
+					// Keep upward bias
+					this.vy = Math.max(-0.35, Math.min(-0.02, this.vy));
+
+					// Mind-Matter Interaction: mouse interaction
+					if (mouseActive) {
+						const dx = this.x - mouseX;
+						const dy = this.y - mouseY;
+						const dist = Math.sqrt(dx * dx + dy * dy);
+						if (dist < 180) {
+							// Gentle repulsion
+							const force = (180 - dist) / 180 * 0.06;
+							this.vx += (dx / dist) * force;
+							this.vy += (dy / dist) * force;
+						}
+					}
+
+					// Apply friction / stabilization
+					this.vx *= 0.985;
+					this.vy *= 0.985;
+
+					// Move
+					this.x += this.vx;
+					this.y += this.vy;
+
+					// Handle fading in/out
+					if (this.isFadingIn) {
+						this.alpha += 0.003;
+						if (this.alpha >= this.baseAlpha) {
+							this.alpha = this.baseAlpha;
+							this.isFadingIn = false;
+						}
+					}
+
+					// Wrap horizontal boundaries
+					if (this.x < -20) this.x = this.canvasWidth + 20;
+					if (this.x > this.canvasWidth + 20) this.x = -20;
+
+					// Reset if particle goes off top or becomes completely translucent
+					if (this.y < -30) {
+						this.reset(false);
+					}
+				}
+
+				draw(ctx: CanvasRenderingContext2D) {
+					ctx.beginPath();
+					const grad = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.size);
+					
+					// Gold/Sand dust tone: rgb(220, 215, 202)
+					grad.addColorStop(0, `rgba(220, 215, 202, ${this.alpha})`);
+					grad.addColorStop(0.3, `rgba(220, 215, 202, ${this.alpha * 0.4})`);
+					grad.addColorStop(1, 'rgba(220, 215, 202, 0)');
+					
+					ctx.fillStyle = grad;
+					ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+					ctx.fill();
+				}
+			}
+
+			function initParticles() {
+				const canvas = document.getElementById('wabi-particles') as HTMLCanvasElement;
+				if (!canvas) return;
+				const ctx = canvas.getContext('2d');
+				if (!ctx) return;
+
+				let w = canvas.width = window.innerWidth;
+				let h = canvas.height = window.innerHeight;
+
+				let particles: DustParticle[] = [];
+				const particleCount = Math.min(95, Math.floor((w * h) / 14000)); // Increased particle count and density
+				
+				for (let i = 0; i < particleCount; i++) {
+					particles.push(new DustParticle(w, h));
+				}
+
+				let mouse = { x: 0, y: 0, active: false };
+
+				window.addEventListener('mousemove', (e) => {
+					mouse.x = e.clientX;
+					mouse.y = e.clientY;
+					mouse.active = true;
+				});
+
+				window.addEventListener('mouseleave', () => {
+					mouse.active = false;
+				});
+
+				window.addEventListener('resize', () => {
+					w = canvas.width = window.innerWidth;
+					h = canvas.height = window.innerHeight;
+					particles.forEach(p => {
+						p.canvasWidth = w;
+						p.canvasHeight = h;
+					});
+				});
+
+				function animate() {
+					if (!ctx || !canvas) return;
+					ctx.clearRect(0, 0, w, h);
+
+					particles.forEach(p => {
+						p.update(mouse.x, mouse.y, mouse.active);
+						p.draw(ctx);
+					});
+
+					requestAnimationFrame(animate);
+				}
+
+				animate();
+			}
+
+			// Initialize when document loads
+			if (document.readyState === 'complete' || document.readyState === 'interactive') {
+				initParticles();
+			} else {
+				document.addEventListener('DOMContentLoaded', initParticles);
+			}
+		</script>
 	</body>
 </html>
+

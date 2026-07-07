@@ -1,0 +1,140 @@
+---
+import Layout from '../layouts/Layout.astro';
+import serviceData from '../content/service.json';
+---
+
+<Layout title={serviceData.title}>
+	<h1 class="page-title">{serviceData.title}</h1>
+	
+	<div class="service-layout">
+		<p class="service-intro">
+			{serviceData.intro}
+		</p>
+		
+		<div class="service-list">
+			{serviceData.items.map((item, index) => (
+				<div class="content-block service-card">
+					<div class="service-header-row">
+						<span class="service-index">0{index + 1}</span>
+						<h2 class="service-name">{item.name}</h2>
+					</div>
+					<p class="service-desc">{item.description}</p>
+					{item.details && (
+						<div class="service-details">
+							<span class="details-label">合作細節</span>
+							<p>{item.details}</p>
+						</div>
+					)}
+				</div>
+			))}
+		</div>
+	</div>
+</Layout>
+
+<style>
+	.page-title {
+		margin-bottom: 4rem;
+		font-family: var(--font-serif);
+		font-size: 2.2rem;
+		font-weight: 300;
+		position: relative;
+	}
+
+	.page-title::after {
+		content: '';
+		display: block;
+		width: 40px;
+		height: 1px;
+		background-color: var(--accent-color);
+		margin-top: 1rem;
+		opacity: 0.6;
+	}
+
+	.service-layout {
+		display: flex;
+		flex-direction: column;
+		gap: 2.5rem;
+	}
+
+	.service-intro {
+		color: var(--text-muted);
+		font-size: 1.05rem;
+		line-height: 1.95;
+		font-weight: 300;
+		max-width: 750px;
+		margin-bottom: 2rem;
+	}
+
+	.service-list {
+		display: flex;
+		flex-direction: column;
+		gap: 2.5rem;
+	}
+
+	.service-card {
+		display: flex;
+		flex-direction: column;
+		gap: 1.2rem;
+		align-items: flex-start;
+	}
+
+	.service-header-row {
+		display: flex;
+		align-items: baseline;
+		gap: 1.5rem;
+	}
+
+	.service-index {
+		font-family: var(--font-serif);
+		font-size: 1.6rem;
+		color: var(--accent-color);
+		font-weight: 300;
+		opacity: 0.7;
+	}
+
+	.service-name {
+		font-size: 1.5rem;
+		margin: 0;
+		font-weight: 300;
+		line-height: 1.3;
+	}
+
+	.service-desc {
+		color: var(--text-color);
+		font-size: 1rem;
+		line-height: 1.8;
+		font-weight: 300;
+		margin: 0;
+	}
+
+	.service-details {
+		margin-top: 0.5rem;
+		border-top: 1px solid var(--border-color);
+		padding-top: 1rem;
+		width: 100%;
+	}
+
+	.details-label {
+		font-size: 0.75rem;
+		color: var(--text-muted);
+		text-transform: uppercase;
+		letter-spacing: 2px;
+		font-family: var(--font-serif);
+		display: block;
+		margin-bottom: 0.5rem;
+	}
+
+	.service-details p {
+		color: var(--text-muted);
+		font-size: 0.9rem;
+		line-height: 1.7;
+		margin: 0;
+	}
+
+	@media (max-width: 576px) {
+		.service-header-row {
+			flex-direction: column;
+			gap: 0.5rem;
+		}
+	}
+</style>
