@@ -30,39 +30,64 @@ const academicBackground = [
 	}
 ];
 
-// Re-structured Research Areas & Interests based on the optimized user draft
+// Re-structured Research Areas with full English translations for SEO and academic precision
 const researchAreas = [
 	{
 		id: "01",
 		category: "超心理學與未明現象",
 		categoryEn: "Parapsychology & Unexplained Phenomena",
 		summary: "專注於常態框架外的現象調查與機制探討。",
-		items: ["超心理學 (Parapsychology)", "ESP 現象", "超常經驗 (EHE)", "靈媒模式實踐 (Mediumship Studies)", "未明飛行物 (UAP)", "地外文明等跨領域調查"]
+		items: [
+			"超心理學 (Parapsychology)",
+			"ESP 現象 (ESP Phenomena)",
+			"超常經驗 (Exceptional Human Experience / EHE)",
+			"靈媒模式實踐 (Mediumship Studies & Practices)",
+			"未明飛行物 (Unidentified Aerial Phenomena / UAP)",
+			"地外文明等跨領域調查 (Extraterrestrial Intelligence & Cosmic Studies)"
+		]
 	},
 	{
 		id: "02",
 		category: "意識與空間維度",
 		categoryEn: "Consciousness & Dimensional Studies",
 		summary: "探索意識的邊界、狀態轉換與底層運作機制。",
-		items: ["意識研究 (Consciousness Studies)", "超個人心理學 (Transpersonal Psychology)", "出體經驗 (OBE)", "瀕死經驗 (NDE)", "靈魂與化身假說", "迷幻研究與應用"]
+		items: [
+			"意識研究 (Consciousness Studies)",
+			"超個人心理學 (Transpersonal Psychology)",
+			"出體經驗 (Out-of-Body Experience / OBE)",
+			"瀕死經驗 (Near-Death Experience / NDE)",
+			"靈魂與化身假說 (Soul & Reincarnation Hypotheses)",
+			"迷幻研究與應用 (Psychedelic Studies & Applications)"
+		]
 	},
 	{
 		id: "03",
 		category: "宗教、民俗與儀式現象",
 		categoryEn: "Religion, Folklore & Ritual Phenomena",
 		summary: "從文化與現象學視角，客觀解構信仰系統與集體經驗。",
-		items: ["宗教學", "民俗學", "惡魔學 (Demonology)", "當代靈性比較", "鬼怪與靈異文化研究", "儀式與集體經驗探討"]
+		items: [
+			"宗教學 (Religious Studies)",
+			"民俗學 (Folklore Studies)",
+			"惡魔學 (Demonology)",
+			"當代靈性比較 (Contemporary Comparative Spirituality)",
+			"鬼怪與靈異文化研究 (Ghosts & Supernatural Culture Studies)",
+			"儀式與集體經驗探討 (Rituals & Collective Experiences)"
+		]
 	},
 	{
 		id: "04",
 		category: "聲波系統與共振實踐",
 		categoryEn: "Sonic Systems & Resonance Practices",
 		summary: "探究環境頻率、聲響媒材與身心意識狀態的交互作用。",
-		items: ["當代身心靈系統架構", "聲音系統工作 (Sonic System Practices)", "環境聲景與文化現象之整合"]
+		items: [
+			"當代身心靈系統架構 (Contemporary Body-Mind-Spirit Frameworks)",
+			"聲音系統工作 (Sonic System Practices)",
+			"環境聲景與文化現象之整合 (Environmental Soundscapes & Cultural Integration)"
+		]
 	}
 ];
 
-// Research Timeline (Theory Milestones) updated with exact user text
+// Research Timeline (Theory Milestones)
 const timeline = [
 	{
 		year: "2024",
@@ -104,15 +129,15 @@ const timeline = [
 		)}
 	</div>
 
-	<!-- Section: 關於 (About Biography) -->
+	<!-- [01] 關於 (About Biography) -->
 	<div class="content-block">
-		<h2>關於</h2>
+		<h2><span class="sec-num">[01]</span> 關於</h2>
 		<p style="white-space: pre-line; line-height: 2.0; color: var(--text-color); font-weight: 400; font-size: 1.05rem;">{aboutData.intro}</p>
 	</div>
 
-	<!-- New Section: 學經歷 (Academic & Professional Background) -->
+	<!-- [02] 學經歷 (Academic & Professional Background) -->
 	<div class="content-block">
-		<h2>學經歷</h2>
+		<h2><span class="sec-num">[02]</span> 學經歷</h2>
 		<div class="background-list">
 			{academicBackground.map((item) => (
 				<div class="background-item">
@@ -126,9 +151,9 @@ const timeline = [
 		</div>
 	</div>
 
-	<!-- Updated Section: 研究領域與關注方向 (Research Areas & Interests) -->
+	<!-- [03] 研究領域與關注方向 (Research Areas & Interests) -->
 	<div class="content-block">
-		<h2>研究領域與關注方向</h2>
+		<h2><span class="sec-num">[03]</span> 研究領域與關注方向</h2>
 		<div class="domain-grid">
 			{researchAreas.map((domain) => (
 				<div class="domain-card">
@@ -139,12 +164,14 @@ const timeline = [
 							<span class="domain-category-en">{domain.categoryEn}</span>
 						</div>
 					</div>
-					<!-- Summary text explaining the domain -->
 					<p class="domain-summary">{domain.summary}</p>
-					<!-- Pill tags under the summary -->
-					<div class="domain-tags">
-						{domain.items.map((item) => (
-							<span class="domain-tag">{item}</span>
+					<!-- Plain text list separated by clean dots (No button-like box filters) -->
+					<div class="domain-items">
+						{domain.items.map((item, idx) => (
+							<span class="domain-item-wrapper">
+								<span class="domain-item-text">{item}</span>
+								{idx < domain.items.length - 1 && <span class="domain-item-separator">·</span>}
+							</span>
 						))}
 					</div>
 				</div>
@@ -152,9 +179,9 @@ const timeline = [
 		</div>
 	</div>
 
-	<!-- Updated Section: 研究理論與發展里程碑 (Theoretical Milestones) -->
+	<!-- [04] 研究理論與發展里程碑 (Theoretical Milestones) -->
 	<div class="content-block">
-		<h2>研究理論與發展里程碑</h2>
+		<h2><span class="sec-num">[04]</span> 研究理論與發展里程碑</h2>
 		<div class="timeline-container">
 			<div class="timeline-line"></div>
 			{timeline.map((item) => (
@@ -223,6 +250,16 @@ const timeline = [
 		border: 1px solid var(--border-color);
 		filter: none !important;
 		box-shadow: 0 5px 25px rgba(0, 0, 0, 0.25);
+	}
+
+	/* Section Numbers */
+	.sec-num {
+		font-family: var(--font-sans);
+		font-size: 0.95rem;
+		color: var(--text-muted);
+		margin-right: 0.5rem;
+		font-weight: 400;
+		letter-spacing: 1px;
 	}
 
 	/* Background List Styling */
@@ -338,26 +375,35 @@ const timeline = [
 		line-height: 1.6;
 	}
 
-	.domain-tags {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 0.6rem;
-		padding-left: 2.2rem;
-	}
-
-	.domain-tag {
-		font-size: 0.88rem;
+	/* Plain text dot-separated list */
+	.domain-items {
+		font-size: 0.92rem;
 		color: var(--text-color);
-		background: rgba(255, 255, 255, 0.03);
-		border: 1px solid rgba(255, 255, 255, 0.06);
-		padding: 5px 12px;
-		transition: all 0.3s ease;
+		line-height: 1.85;
+		padding-left: 2.2rem;
+		letter-spacing: 0.5px;
 	}
 
-	.domain-tag:hover {
-		color: #ffffff;
-		border-color: rgba(255, 255, 255, 0.15);
-		background: rgba(255, 255, 255, 0.06);
+	.domain-item-wrapper {
+		display: inline-block;
+		white-space: nowrap; /* Prevent ugly inline wrapping of a single tag text */
+	}
+
+	.domain-item-text {
+		color: var(--text-color);
+		transition: color 0.3s ease;
+	}
+
+	.domain-card:hover .domain-item-text {
+		color: #ffffff; /* Subtle light highlight on hover card */
+	}
+
+	.domain-item-separator {
+		color: var(--text-muted);
+		margin: 0 0.8rem;
+		font-weight: 300;
+		opacity: 0.6;
+		display: inline-block;
 	}
 
 	/* Timeline Styling */
@@ -438,8 +484,11 @@ const timeline = [
 		.profile-avatar-container {
 			align-self: center;
 		}
-		.domain-summary, .domain-tags {
+		.domain-summary, .domain-items {
 			padding-left: 0;
+		}
+		.domain-item-wrapper {
+			white-space: normal; /* Normal wrap on mobile screens */
 		}
 		.timeline-item {
 			flex-direction: column;
