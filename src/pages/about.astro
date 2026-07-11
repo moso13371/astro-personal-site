@@ -2,19 +2,24 @@
 // src/pages/about.astro
 import Layout from '../layouts/Layout.astro';
 import aboutData from '../content/about.json';
+
+// Split the multiline profession string into an array of lines for bulletproof rendering
+const professions = aboutData.profession ? aboutData.profession.split('\n') : [];
 ---
 
 <Layout title="關於 ABOUT">
 	<div class="profile-header">
 		<div class="profile-text">
-			<!-- Made title size smaller and class-specific -->
 			<h1 class="about-title">{aboutData.name}</h1>
-			<!-- Render multi-line professions with pre-line -->
-			<div class="about-subtitle">{aboutData.profession}</div>
+			<div class="about-subtitle">
+				{professions.map((prof) => (
+					<span class="about-subtitle-line">{prof}</span>
+				))}
+			</div>
 		</div>
 		{aboutData.avatar && (
 			<div class="profile-avatar-container">
-				<!-- Keeps colored by default without hover grayscale -->
+				<!-- Forced color with no hover transformations -->
 				<img src={aboutData.avatar} class="profile-avatar" alt={aboutData.name} />
 			</div>
 		)}
@@ -41,12 +46,12 @@ import aboutData from '../content/about.json';
 <style>
 	.about-title {
 		font-family: var(--font-serif);
-		font-size: 2.0rem; /* Made smaller than general page titles */
+		font-size: 2.0rem;
 		font-weight: 300;
 		letter-spacing: 2px;
 		color: #ffffff;
 		margin-top: 0;
-		margin-bottom: 0.8rem;
+		margin-bottom: 1.2rem;
 	}
 
 	.about-subtitle {
@@ -54,8 +59,16 @@ import aboutData from '../content/about.json';
 		font-size: 0.88rem;
 		line-height: 1.65;
 		color: var(--text-muted);
-		white-space: pre-line; /* Support newlines for multiple titles */
 		letter-spacing: 1px;
+	}
+
+	.about-subtitle-line {
+		display: block; /* Forces line break on each title line */
+		margin-bottom: 0.45rem;
+	}
+
+	.about-subtitle-line:last-child {
+		margin-bottom: 0;
 	}
 
 	.focus-list {
@@ -122,14 +135,9 @@ import aboutData from '../content/about.json';
 		object-fit: cover;
 		border-radius: 50%;
 		border: 1px solid var(--border-color);
-		/* Grayscale removed, keeps standard colored display */
-		transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+		filter: none !important; /* Force color on all platforms and override any defaults */
 		box-shadow: 0 5px 25px rgba(0, 0, 0, 0.25);
-	}
-
-	.profile-avatar:hover {
-		transform: scale(1.03);
-		border-color: var(--accent-color);
+		/* No hover scale transitions or effects */
 	}
 
 	@media (max-width: 768px) {
