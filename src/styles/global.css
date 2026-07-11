@@ -1,7 +1,7 @@
 :root {
   --bg-color: #000000;       /* Solid pitch black for immersive depth */
-  --text-color: #d5d7db;     /* Light plaster/cement white */
-  --text-muted: #828790;     /* Muted weathered cement gray */
+  --text-color: #b8bac0;     /* Soft plaster/cement white (dimmed for OLED eye comfort) */
+  --text-muted: #787c85;     /* Warm weathered concrete gray */
   --accent-color: #c0c4cc;   /* Clean concrete/steel gray */
   --accent-hover: #ffffff;   /* Pure crisp white */
   --border-color: #202225;   /* Concrete joint line */
@@ -9,7 +9,7 @@
   --font-serif: "Times New Roman", Times, "Noto Serif TC", "BiauKai", serif; /* Academic Standard */
   --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --selection-bg: #222428;
-  --selection-color: #d5d7db;
+  --selection-color: #b8bac0;
 }
 
 ::selection {
