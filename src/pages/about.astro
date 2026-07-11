@@ -7,11 +7,14 @@ import aboutData from '../content/about.json';
 <Layout title="關於 ABOUT">
 	<div class="profile-header">
 		<div class="profile-text">
-			<h1 class="title" style="font-family: var(--font-serif); font-weight: 300;">{aboutData.name}</h1>
-			<div class="subtitle">{aboutData.profession}</div>
+			<!-- Made title size smaller and class-specific -->
+			<h1 class="about-title">{aboutData.name}</h1>
+			<!-- Render multi-line professions with pre-line -->
+			<div class="about-subtitle">{aboutData.profession}</div>
 		</div>
 		{aboutData.avatar && (
 			<div class="profile-avatar-container">
+				<!-- Keeps colored by default without hover grayscale -->
 				<img src={aboutData.avatar} class="profile-avatar" alt={aboutData.name} />
 			</div>
 		)}
@@ -36,6 +39,25 @@ import aboutData from '../content/about.json';
 </Layout>
 
 <style>
+	.about-title {
+		font-family: var(--font-serif);
+		font-size: 2.0rem; /* Made smaller than general page titles */
+		font-weight: 300;
+		letter-spacing: 2px;
+		color: #ffffff;
+		margin-top: 0;
+		margin-bottom: 0.8rem;
+	}
+
+	.about-subtitle {
+		font-family: var(--font-sans);
+		font-size: 0.88rem;
+		line-height: 1.65;
+		color: var(--text-muted);
+		white-space: pre-line; /* Support newlines for multiple titles */
+		letter-spacing: 1px;
+	}
+
 	.focus-list {
 		list-style: none;
 		padding: 0;
@@ -100,13 +122,12 @@ import aboutData from '../content/about.json';
 		object-fit: cover;
 		border-radius: 50%;
 		border: 1px solid var(--border-color);
-		filter: grayscale(0.5) contrast(1.05);
+		/* Grayscale removed, keeps standard colored display */
 		transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 		box-shadow: 0 5px 25px rgba(0, 0, 0, 0.25);
 	}
 
 	.profile-avatar:hover {
-		filter: grayscale(0) contrast(1);
 		transform: scale(1.03);
 		border-color: var(--accent-color);
 	}

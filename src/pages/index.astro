@@ -5,8 +5,9 @@ import Layout from '../layouts/Layout.astro';
 
 <Layout title="首頁 HOME">
 	<div class="home-hero">
-		<!-- Centered Minimalist Chinese Subtitle only -->
-		<h1 class="home-subtitle">超心理學與未明現象調查研究</h1>
+		<!-- Refined Minimalist Typography in grayer, elegant colors -->
+		<h1 class="home-title">WONGLING</h1>
+		<p class="home-subtitle">Research on Parapsychology and Unexplained Phenomena</p>
 	</div>
 </Layout>
 
@@ -22,14 +23,25 @@ import Layout from '../layouts/Layout.astro';
 		animation: fadeIn 2.5s cubic-bezier(0.16, 1, 0.3, 1);
 	}
 
+	.home-title {
+		font-family: var(--font-sans);
+		font-size: 2.4rem; /* Refined, smaller size */
+		font-weight: 400;
+		letter-spacing: 10px;
+		margin: 0;
+		color: rgba(255, 255, 255, 0.72); /* Understated, darker steel gray */
+		text-transform: uppercase;
+		text-shadow: 0 0 20px rgba(255, 255, 255, 0.03);
+	}
+
 	.home-subtitle {
 		font-family: var(--font-serif);
-		font-size: 1.35rem; /* Elegant centerpiece size */
+		font-size: 0.95rem; /* Understated, elegant size */
 		font-weight: 300;
-		letter-spacing: 6px;
-		color: #ffffff;
-		margin: 0;
-		text-shadow: 0 0 35px rgba(255, 255, 255, 0.15);
+		letter-spacing: 2px;
+		color: rgba(255, 255, 255, 0.42); /* Softer gray color */
+		margin-top: 1.2rem;
+		margin-bottom: 0;
 	}
 
 	@keyframes fadeIn {
@@ -46,11 +58,15 @@ import Layout from '../layouts/Layout.astro';
 		.home-hero {
 			height: 48vh;
 		}
+		.home-title {
+			font-size: 1.8rem;
+			letter-spacing: 6px;
+		}
 		.home-subtitle {
-			font-size: 1.05rem;
-			letter-spacing: 4px;
-			padding: 0 1rem;
-			line-height: 1.6;
+			font-size: 0.8rem;
+			letter-spacing: 1px;
+			padding: 0 1.5rem;
+			line-height: 1.5;
 		}
 	}
 </style>
