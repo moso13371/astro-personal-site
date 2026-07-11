@@ -66,7 +66,7 @@ const timeline = aboutData.timeline || [];
 				<div class="background-item">
 					<div class="background-title-row">
 						<span class="background-title">{item.title}</span>
-						{item.role && <span class="background-role">{item.role}</span>}
+						{item.role && <span class="background-role">｜ {item.role}</span>}
 					</div>
 					<div class="background-en">{item.en}</div>
 				</div>
@@ -208,12 +208,10 @@ const timeline = aboutData.timeline || [];
 	}
 
 	.background-role {
-		font-size: 0.85rem;
+		font-size: 0.92rem;
 		color: var(--accent-color);
-		background: rgba(255, 255, 255, 0.05);
-		border: 1px solid rgba(255, 255, 255, 0.1);
-		padding: 2px 8px;
 		font-weight: 400;
+		margin-left: 0.4rem;
 	}
 
 	.background-en {

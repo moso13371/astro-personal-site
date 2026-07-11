@@ -99,43 +99,94 @@ header {
   color: var(--accent-color);
 }
 
-nav ul {
-  list-style: none;
-  display: flex;
-  gap: 2.5rem;
-  padding: 0;
-  margin: 0;
+/* Dropdown Menu Container */
+.menu-dropdown {
+  position: relative;
+  display: inline-block;
 }
 
-nav a {
-  font-size: 0.85rem;
+/* Borderless Minimal Trigger Button */
+.menu-trigger {
+  font-family: var(--font-sans);
+  font-size: 0.82rem;
+  font-weight: 500;
+  letter-spacing: 2px;
+  color: var(--text-color);
+  background: none;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  text-transform: uppercase;
+  padding: 6px 12px;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  transition: color 0.3s ease;
+}
+
+.menu-trigger:hover {
+  color: var(--accent-hover);
+}
+
+.menu-trigger .chevron {
+  font-size: 0.72rem;
+  opacity: 0.6;
+  transition: transform 0.3s ease;
+}
+
+.menu-trigger[aria-expanded="true"] .chevron {
+  transform: rotate(180deg);
+}
+
+/* Dropdown Content Box */
+.menu-dropdown-content {
+  position: absolute;
+  right: 0;
+  top: 100%;
+  margin-top: 0.8rem;
+  background: rgba(10, 11, 12, 0.94);
+  border: 1px solid var(--border-color);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  padding: 1.2rem 1.6rem;
+  width: 170px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+  display: none; /* Toggled via JS */
+  z-index: 1010;
+  animation: dropdownFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes dropdownFadeIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.menu-dropdown-content.show {
+  display: block;
+}
+
+.menu-dropdown-content ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+.menu-dropdown-content a {
+  font-size: 0.82rem;
   text-transform: uppercase;
   letter-spacing: 2px;
   color: var(--text-muted);
-  position: relative;
-  padding-bottom: 6px;
+  display: block;
+  padding: 4px 0;
+  transition: color 0.3s ease;
 }
 
-nav a:hover, nav a.active {
-  color: var(--accent-color);
-}
-
-nav a::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 1px;
-  background-color: var(--accent-color);
-  transform: scaleX(0);
-  transform-origin: right;
-  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-nav a:hover::after, nav a.active::after {
-  transform: scaleX(1);
-  transform-origin: left;
+.menu-dropdown-content a:hover, 
+.menu-dropdown-content a.active {
+  color: var(--accent-hover);
 }
 
 main {
@@ -283,12 +334,14 @@ article p {
     font-size: 2.5rem;
   }
   header {
-    position: static; /* Disable sticky on mobile to save vertical space */
-    margin-bottom: 3.5rem;
-    padding: 2rem 0 1rem 0;
-    flex-direction: column;
-    gap: 1.5rem;
-    align-items: flex-start;
+    position: sticky !important; /* Keep sticky on mobile */
+    top: 0;
+    z-index: 1000;
+    margin-bottom: 3rem;
+    padding: 1.5rem 0 1.2rem 0 !important; /* Compact padding on mobile */
+    flex-direction: row; /* Keep Logo and Menu trigger in a single row */
+    justify-content: space-between;
+    align-items: center;
   }
   nav ul {
     gap: 1.5rem;

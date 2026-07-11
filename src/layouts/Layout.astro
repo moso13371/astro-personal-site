@@ -85,22 +85,30 @@ const schemaData = isArticle ? {
 				<div class="logo">
 					<a href="/">WONGLING</a>
 				</div>
-				<nav>
-					<ul>
-						{navData.links.map((link) => {
-							const isActive = link.href === '/' 
-								? currentPath === '/' 
-								: currentPath === link.href || currentPath.startsWith(link.href + '/');
-							return (
-								<li>
-									<a href={link.href} class={isActive ? 'active' : ''}>
-										{link.label}
-									</a>
-								</li>
-							);
-						})}
-					</ul>
-				</nav>
+				<!-- Collapsed Dropdown Menu -->
+				<div class="menu-dropdown">
+					<button class="menu-trigger" aria-haspopup="true" aria-expanded="false">
+						選單 MENU <span class="chevron">↓</span>
+					</button>
+					<div class="menu-dropdown-content">
+						<nav>
+							<ul>
+								{navData.links.map((link) => {
+									const isActive = link.href === '/' 
+										? currentPath === '/' 
+										: currentPath === link.href || currentPath.startsWith(link.href + '/');
+									return (
+										<li>
+											<a href={link.href} class={isActive ? 'active' : ''}>
+												{link.label}
+											</a>
+										</li>
+									);
+								})}
+							</ul>
+						</nav>
+					</div>
+				</div>
 			</header>
 			<main>
 				<slot />
@@ -316,19 +324,48 @@ const schemaData = isArticle ? {
 				document.addEventListener('DOMContentLoaded', initParticles);
 			}
 
-			// Intercept links click to trigger transition
+			// Intercept links click to trigger transition & close dropdown
 			document.addEventListener('DOMContentLoaded', () => {
 				const links = document.querySelectorAll('header nav a, .logo a');
+				const content = document.querySelector('.menu-dropdown-content');
+				const trigger = document.querySelector('.menu-trigger');
+
 				links.forEach(link => {
 					link.addEventListener('click', (e) => {
 						const href = link.getAttribute('href');
 						const target = link.getAttribute('target');
 						if (href && href.startsWith('/') && target !== '_blank' && !e.metaKey && !e.ctrlKey && !e.shiftKey) {
 							e.preventDefault();
+							// Close dropdown immediately on link click
+							if (content && trigger) {
+								content.classList.remove('show');
+								trigger.setAttribute('aria-expanded', 'false');
+							}
 							window.dispatchEvent(new CustomEvent('page-transition', { detail: { targetUrl: href } }));
 						}
 					});
 				});
+
+				// Dropdown Menu Toggle Script
+				if (trigger && content) {
+					trigger.addEventListener('click', (e) => {
+						e.stopPropagation();
+						const isOpen = content.classList.contains('show');
+						if (isOpen) {
+							content.classList.remove('show');
+							trigger.setAttribute('aria-expanded', 'false');
+						} else {
+							content.classList.add('show');
+							trigger.setAttribute('aria-expanded', 'true');
+						}
+					});
+
+					// Close when clicking anywhere outside
+					document.addEventListener('click', () => {
+						content.classList.remove('show');
+						trigger.setAttribute('aria-expanded', 'false');
+					});
+				}
 			});
 		</script>
 	</body>
