@@ -5,9 +5,8 @@ import Layout from '../layouts/Layout.astro';
 
 <Layout title="首頁 HOME">
 	<div class="home-hero">
-		<!-- Centered Minimalist Typography -->
-		<h1 class="home-title">WONGLING</h1>
-		<p class="home-subtitle">超心理學與未明現象調查研究</p>
+		<!-- Centered Minimalist Chinese Subtitle only -->
+		<h1 class="home-subtitle">超心理學與未明現象調查研究</h1>
 	</div>
 </Layout>
 
@@ -20,36 +19,25 @@ import Layout from '../layouts/Layout.astro';
 		height: 52vh; /* Centered in standard viewport under header without causing overflow */
 		text-align: center;
 		box-sizing: border-box;
-		animation: fadeIn 2s cubic-bezier(0.16, 1, 0.3, 1);
-	}
-
-	.home-title {
-		font-family: var(--font-sans);
-		font-size: 3.2rem;
-		font-weight: 400;
-		letter-spacing: 8px;
-		margin: 0;
-		color: #ffffff;
-		text-transform: uppercase;
-		text-shadow: 0 0 30px rgba(255, 255, 255, 0.08);
+		animation: fadeIn 2.5s cubic-bezier(0.16, 1, 0.3, 1);
 	}
 
 	.home-subtitle {
 		font-family: var(--font-serif);
-		font-size: 1.0rem;
+		font-size: 1.35rem; /* Elegant centerpiece size */
 		font-weight: 300;
-		letter-spacing: 4px;
-		color: var(--text-muted);
-		margin-top: 1.2rem;
-		margin-bottom: 0;
+		letter-spacing: 6px;
+		color: #ffffff;
+		margin: 0;
+		text-shadow: 0 0 35px rgba(255, 255, 255, 0.15);
 	}
 
 	@keyframes fadeIn {
-		from { opacity: 0; transform: scale(0.98) translateY(8px); }
+		from { opacity: 0; transform: scale(0.98) translateY(6px); }
 		to { opacity: 1; transform: scale(1) translateY(0); }
 	}
 
-	/* Adjust global footer on index page to hide it for a pure splash homepage look */
+	/* Hide footer on home page for pure splash style */
 	:global(body:has(.home-hero) footer) {
 		display: none !important;
 	}
@@ -58,13 +46,11 @@ import Layout from '../layouts/Layout.astro';
 		.home-hero {
 			height: 48vh;
 		}
-		.home-title {
-			font-size: 2.2rem;
-			letter-spacing: 5px;
-		}
 		.home-subtitle {
-			font-size: 0.85rem;
-			letter-spacing: 2px;
+			font-size: 1.05rem;
+			letter-spacing: 4px;
+			padding: 0 1rem;
+			line-height: 1.6;
 		}
 	}
 </style>

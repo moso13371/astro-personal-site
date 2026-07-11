@@ -24,8 +24,10 @@ body {
   color: var(--text-color);
   font-family: var(--font-sans);
   line-height: 1.9;
-  font-size: 16px;
-  -webkit-font-smoothing: antialiased;
+  font-size: 16.5px;          /* Slightly larger base font size for crisp legibility */
+  -webkit-font-smoothing: subpixel-antialiased;
+  -moz-osx-font-smoothing: auto;
+  text-rendering: optimizeLegibility;
   position: relative;
   overflow-x: hidden;
 }
@@ -287,4 +289,26 @@ article p {
     padding: 2rem;
   }
 }
+
+/* 
+  Global legibility overrides for dark background rendering. 
+  Windows subpixel rendering (ClearType) can make font-weight 300 
+  appear jagged/blurry. Forcing 400 on paragraphs and lists fixes this.
+*/
+p, li, .social-intro, .social-desc, .post-summary, .focus-text, .service-desc, .contact-text, .blogger-setup-hint {
+  font-weight: 400 !important;
+  text-rendering: optimizeLegibility;
+}
+
+/* Smooth entry fade-in for main content on page load */
+main {
+  animation: mainFadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes mainFadeIn {
+  from { opacity: 0; transform: scale(0.99); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+
 
