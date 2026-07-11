@@ -420,30 +420,34 @@
 			<!-- Singing Bowl Sliders -->
 			<div id="sliders-bowl" class="slider-group" style="display: none;">
 				<div class="control-group">
-					<label>介質環境 (Medium):</label>
-					<select id="param-b-medium" class="control-select">
-						<option value="water">水體共振 (Water Waves)</option>
-						<option value="sand">乾砂圖樣 (Chladni Sand)</option>
+					<label>傳播方向 (Direction):</label>
+					<select id="param-b-dir" class="control-select">
+						<option value="both">內外全向擴散 (Omni)</option>
+						<option value="out">向外擴散 (Outward)</option>
+						<option value="in">向內共鳴 (Inward)</option>
 					</select>
 				</div>
 				<div class="control-group">
 					<label>頌缽尺寸 (Bowl Size):</label>
 					<select id="param-b-size" class="control-select">
-						<option value="large">大型低音缽 (Large Low Pitch)</option>
-						<option value="small">小型高音缽 (Small High Pitch)</option>
+						<option value="large">大型低音缽 (Large / Low)</option>
+						<option value="small">小型高音缽 (Small / High)</option>
 					</select>
 				</div>
 				<div class="control-group">
-					<label>共振波數 (Mode - N): <span id="val-b-mode">4</span></label>
-					<input type="range" id="param-b-mode" min="2" max="8" step="2" value="4">
-				</div>
-				<div class="control-group">
-					<label>擦缽能量 (Vibration): <span id="val-b-amp">12</span></label>
-					<input type="range" id="param-b-amp" min="2" max="30" step="1" value="12">
+					<label>激發方式 (Action):</label>
+					<select id="param-b-action" class="control-select">
+						<option value="rub">磨缽共振 (Continuous Rub)</option>
+						<option value="strike">敲擊瞬態 (Transient Hit)</option>
+					</select>
 				</div>
 				<div class="control-group">
 					<label>聲波頻率 (Frequency): <span id="val-b-freq">0.05</span></label>
-					<input type="range" id="param-b-freq" min="0.01" max="0.12" step="0.01" value="0.05">
+					<input type="range" id="param-b-freq" min="0.02" max="0.10" step="0.01" value="0.05">
+				</div>
+				<div class="control-group">
+					<label>聲波能量 (Energy): <span id="val-b-amp">12</span></label>
+					<input type="range" id="param-b-amp" min="2" max="30" step="1" value="12">
 				</div>
 			</div>
 
@@ -519,14 +523,14 @@
 					]
 				},
 				bowl: {
-					title: "頌缽聲波與克拉尼幾何共振",
-					focus: "本模型探討西藏頌缽（Singing Bowl）在敲擊與摩擦（Rubbing）激發共振時，缽體內介質（水體或沙粒）所產生的法拉第不穩定性與克拉尼（Chladni）駐波圖樣。",
-					principle: "當缽緣被持續摩擦時，能量被導入缽壁並激發彎曲振動模式。這會引發缽內流體介質產生法拉第波（Faraday Waves, 1831）。在穩定共振下，缽壁振動具有固定數量的節點（Nodes）與反節點（Antinodes）。粒子會從強烈震動的反節點，被推擠遷移至零震動的節點線上，形成對稱的二維共振幾何曼陀羅。",
-					guide: "【介質環境】可選擇水體共振（動態波紋）或乾砂圖樣（粒子凝聚）；【頌缽尺寸】大缽產生大振幅、慢頻率的巨型粒子；小缽產生高頻精細粒子；【共振波數】改變共振節點數（Mode-N）；用滑鼠沿著圓環邊緣快速且規律地「摩擦」畫圓，可以親自激發對稱的曼陀羅沙粒軌跡。",
-					why: "許多人透過頌缽來進行聲音療癒。本模型從聲學與物理流体力學的角度，證實了特定的「音頻」具備實體物理力量，能將雜亂無序的物質重組成高度和諧的幾何結構。",
+					title: "頌缽聲波與聲波粒子傳播演示",
+					focus: "本模型模擬頌缽（Singing Bowl）發出聲響時，聲學彈性聲波（Acoustic Soundwaves）在缽體周圍空氣及內部空間的「壓縮與膨脹（縱波/壓縮波）」傳播形態。",
+					principle: "頌缽發聲是缽壁物理機械振動推擠周圍空氣的過程。當我們敲擊或摩擦缽緣時，缽壁的彈性形變會引發空氣分子的疏密變化。由於聲波屬於縱波（Longitudinal Wave），粒子在傳播方向上進行局部位移震盪，進而形成明暗相間的「壓縮帶」與「稀疏帶」向外擴散。大缽產生較大、波長較長、震頻較低的宏觀粒子聲波；小缽產生高頻、精細且傳播敏捷的細緻波紋。",
+					guide: "【傳播方向】可切換為向外擴散、向內共鳴或內外全向擴散；【頌缽尺寸】大缽產生慢速低頻的粗粒子波，小缽產生高頻細密粒子波；【激發方式】選擇磨缽共振（持續發出旋轉聲波，需滑鼠在圈外畫圓）或敲擊瞬態（在圈內點擊即可發射出環狀擴散聲波）。",
+					why: "一般人在聆聽頌缽時，往往只能「聽見」聲音，卻無法想像聲波在空間中的實體形態。本模擬將無形的空氣震動「粒子化」，讓觀賞者能以視覺直觀看見聲波如何從缽壁擴散、在缽內聚集共鳴，理解聲音共振的立體物理形態。",
 					references: [
-						"Faraday, M. (1831). On a peculiar class of acoustical figures. Phil. Trans. R. Soc. (法拉第駐波不穩定性理論)",
-						"Terwagne, D., & Bush, J. W. (2011). Tibetan singing bowls. American Journal of Physics. (頌缽共振與液滴懸浮之流體力學考究)"
+						"Faraday, M. (1831). On a peculiar class of acoustical figures. Phil. Trans. R. Soc. (聲學幾何共振奠基研究)",
+						"Terwagne, D., & Bush, J. W. (2011). Tibetan singing bowls. American Journal of Physics. (頌缽聲學與邊界震盪物理考究)"
 					]
 				},
 				drum: {
@@ -555,7 +559,7 @@
 
 			// Initialize Grid & Particle Stores
 			let gridPoints = [];
-			let cymaticsParticles = [];
+			let soundWaveParticles = []; // Singing Bowl Sound Wave Particles Store
 			let drumNodes = [];
 			let dmtParticles = [];
 
@@ -578,15 +582,14 @@
 			const vgMouse = document.getElementById('val-g-mouse');
 
 			// Singing Bowl Inputs
-			const pbMedium = document.getElementById('param-b-medium');
+			const pbDir = document.getElementById('param-b-dir');
 			const pbSize = document.getElementById('param-b-size');
-			const pbMode = document.getElementById('param-b-mode');
-			const pbAmp = document.getElementById('param-b-amp');
+			const pbAction = document.getElementById('param-b-action');
 			const pbFreq = document.getElementById('param-b-freq');
+			const pbAmp = document.getElementById('param-b-amp');
 
-			const vbMode = document.getElementById('val-b-mode');
-			const vbAmp = document.getElementById('val-b-amp');
 			const vbFreq = document.getElementById('val-b-freq');
+			const vbAmp = document.getElementById('val-b-amp');
 
 			// Frame Drum Inputs
 			const pdPower = document.getElementById('param-d-power');
@@ -616,9 +619,8 @@
 			pgC.addEventListener('input', (e) => { vgC.innerText = e.target.value; });
 			pgMouse.addEventListener('input', (e) => { vgMouse.innerText = e.target.value; });
 
-			pbMode.addEventListener('input', (e) => { vbMode.innerText = e.target.value; });
-			pbAmp.addEventListener('input', (e) => { vbAmp.innerText = e.target.value; });
 			pbFreq.addEventListener('input', (e) => { vbFreq.innerText = e.target.value; });
+			pbAmp.addEventListener('input', (e) => { vbAmp.innerText = e.target.value; });
 
 			pdPower.addEventListener('input', (e) => { vdPower.innerText = e.target.value; });
 			pdTension.addEventListener('input', (e) => { vdTension.innerText = e.target.value; });
@@ -630,9 +632,9 @@
 			pdmComp.addEventListener('input', (e) => { vdmComp.innerText = e.target.value; });
 			pdmGlow.addEventListener('input', (e) => { vdmGlow.innerText = e.target.value; });
 
-			// Dropdown select change triggers rebuild
-			pbMedium.addEventListener('change', () => { generateCymatics(); });
-			pbSize.addEventListener('change', () => { generateCymatics(); });
+			// Dropdown rebuild trigger
+			pbSize.addEventListener('change', () => { soundWaveParticles = []; });
+			pbDir.addEventListener('change', () => { soundWaveParticles = []; });
 
 			// Initial state generators
 			function generateGrid() {
@@ -643,24 +645,6 @@
 					for (let y = -1; y < rows; y++) {
 						gridPoints.push({ origX: x * 22, origY: y * 22 });
 					}
-				}
-			}
-
-			function generateCymatics() {
-				cymaticsParticles = [];
-				const size = pbSize.value;
-				const radiusLimit = Math.min(width, height) * (size === 'large' ? 0.38 : 0.28);
-				const count = size === 'large' ? 1200 : 1800; // Small bowl = finer, more particles
-
-				for (let i = 0; i < count; i++) {
-					const angle = Math.random() * Math.PI * 2;
-					const r = Math.sqrt(Math.random()) * radiusLimit;
-					cymaticsParticles.push({
-						x: width / 2 + r * Math.cos(angle),
-						y: height / 2 + r * Math.sin(angle),
-						vx: 0,
-						vy: 0
-					});
 				}
 			}
 
@@ -691,10 +675,9 @@
 
 			function generateDmt() {
 				dmtParticles = [];
-				// Large count for full screen visual richness
 				for (let i = 0; i < 900; i++) {
 					dmtParticles.push({
-						r: Math.random() * Math.max(width, height) * 0.75, // Full screen expansion
+						r: Math.random() * Math.max(width, height) * 0.75, // Full screen
 						theta: Math.random() * Math.PI * 2,
 						speed: 0.4 + Math.random() * 1.6,
 						alpha: 0.1 + Math.random() * 0.7,
@@ -705,7 +688,6 @@
 
 			// Run all initializations
 			generateGrid();
-			generateCymatics();
 			generateDrum();
 			generateDmt();
 
@@ -714,7 +696,6 @@
 				width = canvas.width = window.innerWidth;
 				height = canvas.height = window.innerHeight;
 				generateGrid();
-				generateCymatics();
 				generateDrum();
 				generateDmt();
 			});
@@ -751,8 +732,7 @@
 				}
 			});
 
-			// Transient sound impact trigger (Striking)
-			let cymaticsStrikeIntensity = 0;
+			// Handle strikes / knocks
 			function handleStrike(x, y) {
 				const cx = width / 2;
 				const cy = height / 2;
@@ -772,15 +752,30 @@
 						}
 					});
 				} else if (currentTab === 'bowl') {
-					// Strike impact for Cymatics: transient shock wave pushing sand/water outward
+					// Strike Singing Bowl: emit a massive expanding wave of sound particles
+					const bAction = pbAction.value;
+					const bSize = pbSize.value;
+					const bAmp = parseFloat(pbAmp.value);
+					const bowlRadius = Math.min(width, height) * (bSize === 'large' ? 0.38 : 0.28);
+					
 					const dx = x - cx;
 					const dy = y - cy;
 					const dist = Math.sqrt(dx * dx + dy * dy);
-					const size = pbSize.value;
-					const bowlRadius = Math.min(width, height) * (size === 'large' ? 0.38 : 0.28);
 
-					if (dist < bowlRadius) {
-						cymaticsStrikeIntensity = 25.0; // Trigger impulse
+					// Strike inside the bowl
+					if (bAction === 'strike' && dist < bowlRadius) {
+						// Spawn 350 particles in a concentric ring representing the impact shockwave
+						for (let i = 0; i < 380; i++) {
+							const angle = (i / 380) * Math.PI * 2;
+							soundWaveParticles.push({
+								angle: angle,
+								distTraveled: 0,
+								speed: 2.5 + Math.random() * 1.5,
+								amplitude: bAmp * 1.5,
+								opacity: 1.0,
+								direction: 'both' // Hitting propagates both inward and outward
+							});
+						}
 					}
 				}
 			}
@@ -891,113 +886,112 @@
 				ctx.shadowBlur = 0;
 			}
 
-			// 2. SINGING BOWL (CYMATICS)
+			// 2. SINGING BOWL SOUND WAVE PROPAGATION (縱波/壓縮波粒子可視化)
 			function drawSingingBowl(cx, cy) {
-				const bMedium = pbMedium.value;
+				const bDir = pbDir.value;
 				const bSize = pbSize.value;
-				const bMode = parseInt(pbMode.value);
-				const bAmp = parseFloat(pbAmp.value);
+				const bAction = pbAction.value;
 				const bFreq = parseFloat(pbFreq.value);
+				const bAmp = parseFloat(pbAmp.value);
 
 				const bowlRadius = Math.min(width, height) * (bSize === 'large' ? 0.38 : 0.28);
-				const particleRadius = bSize === 'large' ? 1.8 : 0.9;
+				const particleRadius = bSize === 'large' ? 1.8 : 0.95;
 
-				// Draw Bowl Rim
-				ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
-				ctx.lineWidth = 2;
-				ctx.beginPath();
-				ctx.arc(cx, cy, bowlRadius, 0, Math.PI * 2);
-				ctx.stroke();
-
-				// Rubbing collision detect
+				// Rubbing rim trigger calculations
 				const mdx = mouseX - cx;
 				const mdy = mouseY - cy;
 				const mdist = Math.sqrt(mdx * mdx + mdy * mdy);
 				const isNearRim = mouseActive && Math.abs(mdist - bowlRadius) < 55;
-				const energyForce = isNearRim ? 1.0 : 0.05;
+				const energyFactor = isNearRim ? 1.0 : 0.05;
 
-				// Decay strike impulse slowly
-				if (cymaticsStrikeIntensity > 0.1) {
-					cymaticsStrikeIntensity *= 0.96;
-				} else {
-					cymaticsStrikeIntensity = 0;
+				// Rubbing action: emit sound particles continuously from the rub angle location
+				if (bAction === 'rub' && isNearRim) {
+					const rubAngle = Math.atan2(mdy, mdx);
+					
+					// Emit sound waves pointing outward or inward
+					// We spawn particles near the rub angle with small distribution
+					const spawnCount = bSize === 'large' ? 4 : 8;
+					for (let i = 0; i < spawnCount; i++) {
+						const angle = rubAngle + (Math.random() - 0.5) * 0.4;
+						const dir = bDir; // 'both', 'out', 'in'
+						soundWaveParticles.push({
+							angle: angle,
+							distTraveled: 0,
+							speed: 1.5 + Math.random() * 1.5,
+							amplitude: bAmp * 1.1,
+							opacity: 0.9,
+							direction: dir === 'both' ? (Math.random() > 0.5 ? 'out' : 'in') : dir
+						});
+					}
 				}
 
-				// Update particles
-				cymaticsParticles.forEach(p => {
-					const dx = p.x - cx;
-					const dy = p.y - cy;
-					const dist = Math.sqrt(dx * dx + dy * dy);
-					const theta = Math.atan2(dy, dx);
+				// Render vibrating bowl rim
+				// Quadrupole flex vibration shape for the bowl rim: expands/contracts
+				const flexMode = 4; // Fundamental mode for singing bowl deformation
+				const flexAmp = isNearRim ? 6 : 1.5;
+				
+				ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+				ctx.lineWidth = 2.5;
+				ctx.beginPath();
+				
+				for (let a = 0; a <= 360; a += 2) {
+					const angle = (a * Math.PI) / 180;
+					// Bowl rim flex deformation radius offset
+					const flexOffset = flexAmp * Math.sin(flexMode * angle) * Math.sin(t * bFreq * Math.PI * 2);
+					const r = bowlRadius + flexOffset;
+					const px = cx + r * Math.cos(angle);
+					const py = cy + r * Math.sin(angle);
+					if (a === 0) ctx.moveTo(px, py);
+					else ctx.lineTo(px, py);
+				}
+				ctx.closePath();
+				ctx.stroke();
 
-					// Dynamic vibration pattern inside the bowl: standing wave
-					const vibrationOffset = Math.sin(bMode * theta) * Math.sin(t * bFreq * Math.PI * 2);
-					const forceMag = bAmp * vibrationOffset * energyForce;
-
-					// Accelerations
-					const fTheta = -bMode * Math.cos(bMode * theta) * Math.sin(t * bFreq * Math.PI * 2) * forceMag * 0.012;
-					const fRadial = Math.sin(bMode * theta) * forceMag * 0.01;
-
-					// Base physics push force vectors
-					let pushX = -fTheta * Math.sin(theta) + fRadial * Math.cos(theta);
-					let pushY = fTheta * Math.cos(theta) + fRadial * Math.sin(theta);
-
-					// Medium environment differences
-					if (bMedium === 'water') {
-						// Fluid waves: add sinusoidal wave fluctuation & vortex drifts
-						const waveFactor = Math.sin(dist * 0.08 - t * 0.15) * 0.3;
-						pushX += Math.cos(theta) * waveFactor;
-						pushY += Math.sin(theta) * waveFactor;
+				// Update and Draw Soundwave particles (Longitudinal wave representation)
+				for (let i = soundWaveParticles.length - 1; i >= 0; i--) {
+					const p = soundWaveParticles[i];
+					
+					// Move propagation distance
+					if (p.direction === 'out') {
+						p.distTraveled += p.speed;
+					} else {
+						p.distTraveled += p.speed; // Moving inward
 					}
 
-					// Apply Strike transient shockwave (outward propagation)
-					if (cymaticsStrikeIntensity > 0) {
-						// Ring impulse push
-						const strikeWave = Math.sin(dist * 0.1 - t * 0.8) * cymaticsStrikeIntensity * 0.08;
-						pushX += Math.cos(theta) * strikeWave;
-						pushY += Math.sin(theta) * strikeWave;
+					// Decay opacity over age
+					p.opacity -= 0.008;
+
+					// Check boundaries
+					const currentDist = p.direction === 'out' ? bowlRadius + p.distTraveled : bowlRadius - p.distTraveled;
+					
+					// Remove faded or out-of-screen particles
+					if (p.opacity <= 0 || currentDist < 0 || currentDist > Math.max(width, height) * 0.75) {
+						soundWaveParticles.splice(i, 1);
+						continue;
 					}
 
-					// Update velocities
-					p.vx += pushX;
-					p.vy += pushY;
+					// Longitudinal wave compression oscillation offset
+					// Sound is a compression wave; particles vibrate forward and backward along wave path direction
+					const waveNumber = bSize === 'large' ? 0.08 : 0.16; // Frequency of compression bands
+					const waveOffset = p.amplitude * Math.sin(p.distTraveled * waveNumber - t * bFreq * 10);
 
-					// Medium viscosity drag
-					const drag = bMedium === 'water' ? 0.025 : 0.06; // Water flows more, Sand settles quickly
-					p.vx *= (1 - drag);
-					p.vy *= (1 - drag);
+					// Render coordinates
+					const actualRadius = currentDist + waveOffset;
+					const renderX = cx + actualRadius * Math.cos(p.angle);
+					const renderY = cy + actualRadius * Math.sin(p.angle);
 
-					// Update position
-					p.x += p.vx;
-					p.y += p.vy;
-
-					// Keep inside container rim
-					const newD = Math.sqrt((p.x - cx) ** 2 + (p.y - cy) ** 2);
-					if (newD > bowlRadius - 3) {
-						const angle = Math.atan2(p.y - cy, p.x - cx);
-						p.x = cx + (bowlRadius - 4) * Math.cos(angle);
-						p.y = cy + (bowlRadius - 4) * Math.sin(angle);
-						p.vx *= -0.15;
-						p.vy *= -0.15;
-					}
-
-					// Draw sand or water particle
-					let colorStr = 'rgba(213, 215, 219, 0.7)';
-					if (bMedium === 'water') {
-						// Luminous watery aqua/silver color
-						const flowSpeed = Math.sqrt(p.vx * p.vx + p.vy * p.vy);
-						const alpha = Math.max(0.2, Math.min(0.9, 0.3 + flowSpeed * 0.3));
-						colorStr = `rgba(224, 228, 235, ${alpha})`;
-					}
-
-					ctx.fillStyle = colorStr;
+					// Color shift based on compression state: compressed areas are brighter/whiter
+					const isCompressed = Math.sin(p.distTraveled * waveNumber - t * bFreq * 10) > 0.7;
+					const colorVal = isCompressed ? 255 : 200;
+					
+					ctx.fillStyle = `rgba(${colorVal}, ${colorVal + 5}, ${colorVal + 15}, ${p.opacity})`;
 					ctx.beginPath();
-					ctx.arc(p.x, p.y, particleRadius, 0, Math.PI * 2);
+					ctx.arc(renderX, renderY, particleRadius, 0, Math.PI * 2);
 					ctx.fill();
-				});
+				}
 
-				// Visual feedback indicator for rubbing rim
-				if (isNearRim) {
+				// Draw rubbing feedback circle
+				if (isNearRim && bAction === 'rub') {
 					ctx.beginPath();
 					ctx.arc(mouseX, mouseY, 15, 0, Math.PI * 2);
 					ctx.fillStyle = 'rgba(255, 255, 255, 0.12)';
@@ -1082,7 +1076,6 @@
 
 				dmtParticles.forEach(p => {
 					// Dynamic vector flow field coordinates
-					// Angle direction depends on radius distance and rotational symmetry theta
 					const angle = dmComp * (p.r * 0.004) + Math.sin(p.theta * dmSym) + t * 0.005;
 					
 					// Move along flow field vectors
@@ -1099,13 +1092,6 @@
 					let mOffsetX = 0;
 					let mOffsetY = 0;
 					if (mouseActive) {
-						// Calculate polar coordinates from mouse position
-						const mdx = mouseX - cx;
-						const mdy = mouseY - cy;
-						const mDist = Math.sqrt(mdx * mdx + mdy * mdy);
-						const mTheta = Math.atan2(mdy, mdx);
-						
-						// Warp flow towards mouse locally
 						const px = p.r * Math.cos(p.theta);
 						const py = p.r * Math.sin(p.theta);
 						const pdx = mouseX - (cx + px);
