@@ -15,6 +15,10 @@
     {
       "label": "聯絡 / CONTACT",
       "href": "/contact"
+    },
+    {
+      "label": "演示 / DEMO",
+      "href": "/gravity-wave"
     }
   ]
 }
