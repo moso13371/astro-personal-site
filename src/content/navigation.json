@@ -1,8 +1,12 @@
 {
   "links": [
     {
-      "label": "關於 ABOUT",
+      "label": "首頁 HOME",
       "href": "/"
+    },
+    {
+      "label": "關於 ABOUT",
+      "href": "/about"
     },
     {
       "label": "社群 SOCIAL",
