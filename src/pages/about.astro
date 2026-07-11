@@ -126,7 +126,7 @@ const timeline = aboutData.timeline || [];
 		font-size: 2.0rem;
 		font-weight: 300;
 		letter-spacing: 2px;
-		color: #ffffff;
+		color: var(--text-color); /* Strict 2-tone */
 		margin-top: 0;
 		margin-bottom: 1.2rem;
 	}
@@ -200,16 +200,16 @@ const timeline = aboutData.timeline || [];
 	}
 
 	.background-title {
-		font-family: var(--font-serif); /* Forced Serif for academic consistency */
+		font-family: var(--font-serif);
 		font-size: 1.05rem;
 		font-weight: 400;
-		color: #ffffff;
+		color: var(--text-color); /* Strict 2-tone */
 		line-height: 1.4;
 	}
 
 	.background-role {
 		font-size: 0.92rem;
-		color: var(--accent-color);
+		color: var(--text-color); /* Strict 2-tone */
 		font-weight: 400;
 		margin-left: 0.4rem;
 	}
@@ -253,26 +253,25 @@ const timeline = aboutData.timeline || [];
 	}
 
 	.domain-category {
-		font-family: var(--font-serif); /* Explicitly forced Serif for academic standards */
-		font-size: 1.22rem; /* Slightly larger and highlighted */
+		font-family: var(--font-serif);
+		font-size: 1.22rem;
 		font-weight: 400;
 		margin: 0;
-		color: #ffffff; /* Bright Highlighted White */
+		color: var(--text-color); /* Strict 2-tone */
 		letter-spacing: 1.5px;
 	}
 
 	.domain-category-en {
 		font-size: 0.72rem;
-		color: var(--accent-color); /* Highlighted brighter steel gray */
+		color: var(--text-muted); /* Strict 2-tone */
 		text-transform: uppercase;
 		letter-spacing: 1px;
 		margin-top: 0.3rem;
-		opacity: 0.95;
 	}
 
 	.domain-summary {
 		font-size: 0.95rem;
-		color: rgba(255, 255, 255, 0.88); /* Highlighted brighter readable white */
+		color: var(--text-color); /* Strict 2-tone */
 		padding-left: 0;
 		margin: 0.2rem 0 1.2rem 0;
 		line-height: 1.75;
@@ -292,19 +291,20 @@ const timeline = aboutData.timeline || [];
 	}
 
 	.domain-item-text {
-		color: rgba(255, 255, 255, 0.52); /* Muted gray to create contrast with the highlighted summary */
+		color: var(--text-muted); /* Strict 2-tone */
 		transition: color 0.3s ease;
 	}
 
 	.domain-card:hover .domain-item-text {
-		color: rgba(255, 255, 255, 0.78); /* Subtle light highlight on hover */
+		color: var(--text-color); /* Hover shifts to primary color */
 	}
 
 	.domain-item-separator {
-		color: rgba(255, 255, 255, 0.22); /* Muted separator dot */
+		color: var(--text-muted);
 		margin: 0 0.8rem;
 		font-weight: 300;
 		display: inline-block;
+		opacity: 0.4;
 	}
 
 	/* Timeline Styling */
@@ -350,7 +350,7 @@ const timeline = aboutData.timeline || [];
 		font-family: var(--font-sans);
 		font-size: 1.05rem;
 		font-weight: 500;
-		color: var(--accent-color);
+		color: var(--text-color); /* Strict 2-tone */
 		width: 50px;
 		flex-shrink: 0;
 		padding-left: 15px;
@@ -362,17 +362,17 @@ const timeline = aboutData.timeline || [];
 	}
 
 	.timeline-title {
-		font-family: var(--font-serif); /* Forced Serif */
+		font-family: var(--font-serif);
 		font-size: 1.05rem;
 		font-weight: 400;
 		margin: 0 0 0.5rem 0;
-		color: #ffffff;
+		color: var(--text-color); /* Strict 2-tone */
 		line-height: 1.4;
 	}
 
 	.timeline-desc {
 		font-size: 0.92rem;
-		color: var(--text-muted);
+		color: var(--text-muted); /* Strict 2-tone */
 		line-height: 1.7;
 		margin: 0;
 	}

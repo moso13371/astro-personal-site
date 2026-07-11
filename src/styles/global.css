@@ -1,15 +1,15 @@
 :root {
   --bg-color: #000000;       /* Solid pitch black for immersive depth */
-  --text-color: #b8bac0;     /* Soft plaster/cement white (dimmed for OLED eye comfort) */
-  --text-muted: #787c85;     /* Warm weathered concrete gray */
-  --accent-color: #c0c4cc;   /* Clean concrete/steel gray */
-  --accent-hover: #ffffff;   /* Pure crisp white */
+  --text-color: #c8cad0;     /* Compromise light gray-white (comfortable on mobile, clear on desktop) */
+  --text-muted: #7c8089;     /* Compromise muted concrete gray */
+  --accent-color: #c8cad0;   /* Matches primary text color for 2-tone simplicity */
+  --accent-hover: #ffffff;   /* Pure crisp white for interactive hovers */
   --border-color: #202225;   /* Concrete joint line */
   --border-hover: #32353a;   
   --font-serif: "Times New Roman", Times, "Noto Serif TC", "BiauKai", serif; /* Academic Standard */
   --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --selection-bg: #222428;
-  --selection-color: #b8bac0;
+  --selection-color: #c8cad0;
 }
 
 ::selection {
