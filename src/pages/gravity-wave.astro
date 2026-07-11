@@ -1,0 +1,266 @@
+---
+// src/pages/gravity-wave.astro
+---
+
+<!doctype html>
+<html lang="zh-TW">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>重力波與時空漣漪演示 | WONGLING</title>
+		<!-- Google Fonts: Inter and Noto Serif TC -->
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400&family=Noto+Serif+TC:wght@300;400&display=swap" rel="stylesheet">
+		<style>
+			body, html {
+				margin: 0;
+				padding: 0;
+				width: 100%;
+				height: 100%;
+				overflow: hidden;
+				background-color: #000000;
+				font-family: 'Inter', 'Noto Serif TC', sans-serif;
+				color: #ffffff;
+			}
+
+			#gw-canvas {
+				display: block;
+				width: 100vw;
+				height: 100vh;
+				z-index: 1;
+				position: absolute;
+				top: 0;
+				left: 0;
+			}
+
+			.overlay {
+				position: absolute;
+				z-index: 10;
+				pointer-events: none;
+				width: 100%;
+				height: 100%;
+				display: flex;
+				flex-direction: column;
+				justify-content: space-between;
+				box-sizing: border-box;
+				padding: 2.5rem;
+			}
+
+			.back-btn {
+				pointer-events: auto;
+				color: rgba(255, 255, 255, 0.5);
+				text-decoration: none;
+				font-size: 0.85rem;
+				letter-spacing: 2px;
+				text-transform: uppercase;
+				transition: all 0.4s ease;
+				display: inline-flex;
+				align-items: center;
+				gap: 0.5rem;
+				border: 1px solid rgba(255, 255, 255, 0.15);
+				padding: 8px 16px;
+				background: rgba(0, 0, 0, 0.4);
+				backdrop-filter: blur(5px);
+			}
+
+			.back-btn:hover {
+				color: #c0b099; /* Gold accent */
+				border-color: #c0b099;
+				transform: translateX(-3px);
+			}
+
+			.info-panel {
+				align-self: center;
+				text-align: center;
+				background: rgba(0, 0, 0, 0.5);
+				padding: 1.5rem 2.5rem;
+				border: 1px solid rgba(255, 255, 255, 0.05);
+				backdrop-filter: blur(8px);
+				margin-bottom: 2rem;
+				animation: fadeIn 2s ease;
+				max-width: 600px;
+			}
+
+			.info-title {
+				font-family: 'Noto Serif TC', serif;
+				font-size: 1.2rem;
+				font-weight: 300;
+				letter-spacing: 3px;
+				margin-bottom: 0.5rem;
+				color: #c0b099;
+			}
+
+			.info-desc {
+				font-size: 0.85rem;
+				color: rgba(255, 255, 255, 0.5);
+				line-height: 1.7;
+				letter-spacing: 1px;
+				margin: 0;
+			}
+
+			@keyframes fadeIn {
+				from { opacity: 0; transform: translateY(10px); }
+				to { opacity: 1; transform: translateY(0); }
+			}
+		</style>
+	</head>
+	<body>
+		<canvas id="gw-canvas"></canvas>
+
+		<div class="overlay">
+			<div>
+				<a href="/" class="back-btn">
+					&larr; 返回官網
+				</a>
+			</div>
+			
+			<div class="info-panel">
+				<h2 class="info-title">重力波與時空漣漪演示 (Gravitational Waves)</h2>
+				<p class="info-desc">
+					模擬二元雙黑洞 (Binary Black Holes) 互繞旋入時產生的四極矩引力輻射。<br>
+					時空網格點在波陣面通過時會產生壓縮與拉伸，展現引力波偏振的動態效應。
+				</p>
+			</div>
+		</div>
+
+		<script>
+			const canvas = document.getElementById('gw-canvas');
+			const ctx = canvas.getContext('2d');
+
+			let width = canvas.width = window.innerWidth;
+			let height = canvas.height = window.innerHeight;
+
+			// Handle Resize
+			window.addEventListener('resize', () => {
+				width = canvas.width = window.innerWidth;
+				height = canvas.height = window.innerHeight;
+				initGrid();
+			});
+
+			// Simulation parameters
+			let t = 0;
+			const c = 8; // Speed of wave propagation (pixels per frame)
+			const omega = 0.08; // Orbit frequency
+			const A0 = 40; // Base wave amplitude
+			let bhOrbitRadius = 35; // Initial black hole orbit radius
+
+			// Grid parameters
+			let gridPoints = [];
+			const spacingX = 22; // Grid point spacing
+			const spacingY = 22;
+
+			function initGrid() {
+				gridPoints = [];
+				const cols = Math.ceil(width / spacingX) + 2;
+				const rows = Math.ceil(height / spacingY) + 2;
+
+				for (let x = -1; x < cols; x++) {
+					for (let y = -1; y < rows; y++) {
+						gridPoints.push({
+							origX: x * spacingX,
+							origY: y * spacingY
+						});
+					}
+				}
+			}
+
+			initGrid();
+
+			// Animation loop
+			function animate() {
+				// Pure black background
+				ctx.fillStyle = '#000000';
+				ctx.fillRect(0, 0, width, height);
+
+				const cx = width / 2;
+				const cy = height / 2;
+
+				// Update orbits of binary black holes
+				t += 1;
+				// Slowly decay orbit radius representing inspiral
+				const currentRadius = bhOrbitRadius * (0.8 + 0.2 * Math.sin(t * 0.005));
+				
+				const bh1X = cx + currentRadius * Math.cos(omega * t);
+				const bh1Y = cy + currentRadius * Math.sin(omega * t);
+				const bh2X = cx - currentRadius * Math.cos(omega * t);
+				const bh2Y = cy - currentRadius * Math.sin(omega * t);
+
+				// Draw spacetime grid
+				gridPoints.forEach(p => {
+					// Distance to center
+					const dx = p.origX - cx;
+					const dy = p.origY - cy;
+					const dist = Math.sqrt(dx * dx + dy * dy);
+
+					// Avoid division by zero
+					const d = Math.max(dist, 10);
+
+					// Angle of grid point from center
+					const theta = Math.atan2(dy, dx);
+
+					// Gravitational Wave strain calculation (spiral quadrupole radiation pattern)
+					// Wave phase depends on the distance (propagation delay) and direction (quadrupolar double frequency)
+					const phase = 2 * theta - 2 * omega * (t - d / c);
+					
+					// Amplitude decays with distance (1/r)
+					const amp = (A0 * 150) / (d + 100);
+
+					// Quadrupolar stretching and squeezing offsets
+					// Along the radial line: squeeze/stretch
+					const offsetStrength = amp * Math.cos(phase);
+					
+					// Stretch along X-polarization (h+), rotated by angle
+					const offsetX = offsetStrength * Math.cos(theta) * 0.4;
+					const offsetY = offsetStrength * Math.sin(theta) * 0.4;
+
+					// Actual rendered position
+					const renderX = p.origX + offsetX;
+					const renderY = p.origY + offsetY;
+
+					// Distance-based transparency
+					const alpha = Math.max(0.08, 0.75 - (d / (width * 0.65)));
+
+					// Grid particles (beige/gold style matching the website's wabi-sabi theme)
+					ctx.fillStyle = `rgba(192, 176, 153, ${alpha})`;
+					ctx.beginPath();
+					
+					// Make central particles slightly larger to represent higher metric tension
+					const radius = d < 120 ? 2 : 1.2;
+					ctx.arc(renderX, renderY, radius, 0, Math.PI * 2);
+					ctx.fill();
+
+					// Optional: Draw subtle connecting spacetime grid lines for nearby particles
+					// (Skipped here to keep the visual pure particle-based and minimal)
+				});
+
+				// Draw Binary Black Holes (Massive centers)
+				ctx.shadowBlur = 15;
+				ctx.shadowColor = 'rgba(192, 176, 153, 0.4)';
+				
+				ctx.fillStyle = 'rgba(0, 0, 0, 1)';
+				ctx.strokeStyle = 'rgba(192, 176, 153, 0.8)';
+				ctx.lineWidth = 1;
+
+				// BH 1
+				ctx.beginPath();
+				ctx.arc(bh1X, bh1Y, 5, 0, Math.PI * 2);
+				ctx.fill();
+				ctx.stroke();
+
+				// BH 2
+				ctx.beginPath();
+				ctx.arc(bh2X, bh2Y, 5, 0, Math.PI * 2);
+				ctx.fill();
+				ctx.stroke();
+
+				// Reset shadow for performance
+				ctx.shadowBlur = 0;
+
+				requestAnimationFrame(animate);
+			}
+
+			animate();
+		</script>
+	</body>
+</html>
