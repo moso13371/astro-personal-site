@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@astrojs/mdx": "^6.0.2",
+    "@astrojs/netlify": "^8.1.1",
     "@astrojs/react": "^5.0.1",
     "@astrojs/sitemap": "^3.7.3",
     "@astrojs/vercel": "^10.0.4",
@@ -20,6 +21,7 @@
     "@keystatic/core": "^0.5.50",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
+    "ajv": "^8.20.0",
     "astro": "^6.4.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
