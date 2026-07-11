@@ -11,7 +11,7 @@
 		<!-- Google Fonts: Inter and Noto Serif TC -->
 		<link rel="preconnect" href="https://fonts.googleapis.com">
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-		<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Noto+Serif+TC:wght@300;400&display=swap" rel="stylesheet">
+		<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Noto+Serif+TC:wght@300;400;600&display=swap" rel="stylesheet">
 		<style>
 			body, html {
 				margin: 0;
@@ -90,7 +90,7 @@
 				transform: translateX(-3px);
 			}
 
-			/* Sidebar / Bottom Tab Selection */
+			/* Sidebar / Left Tab Selection */
 			.tabs-container {
 				pointer-events: auto;
 				position: absolute;
@@ -99,7 +99,7 @@
 				display: flex;
 				flex-direction: column;
 				gap: 0.5rem;
-				background: rgba(15, 16, 18, 0.6);
+				background: rgba(15, 16, 18, 0.65);
 				border: 1px solid rgba(255, 255, 255, 0.05);
 				backdrop-filter: blur(15px);
 				-webkit-backdrop-filter: blur(15px);
@@ -114,7 +114,7 @@
 				color: rgba(255, 255, 255, 0.4);
 				padding: 12px 16px;
 				text-align: left;
-				font-size: 0.78rem;
+				font-size: 0.75rem;
 				font-weight: 400;
 				letter-spacing: 2px;
 				cursor: pointer;
@@ -143,8 +143,8 @@
 				top: 2rem;
 				right: 2rem;
 				z-index: 20;
-				width: 250px;
-				background: rgba(15, 16, 18, 0.7);
+				width: 260px;
+				background: rgba(15, 16, 18, 0.75);
 				border: 1px solid rgba(255, 255, 255, 0.08);
 				backdrop-filter: blur(15px);
 				-webkit-backdrop-filter: blur(15px);
@@ -207,35 +207,101 @@
 				transform: scale(1.4);
 			}
 
-			/* Info Panel */
+			.control-select {
+				background: rgba(10, 10, 10, 0.8);
+				border: 1px solid rgba(255, 255, 255, 0.15);
+				color: #ffffff;
+				font-size: 0.72rem;
+				padding: 6px;
+				outline: none;
+				font-family: inherit;
+				cursor: pointer;
+				letter-spacing: 1px;
+			}
+
+			.control-select option {
+				background: #111215;
+				color: #ffffff;
+			}
+
+			/* Detailed Info Panel */
 			.info-panel {
+				pointer-events: auto;
 				align-self: flex-start;
 				text-align: left;
-				background: rgba(10, 10, 10, 0.6);
-				padding: 1.5rem 2rem;
+				background: rgba(10, 10, 10, 0.7);
 				border: 1px solid rgba(255, 255, 255, 0.08);
-				backdrop-filter: blur(10px);
-				-webkit-backdrop-filter: blur(10px);
+				backdrop-filter: blur(15px);
+				-webkit-backdrop-filter: blur(15px);
 				max-width: 480px;
+				max-height: 52vh;
 				margin-top: auto;
+				padding: 1.8rem;
+				box-sizing: border-box;
+				display: flex;
+				flex-direction: column;
+				z-index: 20;
 			}
 
 			.info-title {
 				font-family: 'Noto Serif TC', serif;
 				font-size: 1.15rem;
-				font-weight: 300;
+				font-weight: 500;
 				letter-spacing: 2px;
 				margin-top: 0;
-				margin-bottom: 0.5rem;
+				margin-bottom: 0.8rem;
 				color: #ffffff;
+				border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+				padding-bottom: 0.5rem;
 			}
 
-			.info-desc {
+			.info-body {
+				overflow-y: auto;
+				padding-right: 0.5rem;
+				display: flex;
+				flex-direction: column;
+				gap: 1rem;
+			}
+
+			/* Scrollbar Styling */
+			.info-body::-webkit-scrollbar {
+				width: 3px;
+			}
+			.info-body::-webkit-scrollbar-track {
+				background: rgba(255, 255, 255, 0.02);
+			}
+			.info-body::-webkit-scrollbar-thumb {
+				background: rgba(255, 255, 255, 0.15);
+			}
+
+			.info-section-title {
 				font-size: 0.78rem;
+				font-weight: 600;
+				color: #c0c4cc;
+				margin-bottom: 0.3rem;
+				letter-spacing: 1px;
+				text-transform: uppercase;
+			}
+
+			.info-text {
+				font-size: 0.75rem;
 				color: rgba(255, 255, 255, 0.55);
 				line-height: 1.7;
-				letter-spacing: 1px;
+				letter-spacing: 0.8px;
 				margin: 0;
+			}
+
+			.info-references {
+				border-top: 1px dashed rgba(255, 255, 255, 0.1);
+				padding-top: 0.6rem;
+				margin-top: 0.4rem;
+			}
+
+			.reference-item {
+				font-size: 0.7rem;
+				color: rgba(255, 255, 255, 0.4);
+				margin: 0 0 0.3rem 0;
+				line-height: 1.5;
 			}
 
 			/* Responsive styling */
@@ -299,11 +365,31 @@
 				<button class="tab-button" data-tab="dmt">DMT 意識流動</button>
 			</div>
 			
+			<!-- Academic & Interactive Info Panel -->
 			<div class="info-panel">
 				<h2 id="display-title" class="info-title">重力波與時空幾何演示</h2>
-				<p id="display-desc" class="info-desc">
-					模擬二元黑洞互繞產生的時空漣漪。您可以拖曳或點擊滑鼠，在時空中放置一個重力干擾源，觀察引力透鏡與時空幾何的局部扭曲。
-				</p>
+				<div class="info-body">
+					<div>
+						<div class="info-section-title">科學探索 (Scientific Focus)</div>
+						<p id="desc-focus" class="info-text"></p>
+					</div>
+					<div>
+						<div class="info-section-title">物理共振原理 (Physics Principles)</div>
+						<p id="desc-principle" class="info-text"></p>
+					</div>
+					<div>
+						<div class="info-section-title">互動操作指南 (Interaction Guide)</div>
+						<p id="desc-guide" class="info-text"></p>
+					</div>
+					<div>
+						<div class="info-section-title">演示推薦理由 (Why Recommend)</div>
+						<p id="desc-why" class="info-text"></p>
+					</div>
+					<div class="info-references">
+						<div class="info-section-title">權威科學文獻 (References)</div>
+						<div id="desc-references"></div>
+					</div>
+				</div>
 			</div>
 		</div>
 
@@ -334,20 +420,30 @@
 			<!-- Singing Bowl Sliders -->
 			<div id="sliders-bowl" class="slider-group" style="display: none;">
 				<div class="control-group">
+					<label>介質環境 (Medium):</label>
+					<select id="param-b-medium" class="control-select">
+						<option value="water">水體共振 (Water Waves)</option>
+						<option value="sand">乾砂圖樣 (Chladni Sand)</option>
+					</select>
+				</div>
+				<div class="control-group">
+					<label>頌缽尺寸 (Bowl Size):</label>
+					<select id="param-b-size" class="control-select">
+						<option value="large">大型低音缽 (Large Low Pitch)</option>
+						<option value="small">小型高音缽 (Small High Pitch)</option>
+					</select>
+				</div>
+				<div class="control-group">
 					<label>共振波數 (Mode - N): <span id="val-b-mode">4</span></label>
 					<input type="range" id="param-b-mode" min="2" max="8" step="2" value="4">
 				</div>
 				<div class="control-group">
-					<label>擦缽振幅 (Vibration): <span id="val-b-amp">12</span></label>
+					<label>擦缽能量 (Vibration): <span id="val-b-amp">12</span></label>
 					<input type="range" id="param-b-amp" min="2" max="30" step="1" value="12">
 				</div>
 				<div class="control-group">
 					<label>聲波頻率 (Frequency): <span id="val-b-freq">0.05</span></label>
 					<input type="range" id="param-b-freq" min="0.01" max="0.12" step="0.01" value="0.05">
-				</div>
-				<div class="control-group">
-					<label>流體阻尼 (Damping): <span id="val-b-damp">0.02</span></label>
-					<input type="range" id="param-b-damp" min="0.005" max="0.08" step="0.005" value="0.02">
 				</div>
 			</div>
 
@@ -409,23 +505,51 @@
 			let mouseY = height / 2;
 			let mouseActive = false;
 
-			// Track active Tab Description Info
+			// Academic descriptions
 			const tabDescriptions = {
 				gravity: {
 					title: "重力波與時空幾何演示",
-					desc: "模擬二元黑洞互繞產生的時空漣漪。您可以拖曳或點擊滑鼠，在時空中放置一個重力干擾源，觀察引力透鏡與時空幾何的局部扭曲。"
+					focus: "本模型模擬大質量天體（如雙黑洞 Coalescing Binary Black Holes）互繞合併時，在二維時空網格中產生的引力輻射（Gravitational Radiation）。",
+					principle: "根據愛因斯坦廣義相對論（General Relativity, 1915），大質量天體的加速運動會引發時空度規（Spacetime Metric）的波動。這種波動以光速傳播，導致空間在一個方向拉伸時，在垂直方向壓縮（即四極矩 h+ 與 hx 偏振）。本模擬可視化了螺旋狀傳播的波動如何在空間粒子中引起位移。",
+					guide: "調整【繞行頻率】改變雙引力源互繞的速度，進而影響引力波頻率；【波形振幅】調節波幅強度；【波形波速】調節波長傳播延遲。移動滑鼠可以在特定網格點施加滑鼠引力扭曲，模擬局部重力透鏡效應。",
+					why: "引力波是極其微弱且抽象的時空漣漪。透過本模型，讀者能將無形的廣義相對論場方程，轉化為直觀的幾何波動知覺，了解質量與時空曲率之間的互動關係。",
+					references: [
+						"Einstein, A. (1916). Näherungsweise Integration der Feldgleichungen der Gravitation. (廣義相對論場方程近似積分)",
+						"Abbott, B. P. et al. (LIGO). (2016). Observation of Gravitational Waves from a Binary Black Hole Merger. PRL. (引力波首次直接觀測實證)"
+					]
 				},
 				bowl: {
-					title: "頌缽聲波與克拉尼克幾何共振",
-					desc: "模擬頌缽在缽緣磨擦時激發出的法拉第駐波圖樣。移動滑鼠在圓環上磨擦，可以看見液面沙粒粒子在共振節點（Vibration Nodes）自主排成曼陀羅神聖幾何的過程。"
+					title: "頌缽聲波與克拉尼幾何共振",
+					focus: "本模型探討西藏頌缽（Singing Bowl）在敲擊與摩擦（Rubbing）激發共振時，缽體內介質（水體或沙粒）所產生的法拉第不穩定性與克拉尼（Chladni）駐波圖樣。",
+					principle: "當缽緣被持續摩擦時，能量被導入缽壁並激發彎曲振動模式。這會引發缽內流體介質產生法拉第波（Faraday Waves, 1831）。在穩定共振下，缽壁振動具有固定數量的節點（Nodes）與反節點（Antinodes）。粒子會從強烈震動的反節點，被推擠遷移至零震動的節點線上，形成對稱的二維共振幾何曼陀羅。",
+					guide: "【介質環境】可選擇水體共振（動態波紋）或乾砂圖樣（粒子凝聚）；【頌缽尺寸】大缽產生大振幅、慢頻率的巨型粒子；小缽產生高頻精細粒子；【共振波數】改變共振節點數（Mode-N）；用滑鼠沿著圓環邊緣快速且規律地「摩擦」畫圓，可以親自激發對稱的曼陀羅沙粒軌跡。",
+					why: "許多人透過頌缽來進行聲音療癒。本模型從聲學與物理流体力學的角度，證實了特定的「音頻」具備實體物理力量，能將雜亂無序的物質重組成高度和諧的幾何結構。",
+					references: [
+						"Faraday, M. (1831). On a peculiar class of acoustical figures. Phil. Trans. R. Soc. (法拉第駐波不穩定性理論)",
+						"Terwagne, D., & Bush, J. W. (2011). Tibetan singing bowls. American Journal of Physics. (頌缽共振與液滴懸浮之流體力學考究)"
+					]
 				},
 				drum: {
 					title: "框鼓共振與二維膜貝塞爾波",
-					desc: "以粒子網格模擬圓形鼓皮的三維震動形態。點擊鼓面任何位置可以「擊鼓」，引發衝擊波向邊緣擴散並反彈，展示框鼓基頻與諧音階高次模態 (Bessel harmonics)。"
+					focus: "本模型討論二維圓形鼓面皮膜（Membrane）受到敲擊時產生的彈性波動模式，以及張力、阻尼與聲學諧波（Harmonics）的震動形態。",
+					principle: "圓形膜震動遵循二維波動方程式，其在極坐標下的穩態解由貝塞爾函數（Bessel Functions）與餘弦函數決定。不同的點擊位置與敲擊力道，會激發出不同的振動模態 (n,m)。本模型使用斜角 3D 粒子格柵，將垂直於鼓面的 Z 軸位移放大投影，直觀呈現鼓皮如何將動能轉化為複雜的三維簡諧運動。",
+					guide: "點擊圓形鼓面皮膜的任何位置即可「擊鼓」，波紋將從點擊中心向外擴散，撞擊邊界並產生反射干涉；【鼓皮張力】調整皮膜拉力，拉力越大波動頻率越高、擴散越快；【共振模態】可切換不同的主動諧震頻率（如基本模態、偶極分裂模態）。",
+					why: "框鼓（Frame drum）在許多薩滿文化中被用作引導出神或療癒的工具。透過 3D 粒子皮膜模擬，我們得以解構複雜的擊鼓震動，展示樂器物理共鳴的動態美學。",
+					references: [
+						"Rayleigh, Lord (J. W. Strutt). (1877). The Theory of Sound. (波動力學與圓膜振動之貝塞爾函數經典分析)",
+						"Chladni, E. F. F. (1787). Entdeckungen über die Theorie des Klanges. (聲波幾何圖樣發現記錄)"
+					]
 				},
 				dmt: {
-					title: "DMT 意識流動與視覺幻覺形態",
-					desc: "模擬非常規意識狀態 (ASC) 下視皮層產生的萬花筒幻覺。粒子在大尺度旋轉對稱流場中流動。移動滑鼠可以引導流場的核心，調整滑動桿可開啟高維對稱幾何。"
+					title: "DMT 意識流動與視覺幻覺幾何",
+					focus: "本模型模擬在非常規意識狀態（ASC，如攝入內源性神經傳導物質 DMT）下，人類大腦視皮層（Visual Cortex）產生的高度對稱、流動且繽紛的幾何視覺幻相現象。",
+					principle: "根據 Bressloff 與 Cowan 的神經分岔理論（Neural Bifurcation Theory, 2001），當大腦受到神經遞質激發或阻斷時，初級視皮層（V1）的神經網絡會自發產生圖形不穩定性（Turing Instability），形成特定神經活化駐波。當這些皮層波動經過對數極坐標投射（Log-polar Map）映射到視網膜視野時，人體就會主觀感知到旋轉、放射狀的流動幾何曼陀羅與分形幻覺。",
+					guide: "滑鼠在全螢幕畫面上移動，會改變流體流動的核心中心，影響萬花筒對稱折疊的位置；【幾何對稱】調節旋轉對稱的軸數（3 至 12 軸）；【流動速度】控制粒子穿越高維向量場的速率；【維度複雜度】調整流場幾何起伏波數。",
+					why: "這項模擬將「神秘靈性體驗」或「幻覺」抽離迷信，展示了它們實際上是大腦初級視皮層在特定生理狀態下，神經幾何網絡自發性 Resonances（共振）所呈現的純數學物理圖像。",
+					references: [
+						"Bressloff, P. C., Cowan, J. D., et al. (2001). What Geometric Visual Hallucinations Tell Us about the Visual Cortex. Neural Computation. (大腦初級視皮層神經網格分岔幾何理論)",
+						"Turing, A. M. (1952). The Chemical Basis of Morphogenesis. (圖靈不穩定性與自發幾何圖案生成理論)"
+					]
 				}
 			};
 
@@ -448,22 +572,21 @@
 			const pgAmp = document.getElementById('param-g-amp');
 			const pgC = document.getElementById('param-g-c');
 			const pgMouse = document.getElementById('param-g-mouse');
-
 			const vgSpeed = document.getElementById('val-g-speed');
 			const vgAmp = document.getElementById('val-g-amp');
 			const vgC = document.getElementById('val-g-c');
 			const vgMouse = document.getElementById('val-g-mouse');
 
 			// Singing Bowl Inputs
+			const pbMedium = document.getElementById('param-b-medium');
+			const pbSize = document.getElementById('param-b-size');
 			const pbMode = document.getElementById('param-b-mode');
 			const pbAmp = document.getElementById('param-b-amp');
 			const pbFreq = document.getElementById('param-b-freq');
-			const pbDamp = document.getElementById('param-b-damp');
 
 			const vbMode = document.getElementById('val-b-mode');
 			const vbAmp = document.getElementById('val-b-amp');
 			const vbFreq = document.getElementById('val-b-freq');
-			const vbDamp = document.getElementById('val-b-damp');
 
 			// Frame Drum Inputs
 			const pdPower = document.getElementById('param-d-power');
@@ -487,7 +610,7 @@
 			const vdmComp = document.getElementById('val-dm-comp');
 			const vdmGlow = document.getElementById('val-dm-glow');
 
-			// Event listeners for bindings
+			// Dynamic value updates
 			pgSpeed.addEventListener('input', (e) => { vgSpeed.innerText = e.target.value; });
 			pgAmp.addEventListener('input', (e) => { vgAmp.innerText = e.target.value; });
 			pgC.addEventListener('input', (e) => { vgC.innerText = e.target.value; });
@@ -496,7 +619,6 @@
 			pbMode.addEventListener('input', (e) => { vbMode.innerText = e.target.value; });
 			pbAmp.addEventListener('input', (e) => { vbAmp.innerText = e.target.value; });
 			pbFreq.addEventListener('input', (e) => { vbFreq.innerText = e.target.value; });
-			pbDamp.addEventListener('input', (e) => { vbDamp.innerText = e.target.value; });
 
 			pdPower.addEventListener('input', (e) => { vdPower.innerText = e.target.value; });
 			pdTension.addEventListener('input', (e) => { vdTension.innerText = e.target.value; });
@@ -507,6 +629,10 @@
 			pdmSpeed.addEventListener('input', (e) => { vdmSpeed.innerText = e.target.value; });
 			pdmComp.addEventListener('input', (e) => { vdmComp.innerText = e.target.value; });
 			pdmGlow.addEventListener('input', (e) => { vdmGlow.innerText = e.target.value; });
+
+			// Dropdown select change triggers rebuild
+			pbMedium.addEventListener('change', () => { generateCymatics(); });
+			pbSize.addEventListener('change', () => { generateCymatics(); });
 
 			// Initial state generators
 			function generateGrid() {
@@ -522,9 +648,11 @@
 
 			function generateCymatics() {
 				cymaticsParticles = [];
-				const radiusLimit = Math.min(width, height) * 0.35;
-				// Scatter 1500 particles randomly in a circle
-				for (let i = 0; i < 1600; i++) {
+				const size = pbSize.value;
+				const radiusLimit = Math.min(width, height) * (size === 'large' ? 0.38 : 0.28);
+				const count = size === 'large' ? 1200 : 1800; // Small bowl = finer, more particles
+
+				for (let i = 0; i < count; i++) {
 					const angle = Math.random() * Math.PI * 2;
 					const r = Math.sqrt(Math.random()) * radiusLimit;
 					cymaticsParticles.push({
@@ -542,7 +670,6 @@
 				const cols = 35;
 				const rows = 35;
 
-				// Generate grid points that fit inside a circle
 				for (let x = -cols/2; x <= cols/2; x++) {
 					for (let y = -rows/2; y <= rows/2; y++) {
 						const px = x * (radius * 2 / cols);
@@ -554,8 +681,8 @@
 								y: py,
 								origX: px,
 								origY: py,
-								z: 0, // Vertical displacement
-								velocity: 0 // Velocity of vertical movement
+								z: 0, 
+								velocity: 0 
 							});
 						}
 					}
@@ -564,12 +691,13 @@
 
 			function generateDmt() {
 				dmtParticles = [];
-				for (let i = 0; i < 450; i++) {
+				// Large count for full screen visual richness
+				for (let i = 0; i < 900; i++) {
 					dmtParticles.push({
-						r: Math.random() * Math.min(width, height) * 0.5,
+						r: Math.random() * Math.max(width, height) * 0.75, // Full screen expansion
 						theta: Math.random() * Math.PI * 2,
-						speed: 0.5 + Math.random() * 1.5,
-						alpha: 0.1 + Math.random() * 0.6,
+						speed: 0.4 + Math.random() * 1.6,
+						alpha: 0.1 + Math.random() * 0.7,
 						colorIndex: Math.floor(Math.random() * 3)
 					});
 				}
@@ -588,6 +716,7 @@
 				generateGrid();
 				generateCymatics();
 				generateDrum();
+				generateDmt();
 			});
 
 			// Cursor Interactions
@@ -603,7 +732,6 @@
 				mouseActive = true;
 				handleStrike(e.clientX, e.clientY);
 			});
-			overlay.addEventListener('mouseup', () => {});
 
 			// Mobile touch interactions
 			overlay.addEventListener('touchmove', (e) => {
@@ -623,12 +751,13 @@
 				}
 			});
 
-			// Interactive action triggers
+			// Transient sound impact trigger (Striking)
+			let cymaticsStrikeIntensity = 0;
 			function handleStrike(x, y) {
+				const cx = width / 2;
+				const cy = height / 2;
+
 				if (currentTab === 'drum') {
-					// Excitation stroke on the drum skin
-					const cx = width / 2;
-					const cy = height / 2;
 					const dx = x - cx;
 					const dy = y - cy;
 					const strikePower = parseFloat(pdPower.value);
@@ -638,39 +767,66 @@
 						const ndy = node.y - dy;
 						const dist = Math.sqrt(ndx * ndx + ndy * ndy);
 						if (dist < 80) {
-							// Apply Gaussian impact force downwards/upwards
 							const force = Math.exp(-(dist * dist) / 1200) * strikePower;
 							node.velocity += force;
 						}
 					});
+				} else if (currentTab === 'bowl') {
+					// Strike impact for Cymatics: transient shock wave pushing sand/water outward
+					const dx = x - cx;
+					const dy = y - cy;
+					const dist = Math.sqrt(dx * dx + dy * dy);
+					const size = pbSize.value;
+					const bowlRadius = Math.min(width, height) * (size === 'large' ? 0.38 : 0.28);
+
+					if (dist < bowlRadius) {
+						cymaticsStrikeIntensity = 25.0; // Trigger impulse
+					}
 				}
 			}
+
+			// Update Text Info Panel Content
+			function updateInfoPanel(tabKey) {
+				const info = tabDescriptions[tabKey];
+				document.getElementById('display-title').innerText = info.title;
+				document.getElementById('desc-focus').innerText = info.focus;
+				document.getElementById('desc-principle').innerText = info.principle;
+				document.getElementById('desc-guide').innerText = info.guide;
+				document.getElementById('desc-why').innerText = info.why;
+
+				// Map references list
+				const refContainer = document.getElementById('desc-references');
+				refContainer.innerHTML = '';
+				info.references.forEach(ref => {
+					const p = document.createElement('p');
+					p.className = 'reference-item';
+					p.innerText = ref;
+					refContainer.appendChild(p);
+				});
+			}
+
+			// Initial Description Panel Render
+			updateInfoPanel('gravity');
 
 			// Tab Navigation switching logic
 			const tabButtons = document.querySelectorAll('.tab-button');
 			tabButtons.forEach(btn => {
 				btn.addEventListener('click', (e) => {
-					// Toggle active button style
 					tabButtons.forEach(b => b.classList.remove('active'));
 					btn.classList.add('active');
 
-					// Switch Tab ID
 					currentTab = btn.getAttribute('data-tab');
 
-					// Show correct slider group
 					Object.keys(sliders).forEach(key => {
 						sliders[key].style.display = key === currentTab ? 'block' : 'none';
 					});
 
-					// Update description panel
-					const descInfo = tabDescriptions[currentTab];
-					document.getElementById('display-title').innerText = descInfo.title;
-					document.getElementById('display-desc').innerText = descInfo.desc;
+					updateInfoPanel(currentTab);
 				});
 			});
 
 			// ----------------------------------------------------
-			// RENDERING LOOPS FOR EACH DEMO
+			// RENDERING MODULES
 			// ----------------------------------------------------
 
 			// 1. GRAVITY WAVES
@@ -737,38 +893,35 @@
 
 			// 2. SINGING BOWL (CYMATICS)
 			function drawSingingBowl(cx, cy) {
+				const bMedium = pbMedium.value;
+				const bSize = pbSize.value;
 				const bMode = parseInt(pbMode.value);
 				const bAmp = parseFloat(pbAmp.value);
 				const bFreq = parseFloat(pbFreq.value);
-				const bDamp = parseFloat(pbDamp.value);
 
-				const bowlRadius = Math.min(width, height) * 0.35;
+				const bowlRadius = Math.min(width, height) * (bSize === 'large' ? 0.38 : 0.28);
+				const particleRadius = bSize === 'large' ? 1.8 : 0.9;
 
-				// Draw Singing Bowl Rim
+				// Draw Bowl Rim
 				ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
 				ctx.lineWidth = 2;
 				ctx.beginPath();
 				ctx.arc(cx, cy, bowlRadius, 0, Math.PI * 2);
 				ctx.stroke();
 
-				// Draw Nodal resonance guidelines (faintly)
-				ctx.strokeStyle = 'rgba(255, 255, 255, 0.04)';
-				ctx.lineWidth = 1;
-				for (let i = 0; i < bMode * 2; i++) {
-					const angle = (i * Math.PI) / bMode;
-					ctx.beginPath();
-					ctx.moveTo(cx - bowlRadius * Math.cos(angle), cy - bowlRadius * Math.sin(angle));
-					ctx.lineTo(cx + bowlRadius * Math.cos(angle), cy + bowlRadius * Math.sin(angle));
-					ctx.stroke();
-				}
-
-				// Check if mouse is rubbing the rim
+				// Rubbing collision detect
 				const mdx = mouseX - cx;
 				const mdy = mouseY - cy;
 				const mdist = Math.sqrt(mdx * mdx + mdy * mdy);
-				// Is mouse near the rim?
-				const isRubbing = mouseActive && Math.abs(mdist - bowlRadius) < 55;
-				const inputForce = isRubbing ? 1.0 : 0.05;
+				const isNearRim = mouseActive && Math.abs(mdist - bowlRadius) < 55;
+				const energyForce = isNearRim ? 1.0 : 0.05;
+
+				// Decay strike impulse slowly
+				if (cymaticsStrikeIntensity > 0.1) {
+					cymaticsStrikeIntensity *= 0.96;
+				} else {
+					cymaticsStrikeIntensity = 0;
+				}
 
 				// Update particles
 				cymaticsParticles.forEach(p => {
@@ -778,52 +931,78 @@
 					const theta = Math.atan2(dy, dx);
 
 					// Dynamic vibration pattern inside the bowl: standing wave
-					// Vibration intensity varies with angle (sine pattern) and time (frequency)
 					const vibrationOffset = Math.sin(bMode * theta) * Math.sin(t * bFreq * Math.PI * 2);
-					const forceMag = bAmp * vibrationOffset * inputForce;
+					const forceMag = bAmp * vibrationOffset * energyForce;
 
-					// Force directs particles away from high-vibration antinodes towards low-vibration nodes
-					// Gradients of Chladni standing wave acceleration
-					// Accelerate along theta and radial directions
-					const fTheta = -bMode * Math.cos(bMode * theta) * Math.sin(t * bFreq * Math.PI * 2) * forceMag * 0.015;
+					// Accelerations
+					const fTheta = -bMode * Math.cos(bMode * theta) * Math.sin(t * bFreq * Math.PI * 2) * forceMag * 0.012;
 					const fRadial = Math.sin(bMode * theta) * forceMag * 0.01;
 
-					// Push vectors
-					p.vx += -fTheta * Math.sin(theta) + fRadial * Math.cos(theta);
-					p.vy += fTheta * Math.cos(theta) + fRadial * Math.sin(theta);
+					// Base physics push force vectors
+					let pushX = -fTheta * Math.sin(theta) + fRadial * Math.cos(theta);
+					let pushY = fTheta * Math.cos(theta) + fRadial * Math.sin(theta);
 
-					// Apply drag
-					p.vx *= (1 - bDamp);
-					p.vy *= (1 - bDamp);
+					// Medium environment differences
+					if (bMedium === 'water') {
+						// Fluid waves: add sinusoidal wave fluctuation & vortex drifts
+						const waveFactor = Math.sin(dist * 0.08 - t * 0.15) * 0.3;
+						pushX += Math.cos(theta) * waveFactor;
+						pushY += Math.sin(theta) * waveFactor;
+					}
+
+					// Apply Strike transient shockwave (outward propagation)
+					if (cymaticsStrikeIntensity > 0) {
+						// Ring impulse push
+						const strikeWave = Math.sin(dist * 0.1 - t * 0.8) * cymaticsStrikeIntensity * 0.08;
+						pushX += Math.cos(theta) * strikeWave;
+						pushY += Math.sin(theta) * strikeWave;
+					}
+
+					// Update velocities
+					p.vx += pushX;
+					p.vy += pushY;
+
+					// Medium viscosity drag
+					const drag = bMedium === 'water' ? 0.025 : 0.06; // Water flows more, Sand settles quickly
+					p.vx *= (1 - drag);
+					p.vy *= (1 - drag);
 
 					// Update position
 					p.x += p.vx;
 					p.y += p.vy;
 
-					// Boundary constraint: Keep inside the bowl
+					// Keep inside container rim
 					const newD = Math.sqrt((p.x - cx) ** 2 + (p.y - cy) ** 2);
 					if (newD > bowlRadius - 3) {
 						const angle = Math.atan2(p.y - cy, p.x - cx);
 						p.x = cx + (bowlRadius - 4) * Math.cos(angle);
 						p.y = cy + (bowlRadius - 4) * Math.sin(angle);
-						p.vx *= -0.2;
-						p.vy *= -0.2;
+						p.vx *= -0.15;
+						p.vy *= -0.15;
 					}
 
-					// Render particle
-					ctx.fillStyle = 'rgba(213, 215, 219, 0.7)';
+					// Draw sand or water particle
+					let colorStr = 'rgba(213, 215, 219, 0.7)';
+					if (bMedium === 'water') {
+						// Luminous watery aqua/silver color
+						const flowSpeed = Math.sqrt(p.vx * p.vx + p.vy * p.vy);
+						const alpha = Math.max(0.2, Math.min(0.9, 0.3 + flowSpeed * 0.3));
+						colorStr = `rgba(224, 228, 235, ${alpha})`;
+					}
+
+					ctx.fillStyle = colorStr;
 					ctx.beginPath();
-					ctx.arc(p.x, p.y, 1.2, 0, Math.PI * 2);
+					ctx.arc(p.x, p.y, particleRadius, 0, Math.PI * 2);
 					ctx.fill();
 				});
 
-				// Draw rubbing feedback circle
-				if (isRubbing) {
+				// Visual feedback indicator for rubbing rim
+				if (isNearRim) {
 					ctx.beginPath();
 					ctx.arc(mouseX, mouseY, 15, 0, Math.PI * 2);
-					ctx.fillStyle = 'rgba(255, 255, 255, 0.15)';
+					ctx.fillStyle = 'rgba(255, 255, 255, 0.12)';
 					ctx.fill();
-					ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
+					ctx.strokeStyle = 'rgba(255, 255, 255, 0.25)';
 					ctx.stroke();
 				}
 			}
@@ -842,20 +1021,14 @@
 				ctx.arc(cx, cy, drumRadius, 0, Math.PI * 2);
 				ctx.stroke();
 
-				// Vibration Simulation using a coupled spring lattice approximation
-				// To keep it high-performance, we can calculate displacement Z based on Bessel functions when excited,
-				// or calculate an active propagation step.
-				// Let's do a wave equation solver approximation on grid:
-				// First update velocities and displacements
-				drumNodes.forEach((node, idx) => {
-					// Spring force pulling node to origin center
+				// Solver updates
+				drumNodes.forEach(node => {
 					let force = -dTen * node.z;
 
-					// Continuous background resonance vibration if mode selected
+					// Harmonic Mode excitation force
 					if (dMode > 0) {
 						const dist = Math.sqrt(node.x * node.x + node.y * node.y);
 						const theta = Math.atan2(node.y, node.x);
-						// Bessel-like mode approximation: Jn(kr) * cos(n * theta) * cos(omega * t)
 						let besselApprox = 0;
 						if (dMode === 1) { // Mode (0,1) Fundamental
 							besselApprox = Math.cos((dist / drumRadius) * Math.PI * 0.5);
@@ -865,39 +1038,28 @@
 							besselApprox = Math.cos((dist / drumRadius) * Math.PI * 1.5);
 						}
 						
-						// Inject gentle continuous force
 						force += besselApprox * Math.sin(t * 0.08) * 0.15;
 					}
 
-					// Update velocity
 					node.velocity += force;
-					// Apply damping
 					node.velocity *= (1 - dDecay);
-					// Update Z displacement
 					node.z += node.velocity;
 				});
 
-				// Oblique 3D mesh projection for premium look!
-				const angle3D = Math.PI / 6; // Oblique projection angle (30 deg)
-				const skewY = 0.55; // Vertical squash to simulate perspective
+				// Oblique 3D mesh projection
+				const skewY = 0.55; 
 
 				drumNodes.forEach(node => {
-					// Project to 3D perspective
-					// Z displacement distorts vertically
 					const projX = cx + node.x;
 					const projY = cy + node.y * skewY - node.z * 1.1;
 
-					// Color based on height (displacement)
-					let hue = 210; // Slate blue/gray
 					let lightness = 80;
-					
 					if (node.z > 1) {
 						lightness = Math.min(100, 80 + node.z * 1.2);
 					} else if (node.z < -1) {
 						lightness = Math.max(30, 80 + node.z * 0.8);
 					}
 
-					// Dynamic transparency based on height
 					const alpha = Math.max(0.15, Math.min(0.85, 0.5 + node.z * 0.04));
 
 					ctx.fillStyle = `rgba(${lightness + 40}, ${lightness + 45}, ${lightness + 55}, ${alpha})`;
@@ -908,40 +1070,67 @@
 				});
 			}
 
-			// 4. DMT VISUAL FLOW
+			// 4. DMT VISUAL FLOW (FULL-SCREEN FLUID FIELD)
 			function drawDmtFlow(cx, cy) {
 				const dmSym = parseInt(pdmSym.value);
 				const dmSpeed = parseFloat(pdmSpeed.value);
 				const dmComp = parseFloat(pdmComp.value);
 				const dmGlow = parseFloat(pdmGlow.value);
 
-				// Update particles
-				dmtParticles.forEach(p => {
-					// Spiral motion path
-					p.theta += dmSpeed * p.speed;
-					// Flow oscillations
-					p.r += Math.sin(p.theta * dmComp + t * 0.01) * 0.6;
+				// Max screen boundaries
+				const maxRadius = Math.max(width, height) * 0.85;
 
-					// Wrap radius boundaries
-					if (p.r > Math.min(width, height) * 0.5) {
-						p.r = 10 + Math.random() * 20;
+				dmtParticles.forEach(p => {
+					// Dynamic vector flow field coordinates
+					// Angle direction depends on radius distance and rotational symmetry theta
+					const angle = dmComp * (p.r * 0.004) + Math.sin(p.theta * dmSym) + t * 0.005;
+					
+					// Move along flow field vectors
+					p.theta += dmSpeed * Math.cos(angle) * p.speed;
+					p.r += Math.sin(angle) * p.speed * 1.5;
+
+					// Reset if particle moves out of boundaries
+					if (p.r > maxRadius || p.r < 5) {
+						p.r = 15 + Math.random() * 80;
+						p.theta = Math.random() * Math.PI * 2;
 					}
 
-					// Render N-fold symmetry duplicates (kaleidoscope effect)
+					// Mouse gravity attraction local warp
+					let mOffsetX = 0;
+					let mOffsetY = 0;
+					if (mouseActive) {
+						// Calculate polar coordinates from mouse position
+						const mdx = mouseX - cx;
+						const mdy = mouseY - cy;
+						const mDist = Math.sqrt(mdx * mdx + mdy * mdy);
+						const mTheta = Math.atan2(mdy, mdx);
+						
+						// Warp flow towards mouse locally
+						const px = p.r * Math.cos(p.theta);
+						const py = p.r * Math.sin(p.theta);
+						const pdx = mouseX - (cx + px);
+						const pdy = mouseY - (cy + py);
+						const pDist = Math.sqrt(pdx * pdx + pdy * pdy);
+						if (pDist < 250) {
+							const warpPower = (250 - pDist) / 250 * 3.5;
+							mOffsetX = (pdx / (pDist + 1)) * warpPower;
+							mOffsetY = (pdy / (pDist + 1)) * warpPower;
+						}
+					}
+
+					// Render N-fold kaleidoscope symmetry reflections (Full Screen)
 					for (let i = 0; i < dmSym; i++) {
 						const symTheta = p.theta + (i * Math.PI * 2) / dmSym;
 						
-						// Calculate projection position
-						const px = cx + p.r * Math.cos(symTheta);
-						const py = cy + p.r * Math.sin(symTheta);
+						const px = cx + p.r * Math.cos(symTheta) + mOffsetX;
+						const py = cy + p.r * Math.sin(symTheta) + mOffsetY;
 
-						// Soft silver glows
-						let colorStr = 'rgba(213, 215, 219,';
-						if (p.colorIndex === 1) colorStr = 'rgba(160, 164, 176,'; // Slate gray
+						let colorStr = 'rgba(213, 215, 219,'; // Bright plaster
+						if (p.colorIndex === 1) colorStr = 'rgba(150, 154, 166,'; // Concrete gray
 						else if (p.colorIndex === 2) colorStr = 'rgba(255, 255, 255,'; // White
 
-						ctx.shadowBlur = dmGlow * 20;
-						ctx.shadowColor = 'rgba(255, 255, 255, 0.3)';
+						ctx.shadowBlur = dmGlow * 18;
+						ctx.shadowColor = 'rgba(255, 255, 255, 0.4)';
 
 						ctx.fillStyle = `${colorStr} ${p.alpha})`;
 						ctx.beginPath();
@@ -949,7 +1138,7 @@
 						ctx.fill();
 					}
 				});
-				ctx.shadowBlur = 0; // Reset performance
+				ctx.shadowBlur = 0; // Reset
 			}
 
 			// Main loop selector
