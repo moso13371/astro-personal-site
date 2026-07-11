@@ -66,15 +66,21 @@ a {
 .container {
   max-width: 850px;
   margin: 0 auto;
-  padding: 3rem 2rem;
+  padding: 0 2rem 3rem 2rem; /* Remove top padding to let sticky header dock at viewport top */
   position: relative;
   z-index: 1;
 }
 
 header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background-color: rgba(0, 0, 0, 0.82); /* Semi-transparent black overlay */
+  backdrop-filter: blur(12px);            /* Premium glass blur effect */
+  -webkit-backdrop-filter: blur(12px);
+  padding: 2.2rem 0 1.5rem 0;             /* Retain elegant spacing at the top */
   border-bottom: 1px solid var(--border-color);
-  padding-bottom: 1.5rem;
-  margin-bottom: 6rem;
+  margin-bottom: 4.5rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -277,7 +283,9 @@ article p {
     font-size: 2.5rem;
   }
   header {
-    margin-bottom: 4rem;
+    position: static; /* Disable sticky on mobile to save vertical space */
+    margin-bottom: 3.5rem;
+    padding: 2rem 0 1rem 0;
     flex-direction: column;
     gap: 1.5rem;
     align-items: flex-start;
