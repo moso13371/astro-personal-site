@@ -93,6 +93,9 @@
 			/* Sidebar / Bottom Tab Selection */
 			.tabs-container {
 				pointer-events: auto;
+				position: absolute;
+				top: 6.5rem;
+				left: 2rem;
 				display: flex;
 				flex-direction: column;
 				gap: 0.5rem;
@@ -102,7 +105,7 @@
 				-webkit-backdrop-filter: blur(15px);
 				padding: 0.75rem;
 				width: 220px;
-				margin-top: 5rem;
+				z-index: 20;
 			}
 
 			.tab-button {
@@ -245,6 +248,9 @@
 					gap: 1rem;
 				}
 				.tabs-container {
+					position: relative;
+					top: auto;
+					left: auto;
 					flex-direction: row;
 					width: 100%;
 					overflow-x: auto;
@@ -283,14 +289,14 @@
 				<a href="/" class="back-btn">
 					&larr; 返回官網
 				</a>
-				
-				<!-- Sidebar selection tabs -->
-				<div class="tabs-container">
-					<button class="tab-button active" data-tab="gravity">重力波 GRAVITY</button>
-					<button class="tab-button" data-tab="bowl">頌缽聲波 CYMATICS</button>
-					<button class="tab-button" data-tab="drum">框鼓共振 RESONANCE</button>
-					<button class="tab-button" data-tab="dmt">DMT 意識流動</button>
-				</div>
+			</div>
+			
+			<!-- Sidebar selection tabs -->
+			<div class="tabs-container">
+				<button class="tab-button active" data-tab="gravity">重力波 GRAVITY</button>
+				<button class="tab-button" data-tab="bowl">頌缽聲波 CYMATICS</button>
+				<button class="tab-button" data-tab="drum">框鼓共振 RESONANCE</button>
+				<button class="tab-button" data-tab="dmt">DMT 意識流動</button>
 			</div>
 			
 			<div class="info-panel">
