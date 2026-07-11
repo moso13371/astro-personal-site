@@ -6,61 +6,83 @@ import aboutData from '../content/about.json';
 // Split the multiline profession string into an array of lines
 const professions = aboutData.profession ? aboutData.profession.split('\n') : [];
 
-// Organized Research Domains for clean grid display (reduced density, highly structured)
-const researchDomains = [
+// Academic and Professional Background (with English translations)
+const academicBackground = [
 	{
-		id: "01",
-		category: "超心理學與異常現象",
-		categoryEn: "Parapsychology & Anomalous Phenomena",
-		items: ["超心理學 (Parapsychology)", "ESP現象", "出體經驗 (OBE)", "瀕死經驗研究 (NDE)", "超常經驗研究 (EHE)", "靈魂與化身研究", "靈媒模式實踐", "超自然與未明現象調查"]
+		title: "天主教輔仁大學 宗教學系",
+		role: "",
+		en: "Department of Religious Studies, Fu Jen Catholic University"
 	},
 	{
-		id: "02",
-		category: "宗教、魔鬼學與靈性",
-		categoryEn: "Religious Studies & Demonology",
-		items: ["宗教學", "民俗學 (Folklore)", "惡魔學 (Demonology)", "當代靈性與比較", "儀式與集體經驗"]
+		title: "TAPARA 塔帕拉超心理學與未明現象研究中心",
+		role: "召集人",
+		en: "TAPARA Research Center — Convener"
 	},
 	{
-		id: "03",
-		category: "意識科學與超個人研究",
-		categoryEn: "Consciousness & Transpersonal Studies",
-		items: ["意識研究 (Consciousness Studies)", "超個人心理學", "迷幻研究與應用"]
+		title: "臺灣靈異研究學會",
+		role: "研究員 暨 第一屆會長",
+		en: "Taiwan Paranormal Research Society — Researcher & Founding President"
 	},
 	{
-		id: "04",
-		category: "聲波系統與身心調控",
-		categoryEn: "Sonic Systems & Somatic Regulation",
-		items: ["聲音療癒 (Sound Healing)", "身心靈系統", "療癒文化與實踐"]
-	},
-	{
-		id: "05",
-		category: "宇宙探索與邊界文化",
-		categoryEn: "Border Sciences & Extraterrestrial Studies",
-		items: ["地外文明研究", "不明飛行物 (UAP) 研究", "鬼怪與超自然文化"]
+		title: "福爾摩沙超自然事件調查小組",
+		role: "組長",
+		en: "Formosa Paranormal Investigation Team — Team Leader"
 	}
 ];
 
-// Research Timeline (Theory Milestones)
+// Re-structured Research Areas & Interests based on the optimized user draft
+const researchAreas = [
+	{
+		id: "01",
+		category: "超心理學與未明現象",
+		categoryEn: "Parapsychology & Unexplained Phenomena",
+		summary: "專注於常態框架外的現象調查與機制探討。",
+		items: ["超心理學 (Parapsychology)", "ESP 現象", "超常經驗 (EHE)", "靈媒模式實踐 (Mediumship Studies)", "未明飛行物 (UAP)", "地外文明等跨領域調查"]
+	},
+	{
+		id: "02",
+		category: "意識與空間維度",
+		categoryEn: "Consciousness & Dimensional Studies",
+		summary: "探索意識的邊界、狀態轉換與底層運作機制。",
+		items: ["意識研究 (Consciousness Studies)", "超個人心理學 (Transpersonal Psychology)", "出體經驗 (OBE)", "瀕死經驗 (NDE)", "靈魂與化身假說", "迷幻研究與應用"]
+	},
+	{
+		id: "03",
+		category: "宗教、民俗與儀式現象",
+		categoryEn: "Religion, Folklore & Ritual Phenomena",
+		summary: "從文化與現象學視角，客觀解構信仰系統與集體經驗。",
+		items: ["宗教學", "民俗學", "惡魔學 (Demonology)", "當代靈性比較", "鬼怪與靈異文化研究", "儀式與集體經驗探討"]
+	},
+	{
+		id: "04",
+		category: "聲波系統與共振實踐",
+		categoryEn: "Sonic Systems & Resonance Practices",
+		summary: "探究環境頻率、聲響媒材與身心意識狀態的交互作用。",
+		items: ["當代身心靈系統架構", "聲音系統工作 (Sonic System Practices)", "環境聲景與文化現象之整合"]
+	}
+];
+
+// Research Timeline (Theory Milestones) updated with exact user text
 const timeline = [
 	{
 		year: "2024",
-		title: "意識維度假說實證實驗",
-		desc: "啟動「意識維度假說」相關理論實驗，進行量子隨機數與微觀心物交互作用之實驗驗證。"
+		title: "理論實驗與驗證",
+		desc: "針對「意識維度假說」展開進階的相關理論實驗與驗證工作。"
 	},
 	{
 		year: "2021",
-		title: "「灰域」空間理論建構",
-		desc: "基於瀕死經驗（NDE）與出體經驗（OBE）之空間拓撲結構進行「灰域 (Gray Realm)」空間理論撰寫。"
+		title: "提出「灰域」(Gray Realm) 空間理論",
+		desc: "基於多年對瀕死經驗 (NDE) 與靈魂出竅經驗 (OBE) 的現象解析，建構並撰寫專屬空間理論。"
 	},
 	{
 		year: "2018",
-		title: "理論框架深化",
-		desc: "豐富「意識維度假說」理論框架，並開展初步實證性個案收集與質性研究。"
+		title: "理論框架擴展與實證",
+		desc: "進一步豐富「意識維度假說」的理論框架，並著手進行初步的實證研究探討。"
 	},
 	{
 		year: "2016",
-		title: "「意識維度假說」首次提出",
-		desc: "首次提出 Consciousness Dimension Hypothesis（意識維度假說）並啟動學術理論建構。"
+		title: "首次提出「意識維度假說」(Consciousness Dimension Hypothesis)",
+		desc: "正式啟動多維度意識的理論建構與雛形驗證。"
 	}
 ];
 ---
@@ -82,17 +104,33 @@ const timeline = [
 		)}
 	</div>
 
-	<!-- Section renamed to '關於' (About) -->
+	<!-- Section: 關於 (About Biography) -->
 	<div class="content-block">
 		<h2>關於</h2>
 		<p style="white-space: pre-line; line-height: 2.0; color: var(--text-color); font-weight: 400; font-size: 1.05rem;">{aboutData.intro}</p>
 	</div>
 
-	<!-- Optimized Research Fields Grid -->
+	<!-- New Section: 學經歷 (Academic & Professional Background) -->
 	<div class="content-block">
-		<h2>研究領域與興趣</h2>
+		<h2>學經歷</h2>
+		<div class="background-list">
+			{academicBackground.map((item) => (
+				<div class="background-item">
+					<div class="background-title-row">
+						<span class="background-title">{item.title}</span>
+						{item.role && <span class="background-role">{item.role}</span>}
+					</div>
+					<div class="background-en">{item.en}</div>
+				</div>
+			))}
+		</div>
+	</div>
+
+	<!-- Updated Section: 研究領域與關注方向 (Research Areas & Interests) -->
+	<div class="content-block">
+		<h2>研究領域與關注方向</h2>
 		<div class="domain-grid">
-			{researchDomains.map((domain) => (
+			{researchAreas.map((domain) => (
 				<div class="domain-card">
 					<div class="domain-card-header">
 						<span class="domain-number">{domain.id}</span>
@@ -101,6 +139,9 @@ const timeline = [
 							<span class="domain-category-en">{domain.categoryEn}</span>
 						</div>
 					</div>
+					<!-- Summary text explaining the domain -->
+					<p class="domain-summary">{domain.summary}</p>
+					<!-- Pill tags under the summary -->
 					<div class="domain-tags">
 						{domain.items.map((item) => (
 							<span class="domain-tag">{item}</span>
@@ -111,9 +152,9 @@ const timeline = [
 		</div>
 	</div>
 
-	<!-- Structured Theory Timeline -->
+	<!-- Updated Section: 研究理論與發展里程碑 (Theoretical Milestones) -->
 	<div class="content-block">
-		<h2>研究理論與歷程</h2>
+		<h2>研究理論與發展里程碑</h2>
 		<div class="timeline-container">
 			<div class="timeline-line"></div>
 			{timeline.map((item) => (
@@ -184,6 +225,55 @@ const timeline = [
 		box-shadow: 0 5px 25px rgba(0, 0, 0, 0.25);
 	}
 
+	/* Background List Styling */
+	.background-list {
+		display: flex;
+		flex-direction: column;
+		gap: 1.5rem;
+		margin-top: 1.5rem;
+	}
+
+	.background-item {
+		border-left: 2px solid rgba(255, 255, 255, 0.06);
+		padding-left: 1.5rem;
+		transition: border-color 0.4s ease;
+	}
+
+	.background-item:hover {
+		border-left-color: var(--accent-color);
+	}
+
+	.background-title-row {
+		display: flex;
+		align-items: center;
+		flex-wrap: wrap;
+		gap: 0.75rem;
+	}
+
+	.background-title {
+		font-size: 1.05rem;
+		font-weight: 500;
+		color: #ffffff;
+		line-height: 1.4;
+	}
+
+	.background-role {
+		font-size: 0.85rem;
+		color: var(--accent-color);
+		background: rgba(255, 255, 255, 0.05);
+		border: 1px solid rgba(255, 255, 255, 0.1);
+		padding: 2px 8px;
+		font-weight: 400;
+	}
+
+	.background-en {
+		font-size: 0.78rem;
+		color: var(--text-muted);
+		text-transform: uppercase;
+		letter-spacing: 1px;
+		margin-top: 0.35rem;
+	}
+
 	/* Domain Grid Styling */
 	.domain-grid {
 		display: flex;
@@ -206,7 +296,7 @@ const timeline = [
 		display: flex;
 		align-items: flex-start;
 		gap: 1.2rem;
-		margin-bottom: 1.2rem;
+		margin-bottom: 0.8rem;
 	}
 
 	.domain-number {
@@ -240,11 +330,19 @@ const timeline = [
 		margin-top: 0.25rem;
 	}
 
+	.domain-summary {
+		font-size: 0.92rem;
+		color: var(--text-muted);
+		padding-left: 2.2rem;
+		margin: 0 0 1rem 0;
+		line-height: 1.6;
+	}
+
 	.domain-tags {
 		display: flex;
 		flex-wrap: wrap;
 		gap: 0.6rem;
-		padding-left: 2.2rem; /* Indent tags under title text */
+		padding-left: 2.2rem;
 	}
 
 	.domain-tag {
@@ -308,7 +406,7 @@ const timeline = [
 		color: var(--accent-color);
 		width: 50px;
 		flex-shrink: 0;
-		padding-left: 15px; /* Offset from dot */
+		padding-left: 15px;
 		line-height: 1.4;
 	}
 
@@ -340,7 +438,7 @@ const timeline = [
 		.profile-avatar-container {
 			align-self: center;
 		}
-		.domain-tags {
+		.domain-summary, .domain-tags {
 			padding-left: 0;
 		}
 		.timeline-item {
