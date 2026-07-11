@@ -1,396 +1,70 @@
 ---
 // src/pages/index.astro
 import Layout from '../layouts/Layout.astro';
-import aboutData from '../content/about.json';
 ---
 
 <Layout title="首頁 HOME">
-	<div class="home-entrance">
-		<!-- Fullscreen Interactive Canvas behind home content -->
-		<canvas id="home-particles-canvas"></canvas>
-		<div id="canvas-interaction-layer"></div>
-
+	<div class="home-hero">
 		<!-- Centered Minimalist Typography -->
-		<div class="home-title-container">
-			<h1 class="home-title">往櫺</h1>
-			<div class="home-title-en">WONGLING</div>
-			<p class="home-subtitle">超心理學與非常規意識狀態研究</p>
-			<div class="home-hint">點擊任意處激發時空波紋</div>
-		</div>
+		<h1 class="home-title">WONGLING</h1>
+		<p class="home-subtitle">超心理學與未明現象調查研究</p>
 	</div>
 </Layout>
 
 <style>
-	.home-entrance {
-		position: absolute;
-		top: 0;
-		left: 0;
-		width: 100vw;
-		height: 100vh;
-		overflow: hidden;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		z-index: 1;
-		margin: 0;
-		padding: 0;
-		background-color: #000000;
-	}
-
-	#home-particles-canvas {
-		position: absolute;
-		top: 0;
-		left: 0;
-		width: 100%;
-		height: 100%;
-		z-index: 2;
-		display: block;
-	}
-
-	#canvas-interaction-layer {
-		position: absolute;
-		top: 0;
-		left: 0;
-		width: 100%;
-		height: 100%;
-		z-index: 3;
-		cursor: pointer;
-	}
-
-	.home-title-container {
-		position: relative;
-		z-index: 10;
-		text-align: center;
-		pointer-events: none; /* Let clicks pass through to the interaction layer */
-		animation: fadeIn 2.5s cubic-bezier(0.16, 1, 0.3, 1);
+	.home-hero {
 		display: flex;
 		flex-direction: column;
+		justify-content: center;
 		align-items: center;
-		gap: 0.5rem;
+		height: 52vh; /* Centered in standard viewport under header without causing overflow */
+		text-align: center;
+		box-sizing: border-box;
+		animation: fadeIn 2s cubic-bezier(0.16, 1, 0.3, 1);
 	}
 
 	.home-title {
-		font-family: var(--font-serif);
-		font-size: 3.8rem;
-		font-weight: 300;
-		letter-spacing: 12px;
-		margin: 0;
-		color: #ffffff;
-		text-shadow: 0 0 40px rgba(255, 255, 255, 0.15);
-	}
-
-	.home-title-en {
 		font-family: var(--font-sans);
-		font-size: 1.05rem;
+		font-size: 3.2rem;
 		font-weight: 400;
 		letter-spacing: 8px;
 		margin: 0;
-		color: var(--text-muted);
+		color: #ffffff;
 		text-transform: uppercase;
+		text-shadow: 0 0 30px rgba(255, 255, 255, 0.08);
 	}
 
 	.home-subtitle {
 		font-family: var(--font-serif);
-		font-size: 0.92rem;
+		font-size: 1.0rem;
 		font-weight: 300;
 		letter-spacing: 4px;
-		color: rgba(255, 255, 255, 0.45);
-		margin-top: 1.5rem;
-		margin-bottom: 2rem;
-	}
-
-	.home-hint {
-		font-size: 0.72rem;
-		letter-spacing: 2px;
-		color: rgba(255, 255, 255, 0.25);
-		text-transform: uppercase;
-		border: 1px solid rgba(255, 255, 255, 0.08);
-		padding: 6px 14px;
-		background: rgba(0, 0, 0, 0.3);
-		backdrop-filter: blur(5px);
-		-webkit-backdrop-filter: blur(5px);
+		color: var(--text-muted);
+		margin-top: 1.2rem;
+		margin-bottom: 0;
 	}
 
 	@keyframes fadeIn {
-		from { opacity: 0; transform: scale(0.98) translateY(10px); }
+		from { opacity: 0; transform: scale(0.98) translateY(8px); }
 		to { opacity: 1; transform: scale(1) translateY(0); }
 	}
 
-	/* Adjust global header on index page to integrate seamlessly */
-	:global(body:has(.home-entrance) header) {
-		background: transparent !important;
-		border-bottom: none !important;
-		backdrop-filter: none !important;
-		-webkit-backdrop-filter: none !important;
-		position: absolute;
-		z-index: 100;
-	}
-
-	/* Adjust footer on index page to hide it completely for pure immersive look */
-	:global(body:has(.home-entrance) footer) {
+	/* Adjust global footer on index page to hide it for a pure splash homepage look */
+	:global(body:has(.home-hero) footer) {
 		display: none !important;
 	}
 
 	@media (max-width: 768px) {
-		.home-title {
-			font-size: 2.8rem;
-			letter-spacing: 8px;
+		.home-hero {
+			height: 48vh;
 		}
-		.home-title-en {
-			font-size: 0.9rem;
-			letter-spacing: 6px;
+		.home-title {
+			font-size: 2.2rem;
+			letter-spacing: 5px;
 		}
 		.home-subtitle {
-			font-size: 0.8rem;
-			letter-spacing: 3px;
+			font-size: 0.85rem;
+			letter-spacing: 2px;
 		}
 	}
 </style>
-
-<script>
-	const canvas = document.getElementById('home-particles-canvas') as HTMLCanvasElement;
-	const ctx = canvas.getContext('2d')!;
-	const overlay = document.getElementById('canvas-interaction-layer')!;
-
-	let width = canvas.width = window.innerWidth;
-	let height = canvas.height = window.innerHeight;
-
-	let t = 0;
-	let mouseX = width / 2;
-	let mouseY = height / 2;
-	let mouseActive = false;
-	let isTransitioning = false;
-	let targetUrl = '';
-
-	// Particle class definition
-	class FloatingParticle {
-		x: number;
-		y: number;
-		vx: number;
-		vy: number;
-		baseSize: number;
-		size: number;
-		alpha: number;
-		baseAlpha: number;
-		pulsePhase: number;
-		pulseSpeed: number;
-
-		constructor(randomPos = true) {
-			this.x = randomPos ? Math.random() * width : width / 2;
-			this.y = randomPos ? Math.random() * height : height / 2;
-			
-			// Breathing base sizes: some small sharp, some big blurry bokeh
-			const rand = Math.random();
-			if (rand > 0.88) {
-				this.baseSize = 6 + Math.random() * 12; // big out of focus dust
-				this.baseAlpha = 0.05 + Math.random() * 0.08;
-			} else {
-				this.baseSize = 1.2 + Math.random() * 3.5; // small crisp dust
-				this.baseAlpha = 0.15 + Math.random() * 0.25;
-			}
-
-			this.size = this.baseSize;
-			this.alpha = this.baseAlpha;
-
-			// Drift velocity
-			this.vx = (Math.random() - 0.5) * 0.22;
-			this.vy = (Math.random() - 0.5) * 0.22;
-
-			// Breathing pulse settings
-			this.pulsePhase = Math.random() * Math.PI * 2;
-			this.pulseSpeed = 0.008 + Math.random() * 0.015;
-		}
-
-		update() {
-			if (isTransitioning) {
-				// Transition Explode: particles accelerate away from center
-				const cx = width / 2;
-				const cy = height / 2;
-				const dx = this.x - cx;
-				const dy = this.y - cy;
-				const dist = Math.sqrt(dx * dx + dy * dy) || 1;
-
-				// Expand velocities outward rapidly
-				this.vx += (dx / dist) * 0.45;
-				this.vy += (dy / dist) * 0.45;
-
-				this.x += this.vx;
-				this.y += this.vy;
-				
-				// Rapid fade out
-				this.alpha -= 0.006;
-				return;
-			}
-
-			// Organic slow drift
-			this.x += this.vx;
-			this.y += this.vy;
-
-			// Brownian velocity fluctuations
-			this.vx += (Math.random() - 0.5) * 0.012;
-			this.vy += (Math.random() - 0.5) * 0.012;
-
-			// Speed limit
-			this.vx = Math.max(-0.45, Math.min(0.45, this.vx));
-			this.vy = Math.max(-0.45, Math.min(0.45, this.vy));
-
-			// Organic size breathing (pulsating)
-			this.pulsePhase += this.pulseSpeed;
-			this.size = this.baseSize * (0.8 + 0.3 * Math.sin(this.pulsePhase));
-
-			// Flee/Repel interaction from mouse
-			if (mouseActive) {
-				const dx = this.x - mouseX;
-				const dy = this.y - mouseY;
-				const dist = Math.sqrt(dx * dx + dy * dy);
-				if (dist < 180) {
-					const force = (180 - dist) / 180 * 0.15; // repulsion force
-					this.vx += (dx / (dist + 1)) * force;
-					this.vy += (dy / (dist + 1)) * force;
-				}
-			}
-
-			// Boundary wrap around
-			if (this.x < -40) this.x = width + 40;
-			if (this.x > width + 40) this.x = -40;
-			if (this.y < -40) this.y = height + 40;
-			if (this.y > height + 40) this.y = -40;
-		}
-
-		draw() {
-			if (this.alpha <= 0) return;
-			ctx.beginPath();
-			
-			// Plaster white/steel gray particles: rgb(192, 196, 204)
-			const grad = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.size);
-			grad.addColorStop(0, `rgba(192, 196, 204, ${this.alpha})`);
-			grad.addColorStop(0.3, `rgba(192, 196, 204, ${this.alpha * 0.4})`);
-			grad.addColorStop(1, 'rgba(192, 196, 204, 0)');
-			
-			ctx.fillStyle = grad;
-			ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-			ctx.fill();
-		}
-	}
-
-	// Create particle swarm
-	const particles: FloatingParticle[] = [];
-	const particleCount = 140;
-	for (let i = 0; i < particleCount; i++) {
-		particles.push(new FloatingParticle(true));
-	}
-
-	// Handle screen resize
-	window.addEventListener('resize', () => {
-		width = canvas.width = window.innerWidth;
-		height = canvas.height = window.innerHeight;
-	});
-
-	// Interaction tracking
-	overlay.addEventListener('mousemove', (e: any) => {
-		mouseX = e.clientX;
-		mouseY = e.clientY;
-		mouseActive = true;
-	});
-
-	overlay.addEventListener('mouseleave', () => {
-		mouseActive = false;
-	});
-
-	// Tap/Click to trigger local wave impulse
-	overlay.addEventListener('mousedown', (e: any) => {
-		mouseX = e.clientX;
-		mouseY = e.clientY;
-		mouseActive = true;
-
-		// Propagate shockwave pushes particles outward from click point
-		particles.forEach(p => {
-			const dx = p.x - mouseX;
-			const dy = p.y - mouseY;
-			const dist = Math.sqrt(dx * dx + dy * dy);
-			if (dist < 220) {
-				const impulse = (220 - dist) / 220 * 8;
-				p.vx += (dx / (dist + 1)) * impulse;
-				p.vy += (dy / (dist + 1)) * impulse;
-			}
-		});
-	});
-
-	// Touch support
-	overlay.addEventListener('touchmove', (e: any) => {
-		if (e.touches.length > 0) {
-			mouseX = e.touches[0].clientX;
-			mouseY = e.touches[0].clientY;
-			mouseActive = true;
-		}
-	});
-
-	overlay.addEventListener('touchstart', (e: any) => {
-		if (e.touches.length > 0) {
-			mouseX = e.touches[0].clientX;
-			mouseY = e.touches[0].clientY;
-			mouseActive = true;
-
-			particles.forEach(p => {
-				const dx = p.x - mouseX;
-				const dy = p.y - mouseY;
-				const dist = Math.sqrt(dx * dx + dy * dy);
-				if (dist < 220) {
-					const impulse = (220 - dist) / 220 * 8;
-					p.vx += (dx / (dist + 1)) * impulse;
-					p.vy += (dy / (dist + 1)) * impulse;
-				}
-			});
-		}
-	});
-
-	// Main Animation Loop
-	function animate() {
-		t += 1;
-		ctx.fillStyle = '#000000';
-		ctx.fillRect(0, 0, width, height);
-
-		particles.forEach(p => {
-			p.update();
-			p.draw();
-		});
-
-		requestAnimationFrame(animate);
-	}
-
-	animate();
-
-	// ----------------------------------------------------
-	// TRANSITION INTERCEPTOR (粒子散射轉場動畫)
-	// ----------------------------------------------------
-	document.addEventListener('DOMContentLoaded', () => {
-		// Target all internal navigation menu links
-		const links = document.querySelectorAll('header nav a');
-		links.forEach(link => {
-			link.addEventListener('click', (e) => {
-				const href = link.getAttribute('href');
-				// Check if the link is a valid internal link
-				if (href && href.startsWith('/') && !e.metaKey && !e.ctrlKey && !e.shiftKey) {
-					e.preventDefault();
-					
-					// Set transition trigger
-					targetUrl = href;
-					isTransitioning = true;
-					
-					// Start fading/sliding out the centered typography
-					const titleContainer = document.querySelector('.home-title-container');
-					if (titleContainer) {
-						titleContainer.style.transition = 'all 0.5s ease';
-						titleContainer.style.opacity = '0';
-						titleContainer.style.transform = 'scale(0.95)';
-					}
-
-					// Let particles explode and then navigate after transition ends (550ms)
-					setTimeout(() => {
-						window.location.href = targetUrl;
-					}, 550);
-				}
-			});
-		});
-	});
-</script>
