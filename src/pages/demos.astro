@@ -1,0 +1,974 @@
+---
+// src/pages/demos.astro
+---
+
+<!doctype html>
+<html lang="zh-TW">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>粒子物理與意識共振實驗室 | WONGLING</title>
+		<!-- Google Fonts: Inter and Noto Serif TC -->
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Noto+Serif+TC:wght@300;400&display=swap" rel="stylesheet">
+		<style>
+			body, html {
+				margin: 0;
+				padding: 0;
+				width: 100%;
+				height: 100%;
+				overflow: hidden;
+				background-color: #000000;
+				font-family: 'Inter', 'Noto Serif TC', sans-serif;
+				color: #ffffff;
+				user-select: none;
+			}
+
+			#lab-canvas {
+				display: block;
+				width: 100vw;
+				height: 100vh;
+				z-index: 1;
+				position: absolute;
+				top: 0;
+				left: 0;
+			}
+
+			.interactive-layer {
+				position: absolute;
+				z-index: 5;
+				width: 100%;
+				height: 100%;
+				top: 0;
+				left: 0;
+				cursor: pointer;
+			}
+
+			.overlay {
+				position: absolute;
+				z-index: 10;
+				pointer-events: none;
+				width: 100%;
+				height: 100%;
+				display: flex;
+				flex-direction: column;
+				justify-content: space-between;
+				box-sizing: border-box;
+				padding: 2rem;
+			}
+
+			/* Navigation & Tabs UI */
+			.header-area {
+				display: flex;
+				justify-content: space-between;
+				align-items: flex-start;
+				width: 100%;
+			}
+
+			.back-btn {
+				pointer-events: auto;
+				color: rgba(255, 255, 255, 0.5);
+				text-decoration: none;
+				font-size: 0.85rem;
+				letter-spacing: 2px;
+				text-transform: uppercase;
+				transition: all 0.4s ease;
+				display: inline-flex;
+				align-items: center;
+				gap: 0.5rem;
+				border: 1px solid rgba(255, 255, 255, 0.1);
+				padding: 8px 16px;
+				background: rgba(10, 10, 10, 0.6);
+				backdrop-filter: blur(10px);
+				-webkit-backdrop-filter: blur(10px);
+			}
+
+			.back-btn:hover {
+				color: #ffffff;
+				border-color: #ffffff;
+				transform: translateX(-3px);
+			}
+
+			/* Sidebar / Bottom Tab Selection */
+			.tabs-container {
+				pointer-events: auto;
+				display: flex;
+				flex-direction: column;
+				gap: 0.5rem;
+				background: rgba(15, 16, 18, 0.6);
+				border: 1px solid rgba(255, 255, 255, 0.05);
+				backdrop-filter: blur(15px);
+				-webkit-backdrop-filter: blur(15px);
+				padding: 0.75rem;
+				width: 220px;
+				margin-top: 5rem;
+			}
+
+			.tab-button {
+				background: none;
+				border: 1px solid transparent;
+				color: rgba(255, 255, 255, 0.4);
+				padding: 12px 16px;
+				text-align: left;
+				font-size: 0.78rem;
+				font-weight: 400;
+				letter-spacing: 2px;
+				cursor: pointer;
+				transition: all 0.4s ease;
+				text-transform: uppercase;
+				width: 100%;
+				box-sizing: border-box;
+			}
+
+			.tab-button:hover {
+				color: #ffffff;
+				background: rgba(255, 255, 255, 0.03);
+			}
+
+			.tab-button.active {
+				color: #ffffff;
+				border-color: rgba(255, 255, 255, 0.15);
+				background: rgba(255, 255, 255, 0.05);
+				font-weight: 500;
+			}
+
+			/* Controls Box */
+			.control-box {
+				pointer-events: auto;
+				position: absolute;
+				top: 2rem;
+				right: 2rem;
+				z-index: 20;
+				width: 250px;
+				background: rgba(15, 16, 18, 0.7);
+				border: 1px solid rgba(255, 255, 255, 0.08);
+				backdrop-filter: blur(15px);
+				-webkit-backdrop-filter: blur(15px);
+				padding: 1.5rem;
+				display: flex;
+				flex-direction: column;
+				gap: 1.2rem;
+			}
+
+			.control-box-title {
+				font-size: 0.8rem;
+				font-weight: 500;
+				margin: 0;
+				letter-spacing: 2px;
+				color: #c0c4cc;
+				border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+				padding-bottom: 0.5rem;
+			}
+
+			.control-group {
+				display: flex;
+				flex-direction: column;
+				gap: 0.4rem;
+			}
+
+			.control-group label {
+				font-size: 0.72rem;
+				color: rgba(255, 255, 255, 0.5);
+				letter-spacing: 1px;
+				display: flex;
+				justify-content: space-between;
+			}
+
+			.control-group label span {
+				color: #ffffff;
+				font-weight: 500;
+			}
+
+			.control-group input[type="range"] {
+				-webkit-appearance: none;
+				width: 100%;
+				height: 2px;
+				background: rgba(255, 255, 255, 0.15);
+				outline: none;
+				margin: 8px 0;
+			}
+
+			.control-group input[type="range"]::-webkit-slider-thumb {
+				-webkit-appearance: none;
+				appearance: none;
+				width: 8px;
+				height: 8px;
+				border-radius: 50%;
+				background: #ffffff;
+				cursor: pointer;
+				transition: transform 0.1s ease;
+			}
+
+			.control-group input[type="range"]::-webkit-slider-thumb:hover {
+				transform: scale(1.4);
+			}
+
+			/* Info Panel */
+			.info-panel {
+				align-self: flex-start;
+				text-align: left;
+				background: rgba(10, 10, 10, 0.6);
+				padding: 1.5rem 2rem;
+				border: 1px solid rgba(255, 255, 255, 0.08);
+				backdrop-filter: blur(10px);
+				-webkit-backdrop-filter: blur(10px);
+				max-width: 480px;
+				margin-top: auto;
+			}
+
+			.info-title {
+				font-family: 'Noto Serif TC', serif;
+				font-size: 1.15rem;
+				font-weight: 300;
+				letter-spacing: 2px;
+				margin-top: 0;
+				margin-bottom: 0.5rem;
+				color: #ffffff;
+			}
+
+			.info-desc {
+				font-size: 0.78rem;
+				color: rgba(255, 255, 255, 0.55);
+				line-height: 1.7;
+				letter-spacing: 1px;
+				margin: 0;
+			}
+
+			/* Responsive styling */
+			@media (max-width: 768px) {
+				.overlay {
+					padding: 1rem;
+				}
+				.header-area {
+					flex-direction: column;
+					gap: 1rem;
+				}
+				.tabs-container {
+					flex-direction: row;
+					width: 100%;
+					overflow-x: auto;
+					margin-top: 0.5rem;
+					padding: 0.5rem;
+				}
+				.tab-button {
+					padding: 8px 12px;
+					font-size: 0.7rem;
+					white-space: nowrap;
+					text-align: center;
+				}
+				.control-box {
+					position: relative;
+					top: auto;
+					right: auto;
+					width: 100%;
+					box-sizing: border-box;
+					margin-top: 1rem;
+				}
+				.info-panel {
+					display: none; /* Hide bottom panel on mobile */
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<canvas id="lab-canvas"></canvas>
+
+		<!-- Capture cursor interactions -->
+		<div id="interactive-overlay" class="interactive-layer"></div>
+
+		<!-- UI Overlay -->
+		<div class="overlay">
+			<div class="header-area">
+				<a href="/" class="back-btn">
+					&larr; 返回官網
+				</a>
+				
+				<!-- Sidebar selection tabs -->
+				<div class="tabs-container">
+					<button class="tab-button active" data-tab="gravity">重力波 GRAVITY</button>
+					<button class="tab-button" data-tab="bowl">頌缽聲波 CYMATICS</button>
+					<button class="tab-button" data-tab="drum">框鼓共振 RESONANCE</button>
+					<button class="tab-button" data-tab="dmt">DMT 意識流動</button>
+				</div>
+			</div>
+			
+			<div class="info-panel">
+				<h2 id="display-title" class="info-title">重力波與時空幾何演示</h2>
+				<p id="display-desc" class="info-desc">
+					模擬二元黑洞互繞產生的時空漣漪。您可以拖曳或點擊滑鼠，在時空中放置一個重力干擾源，觀察引力透鏡與時空幾何的局部扭曲。
+				</p>
+			</div>
+		</div>
+
+		<!-- Control Box containing dynamic sliders -->
+		<div class="control-box">
+			<h3 class="control-box-title">控制面板 CONTROLS</h3>
+			
+			<!-- Gravity Wave Sliders -->
+			<div id="sliders-gravity" class="slider-group">
+				<div class="control-group">
+					<label>繞行頻率 (Speed): <span id="val-g-speed">0.035</span></label>
+					<input type="range" id="param-g-speed" min="0.005" max="0.10" step="0.005" value="0.035">
+				</div>
+				<div class="control-group">
+					<label>波形振幅 (Amplitude): <span id="val-g-amp">30</span></label>
+					<input type="range" id="param-g-amp" min="5" max="80" step="5" value="30">
+				</div>
+				<div class="control-group">
+					<label>波形波速 (Wave Speed): <span id="val-g-c">7.5</span></label>
+					<input type="range" id="param-g-c" min="4.0" max="15.0" step="0.5" value="7.5">
+				</div>
+				<div class="control-group">
+					<label>引力扭曲 (Mouse Gravity): <span id="val-g-mouse">30</span></label>
+					<input type="range" id="param-g-mouse" min="0" max="80" step="5" value="30">
+				</div>
+			</div>
+
+			<!-- Singing Bowl Sliders -->
+			<div id="sliders-bowl" class="slider-group" style="display: none;">
+				<div class="control-group">
+					<label>共振波數 (Mode - N): <span id="val-b-mode">4</span></label>
+					<input type="range" id="param-b-mode" min="2" max="8" step="2" value="4">
+				</div>
+				<div class="control-group">
+					<label>擦缽振幅 (Vibration): <span id="val-b-amp">12</span></label>
+					<input type="range" id="param-b-amp" min="2" max="30" step="1" value="12">
+				</div>
+				<div class="control-group">
+					<label>聲波頻率 (Frequency): <span id="val-b-freq">0.05</span></label>
+					<input type="range" id="param-b-freq" min="0.01" max="0.12" step="0.01" value="0.05">
+				</div>
+				<div class="control-group">
+					<label>流體阻尼 (Damping): <span id="val-b-damp">0.02</span></label>
+					<input type="range" id="param-b-damp" min="0.005" max="0.08" step="0.005" value="0.02">
+				</div>
+			</div>
+
+			<!-- Frame Drum Sliders -->
+			<div id="sliders-drum" class="slider-group" style="display: none;">
+				<div class="control-group">
+					<label>擊鼓力道 (Strike Power): <span id="val-d-power">25</span></label>
+					<input type="range" id="param-d-power" min="5" max="50" step="5" value="25">
+				</div>
+				<div class="control-group">
+					<label>鼓皮張力 (Tension): <span id="val-d-tension">0.04</span></label>
+					<input type="range" id="param-d-tension" min="0.01" max="0.10" step="0.01" value="0.04">
+				</div>
+				<div class="control-group">
+					<label>振相衰減 (Decay): <span id="val-d-decay">0.015</span></label>
+					<input type="range" id="param-d-decay" min="0.005" max="0.05" step="0.005" value="0.015">
+				</div>
+				<div class="control-group">
+					<label>共振模態 (Harmonic Mode): <span id="val-d-mode">1</span></label>
+					<input type="range" id="param-d-mode" min="0" max="3" step="1" value="1">
+				</div>
+			</div>
+
+			<!-- DMT Sliders -->
+			<div id="sliders-dmt" class="slider-group" style="display: none;">
+				<div class="control-group">
+					<label>幾何對稱 (Symmetry Fold): <span id="val-dm-sym">6</span></label>
+					<input type="range" id="param-dm-sym" min="3" max="12" step="1" value="6">
+				</div>
+				<div class="control-group">
+					<label>流動速度 (Drift Speed): <span id="val-dm-speed">0.02</span></label>
+					<input type="range" id="param-dm-speed" min="0.005" max="0.06" step="0.005" value="0.02">
+				</div>
+				<div class="control-group">
+					<label>維度複雜度 (Complexity): <span id="val-dm-comp">3.0</span></label>
+					<input type="range" id="param-dm-comp" min="1.0" max="6.0" step="0.2" value="3.0">
+				</div>
+				<div class="control-group">
+					<label>幻覺輝光 (Glow Intensity): <span id="val-dm-glow">0.45</span></label>
+					<input type="range" id="param-dm-glow" min="0.1" max="0.9" step="0.05" value="0.45">
+				</div>
+			</div>
+		</div>
+
+		<script>
+			const canvas = document.getElementById('lab-canvas');
+			const ctx = canvas.getContext('2d');
+			const overlay = document.getElementById('interactive-overlay');
+
+			let width = canvas.width = window.innerWidth;
+			let height = canvas.height = window.innerHeight;
+
+			// Simulation states
+			let currentTab = 'gravity';
+			let t = 0;
+
+			// Cursor Coordinates
+			let mouseX = width / 2;
+			let mouseY = height / 2;
+			let mouseActive = false;
+
+			// Track active Tab Description Info
+			const tabDescriptions = {
+				gravity: {
+					title: "重力波與時空幾何演示",
+					desc: "模擬二元黑洞互繞產生的時空漣漪。您可以拖曳或點擊滑鼠，在時空中放置一個重力干擾源，觀察引力透鏡與時空幾何的局部扭曲。"
+				},
+				bowl: {
+					title: "頌缽聲波與克拉尼克幾何共振",
+					desc: "模擬頌缽在缽緣磨擦時激發出的法拉第駐波圖樣。移動滑鼠在圓環上磨擦，可以看見液面沙粒粒子在共振節點（Vibration Nodes）自主排成曼陀羅神聖幾何的過程。"
+				},
+				drum: {
+					title: "框鼓共振與二維膜貝塞爾波",
+					desc: "以粒子網格模擬圓形鼓皮的三維震動形態。點擊鼓面任何位置可以「擊鼓」，引發衝擊波向邊緣擴散並反彈，展示框鼓基頻與諧音階高次模態 (Bessel harmonics)。"
+				},
+				dmt: {
+					title: "DMT 意識流動與視覺幻覺形態",
+					desc: "模擬非常規意識狀態 (ASC) 下視皮層產生的萬花筒幻覺。粒子在大尺度旋轉對稱流場中流動。移動滑鼠可以引導流場的核心，調整滑動桿可開啟高維對稱幾何。"
+				}
+			};
+
+			// Initialize Grid & Particle Stores
+			let gridPoints = [];
+			let cymaticsParticles = [];
+			let drumNodes = [];
+			let dmtParticles = [];
+
+			// UI Sliders and values binding
+			const sliders = {
+				gravity: document.getElementById('sliders-gravity'),
+				bowl: document.getElementById('sliders-bowl'),
+				drum: document.getElementById('sliders-drum'),
+				dmt: document.getElementById('sliders-dmt')
+			};
+
+			// Gravity Inputs
+			const pgSpeed = document.getElementById('param-g-speed');
+			const pgAmp = document.getElementById('param-g-amp');
+			const pgC = document.getElementById('param-g-c');
+			const pgMouse = document.getElementById('param-g-mouse');
+
+			const vgSpeed = document.getElementById('val-g-speed');
+			const vgAmp = document.getElementById('val-g-amp');
+			const vgC = document.getElementById('val-g-c');
+			const vgMouse = document.getElementById('val-g-mouse');
+
+			// Singing Bowl Inputs
+			const pbMode = document.getElementById('param-b-mode');
+			const pbAmp = document.getElementById('param-b-amp');
+			const pbFreq = document.getElementById('param-b-freq');
+			const pbDamp = document.getElementById('param-b-damp');
+
+			const vbMode = document.getElementById('val-b-mode');
+			const vbAmp = document.getElementById('val-b-amp');
+			const vbFreq = document.getElementById('val-b-freq');
+			const vbDamp = document.getElementById('val-b-damp');
+
+			// Frame Drum Inputs
+			const pdPower = document.getElementById('param-d-power');
+			const pdTension = document.getElementById('param-d-tension');
+			const pdDecay = document.getElementById('param-d-decay');
+			const pdMode = document.getElementById('param-d-mode');
+
+			const vdPower = document.getElementById('val-d-power');
+			const vdTension = document.getElementById('val-d-tension');
+			const vdDecay = document.getElementById('val-d-decay');
+			const vdMode = document.getElementById('val-d-mode');
+
+			// DMT Inputs
+			const pdmSym = document.getElementById('param-dm-sym');
+			const pdmSpeed = document.getElementById('param-dm-speed');
+			const pdmComp = document.getElementById('param-dm-comp');
+			const pdmGlow = document.getElementById('param-dm-glow');
+
+			const vdmSym = document.getElementById('val-dm-sym');
+			const vdmSpeed = document.getElementById('val-dm-speed');
+			const vdmComp = document.getElementById('val-dm-comp');
+			const vdmGlow = document.getElementById('val-dm-glow');
+
+			// Event listeners for bindings
+			pgSpeed.addEventListener('input', (e) => { vgSpeed.innerText = e.target.value; });
+			pgAmp.addEventListener('input', (e) => { vgAmp.innerText = e.target.value; });
+			pgC.addEventListener('input', (e) => { vgC.innerText = e.target.value; });
+			pgMouse.addEventListener('input', (e) => { vgMouse.innerText = e.target.value; });
+
+			pbMode.addEventListener('input', (e) => { vbMode.innerText = e.target.value; });
+			pbAmp.addEventListener('input', (e) => { vbAmp.innerText = e.target.value; });
+			pbFreq.addEventListener('input', (e) => { vbFreq.innerText = e.target.value; });
+			pbDamp.addEventListener('input', (e) => { vbDamp.innerText = e.target.value; });
+
+			pdPower.addEventListener('input', (e) => { vdPower.innerText = e.target.value; });
+			pdTension.addEventListener('input', (e) => { vdTension.innerText = e.target.value; });
+			pdDecay.addEventListener('input', (e) => { vdDecay.innerText = e.target.value; });
+			pdMode.addEventListener('input', (e) => { vdMode.innerText = e.target.value; });
+
+			pdmSym.addEventListener('input', (e) => { vdmSym.innerText = e.target.value; });
+			pdmSpeed.addEventListener('input', (e) => { vdmSpeed.innerText = e.target.value; });
+			pdmComp.addEventListener('input', (e) => { vdmComp.innerText = e.target.value; });
+			pdmGlow.addEventListener('input', (e) => { vdmGlow.innerText = e.target.value; });
+
+			// Initial state generators
+			function generateGrid() {
+				gridPoints = [];
+				const cols = Math.ceil(width / 22) + 2;
+				const rows = Math.ceil(height / 22) + 2;
+				for (let x = -1; x < cols; x++) {
+					for (let y = -1; y < rows; y++) {
+						gridPoints.push({ origX: x * 22, origY: y * 22 });
+					}
+				}
+			}
+
+			function generateCymatics() {
+				cymaticsParticles = [];
+				const radiusLimit = Math.min(width, height) * 0.35;
+				// Scatter 1500 particles randomly in a circle
+				for (let i = 0; i < 1600; i++) {
+					const angle = Math.random() * Math.PI * 2;
+					const r = Math.sqrt(Math.random()) * radiusLimit;
+					cymaticsParticles.push({
+						x: width / 2 + r * Math.cos(angle),
+						y: height / 2 + r * Math.sin(angle),
+						vx: 0,
+						vy: 0
+					});
+				}
+			}
+
+			function generateDrum() {
+				drumNodes = [];
+				const radius = Math.min(width, height) * 0.35;
+				const cols = 35;
+				const rows = 35;
+
+				// Generate grid points that fit inside a circle
+				for (let x = -cols/2; x <= cols/2; x++) {
+					for (let y = -rows/2; y <= rows/2; y++) {
+						const px = x * (radius * 2 / cols);
+						const py = y * (radius * 2 / rows);
+						const dist = Math.sqrt(px * px + py * py);
+						if (dist < radius) {
+							drumNodes.push({
+								x: px,
+								y: py,
+								origX: px,
+								origY: py,
+								z: 0, // Vertical displacement
+								velocity: 0 // Velocity of vertical movement
+							});
+						}
+					}
+				}
+			}
+
+			function generateDmt() {
+				dmtParticles = [];
+				for (let i = 0; i < 450; i++) {
+					dmtParticles.push({
+						r: Math.random() * Math.min(width, height) * 0.5,
+						theta: Math.random() * Math.PI * 2,
+						speed: 0.5 + Math.random() * 1.5,
+						alpha: 0.1 + Math.random() * 0.6,
+						colorIndex: Math.floor(Math.random() * 3)
+					});
+				}
+			}
+
+			// Run all initializations
+			generateGrid();
+			generateCymatics();
+			generateDrum();
+			generateDmt();
+
+			// Resize Handler
+			window.addEventListener('resize', () => {
+				width = canvas.width = window.innerWidth;
+				height = canvas.height = window.innerHeight;
+				generateGrid();
+				generateCymatics();
+				generateDrum();
+			});
+
+			// Cursor Interactions
+			overlay.addEventListener('mousemove', (e) => {
+				mouseX = e.clientX;
+				mouseY = e.clientY;
+				mouseActive = true;
+			});
+			overlay.addEventListener('mouseleave', () => { mouseActive = false; });
+			overlay.addEventListener('mousedown', (e) => {
+				mouseX = e.clientX;
+				mouseY = e.clientY;
+				mouseActive = true;
+				handleStrike(e.clientX, e.clientY);
+			});
+			overlay.addEventListener('mouseup', () => {});
+
+			// Mobile touch interactions
+			overlay.addEventListener('touchmove', (e) => {
+				if (e.touches.length > 0) {
+					mouseX = e.touches[0].clientX;
+					mouseY = e.touches[0].clientY;
+					mouseActive = true;
+				}
+			});
+			overlay.addEventListener('touchend', () => { mouseActive = false; });
+			overlay.addEventListener('touchstart', (e) => {
+				if (e.touches.length > 0) {
+					mouseX = e.touches[0].clientX;
+					mouseY = e.touches[0].clientY;
+					mouseActive = true;
+					handleStrike(e.touches[0].clientX, e.touches[0].clientY);
+				}
+			});
+
+			// Interactive action triggers
+			function handleStrike(x, y) {
+				if (currentTab === 'drum') {
+					// Excitation stroke on the drum skin
+					const cx = width / 2;
+					const cy = height / 2;
+					const dx = x - cx;
+					const dy = y - cy;
+					const strikePower = parseFloat(pdPower.value);
+
+					drumNodes.forEach(node => {
+						const ndx = node.x - dx;
+						const ndy = node.y - dy;
+						const dist = Math.sqrt(ndx * ndx + ndy * ndy);
+						if (dist < 80) {
+							// Apply Gaussian impact force downwards/upwards
+							const force = Math.exp(-(dist * dist) / 1200) * strikePower;
+							node.velocity += force;
+						}
+					});
+				}
+			}
+
+			// Tab Navigation switching logic
+			const tabButtons = document.querySelectorAll('.tab-button');
+			tabButtons.forEach(btn => {
+				btn.addEventListener('click', (e) => {
+					// Toggle active button style
+					tabButtons.forEach(b => b.classList.remove('active'));
+					btn.classList.add('active');
+
+					// Switch Tab ID
+					currentTab = btn.getAttribute('data-tab');
+
+					// Show correct slider group
+					Object.keys(sliders).forEach(key => {
+						sliders[key].style.display = key === currentTab ? 'block' : 'none';
+					});
+
+					// Update description panel
+					const descInfo = tabDescriptions[currentTab];
+					document.getElementById('display-title').innerText = descInfo.title;
+					document.getElementById('display-desc').innerText = descInfo.desc;
+				});
+			});
+
+			// ----------------------------------------------------
+			// RENDERING LOOPS FOR EACH DEMO
+			// ----------------------------------------------------
+
+			// 1. GRAVITY WAVES
+			function drawGravityWaves(cx, cy) {
+				const gSpeed = parseFloat(pgSpeed.value);
+				const gAmp = parseFloat(pgAmp.value);
+				const gC = parseFloat(pgC.value);
+				const gMouse = parseFloat(pgMouse.value);
+				const bhR = 38;
+
+				const currentRadius = bhR * (0.85 + 0.15 * Math.sin(t * 0.003));
+				const bh1X = cx + currentRadius * Math.cos(gSpeed * t);
+				const bh1Y = cy + currentRadius * Math.sin(gSpeed * t);
+				const bh2X = cx - currentRadius * Math.cos(gSpeed * t);
+				const bh2Y = cy - currentRadius * Math.sin(gSpeed * t);
+
+				gridPoints.forEach(p => {
+					const dx = p.origX - cx;
+					const dy = p.origY - cy;
+					const dist = Math.sqrt(dx * dx + dy * dy);
+					const d = Math.max(dist, 10);
+					const theta = Math.atan2(dy, dx);
+
+					const phase = 2 * theta - 2 * gSpeed * (t - d / gC);
+					const amp = (gAmp * 150) / (d + 120);
+
+					const offsetStrength = amp * Math.cos(phase);
+					let offsetX = offsetStrength * Math.cos(theta) * 0.45;
+					let offsetY = offsetStrength * Math.sin(theta) * 0.45;
+
+					if (mouseActive && gMouse > 0) {
+						const mdx = mouseX - p.origX;
+						const mdy = mouseY - p.origY;
+						const mdist = Math.sqrt(mdx * mdx + mdy * mdy);
+						if (mdist < 240) {
+							const pull = (240 - mdist) / 240 * gMouse;
+							offsetX += (mdx / (mdist + 1)) * pull;
+							offsetY += (mdy / (mdist + 1)) * pull;
+						}
+					}
+
+					const renderX = p.origX + offsetX;
+					const renderY = p.origY + offsetY;
+					const alpha = Math.max(0.08, 0.72 - (d / (width * 0.65)));
+
+					ctx.fillStyle = `rgba(192, 196, 204, ${alpha})`;
+					ctx.beginPath();
+					const r = d < 120 ? 1.8 : 1.1;
+					ctx.arc(renderX, renderY, r, 0, Math.PI * 2);
+					ctx.fill();
+				});
+
+				// Draw Binary BHs
+				ctx.shadowBlur = 10;
+				ctx.shadowColor = 'rgba(255, 255, 255, 0.2)';
+				ctx.fillStyle = 'rgba(0, 0, 0, 1)';
+				ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)';
+				ctx.lineWidth = 1;
+
+				ctx.beginPath(); ctx.arc(bh1X, bh1Y, 4, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+				ctx.beginPath(); ctx.arc(bh2X, bh2Y, 4, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+				ctx.shadowBlur = 0;
+			}
+
+			// 2. SINGING BOWL (CYMATICS)
+			function drawSingingBowl(cx, cy) {
+				const bMode = parseInt(pbMode.value);
+				const bAmp = parseFloat(pbAmp.value);
+				const bFreq = parseFloat(pbFreq.value);
+				const bDamp = parseFloat(pbDamp.value);
+
+				const bowlRadius = Math.min(width, height) * 0.35;
+
+				// Draw Singing Bowl Rim
+				ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
+				ctx.lineWidth = 2;
+				ctx.beginPath();
+				ctx.arc(cx, cy, bowlRadius, 0, Math.PI * 2);
+				ctx.stroke();
+
+				// Draw Nodal resonance guidelines (faintly)
+				ctx.strokeStyle = 'rgba(255, 255, 255, 0.04)';
+				ctx.lineWidth = 1;
+				for (let i = 0; i < bMode * 2; i++) {
+					const angle = (i * Math.PI) / bMode;
+					ctx.beginPath();
+					ctx.moveTo(cx - bowlRadius * Math.cos(angle), cy - bowlRadius * Math.sin(angle));
+					ctx.lineTo(cx + bowlRadius * Math.cos(angle), cy + bowlRadius * Math.sin(angle));
+					ctx.stroke();
+				}
+
+				// Check if mouse is rubbing the rim
+				const mdx = mouseX - cx;
+				const mdy = mouseY - cy;
+				const mdist = Math.sqrt(mdx * mdx + mdy * mdy);
+				// Is mouse near the rim?
+				const isRubbing = mouseActive && Math.abs(mdist - bowlRadius) < 55;
+				const inputForce = isRubbing ? 1.0 : 0.05;
+
+				// Update particles
+				cymaticsParticles.forEach(p => {
+					const dx = p.x - cx;
+					const dy = p.y - cy;
+					const dist = Math.sqrt(dx * dx + dy * dy);
+					const theta = Math.atan2(dy, dx);
+
+					// Dynamic vibration pattern inside the bowl: standing wave
+					// Vibration intensity varies with angle (sine pattern) and time (frequency)
+					const vibrationOffset = Math.sin(bMode * theta) * Math.sin(t * bFreq * Math.PI * 2);
+					const forceMag = bAmp * vibrationOffset * inputForce;
+
+					// Force directs particles away from high-vibration antinodes towards low-vibration nodes
+					// Gradients of Chladni standing wave acceleration
+					// Accelerate along theta and radial directions
+					const fTheta = -bMode * Math.cos(bMode * theta) * Math.sin(t * bFreq * Math.PI * 2) * forceMag * 0.015;
+					const fRadial = Math.sin(bMode * theta) * forceMag * 0.01;
+
+					// Push vectors
+					p.vx += -fTheta * Math.sin(theta) + fRadial * Math.cos(theta);
+					p.vy += fTheta * Math.cos(theta) + fRadial * Math.sin(theta);
+
+					// Apply drag
+					p.vx *= (1 - bDamp);
+					p.vy *= (1 - bDamp);
+
+					// Update position
+					p.x += p.vx;
+					p.y += p.vy;
+
+					// Boundary constraint: Keep inside the bowl
+					const newD = Math.sqrt((p.x - cx) ** 2 + (p.y - cy) ** 2);
+					if (newD > bowlRadius - 3) {
+						const angle = Math.atan2(p.y - cy, p.x - cx);
+						p.x = cx + (bowlRadius - 4) * Math.cos(angle);
+						p.y = cy + (bowlRadius - 4) * Math.sin(angle);
+						p.vx *= -0.2;
+						p.vy *= -0.2;
+					}
+
+					// Render particle
+					ctx.fillStyle = 'rgba(213, 215, 219, 0.7)';
+					ctx.beginPath();
+					ctx.arc(p.x, p.y, 1.2, 0, Math.PI * 2);
+					ctx.fill();
+				});
+
+				// Draw rubbing feedback circle
+				if (isRubbing) {
+					ctx.beginPath();
+					ctx.arc(mouseX, mouseY, 15, 0, Math.PI * 2);
+					ctx.fillStyle = 'rgba(255, 255, 255, 0.15)';
+					ctx.fill();
+					ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
+					ctx.stroke();
+				}
+			}
+
+			// 3. FRAME DRUM RESONANCE
+			function drawFrameDrum(cx, cy) {
+				const dTen = parseFloat(pdTension.value);
+				const dDecay = parseFloat(pdDecay.value);
+				const dMode = parseInt(pdMode.value);
+				const drumRadius = Math.min(width, height) * 0.35;
+
+				// Draw Drum Shell
+				ctx.strokeStyle = 'rgba(255, 255, 255, 0.12)';
+				ctx.lineWidth = 3;
+				ctx.beginPath();
+				ctx.arc(cx, cy, drumRadius, 0, Math.PI * 2);
+				ctx.stroke();
+
+				// Vibration Simulation using a coupled spring lattice approximation
+				// To keep it high-performance, we can calculate displacement Z based on Bessel functions when excited,
+				// or calculate an active propagation step.
+				// Let's do a wave equation solver approximation on grid:
+				// First update velocities and displacements
+				drumNodes.forEach((node, idx) => {
+					// Spring force pulling node to origin center
+					let force = -dTen * node.z;
+
+					// Continuous background resonance vibration if mode selected
+					if (dMode > 0) {
+						const dist = Math.sqrt(node.x * node.x + node.y * node.y);
+						const theta = Math.atan2(node.y, node.x);
+						// Bessel-like mode approximation: Jn(kr) * cos(n * theta) * cos(omega * t)
+						let besselApprox = 0;
+						if (dMode === 1) { // Mode (0,1) Fundamental
+							besselApprox = Math.cos((dist / drumRadius) * Math.PI * 0.5);
+						} else if (dMode === 2) { // Mode (1,1) Split dipole
+							besselApprox = Math.sin((dist / drumRadius) * Math.PI) * Math.cos(theta);
+						} else if (dMode === 3) { // Mode (0,2) Concentric ring
+							besselApprox = Math.cos((dist / drumRadius) * Math.PI * 1.5);
+						}
+						
+						// Inject gentle continuous force
+						force += besselApprox * Math.sin(t * 0.08) * 0.15;
+					}
+
+					// Update velocity
+					node.velocity += force;
+					// Apply damping
+					node.velocity *= (1 - dDecay);
+					// Update Z displacement
+					node.z += node.velocity;
+				});
+
+				// Oblique 3D mesh projection for premium look!
+				const angle3D = Math.PI / 6; // Oblique projection angle (30 deg)
+				const skewY = 0.55; // Vertical squash to simulate perspective
+
+				drumNodes.forEach(node => {
+					// Project to 3D perspective
+					// Z displacement distorts vertically
+					const projX = cx + node.x;
+					const projY = cy + node.y * skewY - node.z * 1.1;
+
+					// Color based on height (displacement)
+					let hue = 210; // Slate blue/gray
+					let lightness = 80;
+					
+					if (node.z > 1) {
+						lightness = Math.min(100, 80 + node.z * 1.2);
+					} else if (node.z < -1) {
+						lightness = Math.max(30, 80 + node.z * 0.8);
+					}
+
+					// Dynamic transparency based on height
+					const alpha = Math.max(0.15, Math.min(0.85, 0.5 + node.z * 0.04));
+
+					ctx.fillStyle = `rgba(${lightness + 40}, ${lightness + 45}, ${lightness + 55}, ${alpha})`;
+					ctx.beginPath();
+					const size = Math.max(1, 1.4 + Math.abs(node.z) * 0.08);
+					ctx.arc(projX, projY, size, 0, Math.PI * 2);
+					ctx.fill();
+				});
+			}
+
+			// 4. DMT VISUAL FLOW
+			function drawDmtFlow(cx, cy) {
+				const dmSym = parseInt(pdmSym.value);
+				const dmSpeed = parseFloat(pdmSpeed.value);
+				const dmComp = parseFloat(pdmComp.value);
+				const dmGlow = parseFloat(pdmGlow.value);
+
+				// Update particles
+				dmtParticles.forEach(p => {
+					// Spiral motion path
+					p.theta += dmSpeed * p.speed;
+					// Flow oscillations
+					p.r += Math.sin(p.theta * dmComp + t * 0.01) * 0.6;
+
+					// Wrap radius boundaries
+					if (p.r > Math.min(width, height) * 0.5) {
+						p.r = 10 + Math.random() * 20;
+					}
+
+					// Render N-fold symmetry duplicates (kaleidoscope effect)
+					for (let i = 0; i < dmSym; i++) {
+						const symTheta = p.theta + (i * Math.PI * 2) / dmSym;
+						
+						// Calculate projection position
+						const px = cx + p.r * Math.cos(symTheta);
+						const py = cy + p.r * Math.sin(symTheta);
+
+						// Soft silver glows
+						let colorStr = 'rgba(213, 215, 219,';
+						if (p.colorIndex === 1) colorStr = 'rgba(160, 164, 176,'; // Slate gray
+						else if (p.colorIndex === 2) colorStr = 'rgba(255, 255, 255,'; // White
+
+						ctx.shadowBlur = dmGlow * 20;
+						ctx.shadowColor = 'rgba(255, 255, 255, 0.3)';
+
+						ctx.fillStyle = `${colorStr} ${p.alpha})`;
+						ctx.beginPath();
+						ctx.arc(px, py, 1.6, 0, Math.PI * 2);
+						ctx.fill();
+					}
+				});
+				ctx.shadowBlur = 0; // Reset performance
+			}
+
+			// Main loop selector
+			function animate() {
+				t += 1;
+				ctx.fillStyle = '#000000';
+				ctx.fillRect(0, 0, width, height);
+
+				const cx = width / 2;
+				const cy = height / 2;
+
+				if (currentTab === 'gravity') {
+					drawGravityWaves(cx, cy);
+				} else if (currentTab === 'bowl') {
+					drawSingingBowl(cx, cy);
+				} else if (currentTab === 'drum') {
+					drawFrameDrum(cx, cy);
+				} else if (currentTab === 'dmt') {
+					drawDmtFlow(cx, cy);
+				}
+
+				requestAnimationFrame(animate);
+			}
+
+			animate();
+		</script>
+	</body>
+</html>

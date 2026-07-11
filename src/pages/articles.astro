@@ -1,55 +1,152 @@
 ---
-import { getCollection } from 'astro:content';
+// src/pages/articles.astro
 import Layout from '../layouts/Layout.astro';
+import socialData from '../content/social.json';
 
-// 在開發環境顯示所有文章（包含草稿），在正式環境過濾掉草稿
-const posts = await getCollection('posts', ({ data }) => {
-  return import.meta.env.DEV ? true : !data.isDraft;
-});
+// Fetch dynamic Blogger RSS feed in real-time
+let bloggerPosts = [];
+let fetchSuccess = false;
 
-// 按日期降序排序
-posts.sort((a, b) => b.data.publishDate.getTime() - a.data.publishDate.getTime());
+if (socialData.bloggerUrl && socialData.bloggerUrl !== '#') {
+	try {
+		const blogName = socialData.bloggerUrl.replace(/https?:\/\//, '').replace(/\/$/, '');
+		const res = await fetch(`https://${blogName}/feeds/posts/default?alt=json&max-results=3`);
+		if (res.ok) {
+			const data = await res.json();
+			if (data.feed && data.feed.entry) {
+				bloggerPosts = data.feed.entry.map((entry: any) => {
+					const title = entry.title.$t || '無標題文章';
+					const link = entry.link.find((l: any) => l.rel === 'alternate')?.href || '#';
+					const publishedRaw = entry.published?.$t;
+					const published = publishedRaw 
+						? new Date(publishedRaw).toISOString().split('T')[0].replace(/-/g, '.')
+						: 'N/A';
+					
+					// Parse content and strip HTML tags for clean summary
+					const contentHtml = entry.content?.$t || entry.summary?.$t || '';
+					const cleanSummary = contentHtml
+						.replace(/<[^>]*>/g, '') // Strip HTML tags
+						.replace(/\s+/g, ' ')    // Normalize whitespace
+						.slice(0, 110) + '...';
+						
+					return { title, link, published, summary: cleanSummary };
+				});
+				fetchSuccess = true;
+			}
+		}
+	} catch (e) {
+		console.error("Failed to fetch Blogger RSS feed:", e);
+	}
+}
 
-const formatDate = (date: Date) => {
-  return date.toISOString().split('T')[0].replace(/-/g, '.');
-};
+// Fallback sample posts if Blogger is not set or offline
+const samplePosts = [
+	{
+		title: "如何以超心理學角度解構現代恐怖電影中的意識投影",
+		summary: "探討電影中如何運用潛意識、集體記憶與空間恐懼，引發受眾在日常環境中的異常認知與共鳴效應...",
+		published: "2026.05.10",
+		link: "#"
+	},
+	{
+		title: "離體經驗 (OBE) 中的時空知覺偏差與灰色領域理論",
+		summary: "彙整 NDE 與 OBE 調查個案，深入剖析個案在跨越物質邊界時對「灰色領域」空間結構的描述與實證意義...",
+		published: "2026.04.18",
+		link: "#"
+	}
+];
+
+const displayPosts = fetchSuccess ? bloggerPosts : samplePosts;
 ---
 
-<Layout title="研究文章 (Articles)">
-	<h1 class="page-title">研究日誌與學術文章</h1>
+<Layout title="社群動態 (Social)">
+	<h1 class="page-title">社群動態 SOCIAL</h1>
 	
-	<div class="articles-container">
-		{posts.length === 0 ? (
-			<p class="no-posts">目前尚無發佈的文章。</p>
-		) : (
-			posts.map((post) => (
-				<article class="content-block post-card">
-					{post.data.heroImage && (
-						<img src={post.data.heroImage} class="post-hero-image" alt={post.data.title} />
-					)}
-					<div class="post-date">
-						{formatDate(post.data.publishDate)}
-						{post.data.isDraft && <span class="draft-badge">草稿</span>}
+	<div class="social-hub-layout">
+		<!-- Introduction -->
+		<p class="social-intro">
+			主要專業文章與深入學術備份已遷移至 Google Blogger 存放。在此您可以一鍵瀏覽我的各個社群管道動態，並透過下方即時同步的 RSS 欄位，獲取 Blogger 部落格的最新文章。
+		</p>
+		
+		<!-- Social Media Grid -->
+		<div class="social-grid">
+			{socialData.instagram && socialData.instagram !== '#' && (
+				<a href={socialData.instagram} target="_blank" rel="noopener noreferrer" class="content-block social-card">
+					<div class="social-card-header">
+						<span class="social-icon">
+							<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+						</span>
+						<h3 class="social-name">Instagram</h3>
 					</div>
-					<h3 class="post-title">
-						<a href={`/articles/${post.id}`}>{post.data.title}</a>
-					</h3>
-					<p class="post-summary">{post.data.summary}</p>
-					
-					{post.data.tags && post.data.tags.length > 0 && (
-						<div class="post-tags">
-							{post.data.tags.map(tag => (
-								<span class="tag">#{tag}</span>
-							))}
-						</div>
-					)}
+					<p class="social-desc">分享研究日常花絮、靈性探討與日常生活觀察。</p>
+					<span class="social-action">前往關注 &rarr;</span>
+				</a>
+			)}
 
-					<a href={`/articles/${post.id}`} class="read-more">
-						閱讀全文 <span class="arrow">&rarr;</span>
+			{socialData.threads && socialData.threads !== '#' && (
+				<a href={socialData.threads} target="_blank" rel="noopener noreferrer" class="content-block social-card">
+					<div class="social-card-header">
+						<span class="social-icon">
+							<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"></path><path d="M12 6a6 6 0 0 0-6 6c0 2.2.8 4.2 2.1 5.7l1.4-1.4A4 4 0 0 1 8 12a4 4 0 0 1 4-4 4 4 0 0 1 4 4c0 1.1-.4 2.1-1.1 2.9l1.4 1.4A6 6 0 0 0 18 12a6 6 0 0 0-6-6z"></path></svg>
+						</span>
+						<h3 class="social-name">Threads</h3>
+					</div>
+					<p class="social-desc">發表即時思考碎屑、對話性觀點與日常互動。</p>
+					<span class="social-action">前往互動 &rarr;</span>
+				</a>
+			)}
+
+			{socialData.facebook && socialData.facebook !== '#' && (
+				<a href={socialData.facebook} target="_blank" rel="noopener noreferrer" class="content-block social-card">
+					<div class="social-card-header">
+						<span class="social-icon">
+							<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
+						</span>
+						<h3 class="social-name">Facebook</h3>
+					</div>
+					<p class="social-desc">發布重要公告、跨界合作專案與影視超物理剖析。</p>
+					<span class="social-action">前往追蹤 &rarr;</span>
+				</a>
+			)}
+
+			{socialData.x && socialData.x !== '#' && (
+				<a href={socialData.x} target="_blank" rel="noopener noreferrer" class="content-block social-card">
+					<div class="social-card-header">
+						<span class="social-icon">
+							<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16"><path d="M12.6.75h2.454l-5.36 6.142L16 15.25h-4.937l-3.867-5.07-4.425 5.07H.316l5.733-6.57L0 .75h5.063l3.495 4.633L12.6.75zm-.86 13.028h1.36L4.323 2.145H2.865l8.875 11.633z"/></svg>
+						</span>
+						<h3 class="social-name">X (Twitter)</h3>
+					</div>
+					<p class="social-desc">國際學術交流與前沿邊界科學觀點探討。</p>
+					<span class="social-action">前往交流 &rarr;</span>
+				</a>
+			)}
+		</div>
+
+		<!-- Blogger RSS Feed Section -->
+		<div class="blogger-section">
+			<h2 class="section-subtitle">
+				部落格文章備份 {fetchSuccess ? <span class="sync-badge">即時同步中</span> : <span class="fallback-badge">預覽範本</span>}
+			</h2>
+			
+			{!fetchSuccess && (
+				<p class="blogger-setup-hint">
+					💡 提示：您尚未在後台設定正確的 Blogger 網域，或者處於離線狀態。以下展示網頁同步時的預覽效果：
+				</p>
+			)}
+			
+			<div class="blogger-posts-list">
+				{displayPosts.map((post) => (
+					<a href={post.link} target="_blank" rel="noopener noreferrer" class="content-block blogger-post-card">
+						<div class="post-date">{post.published}</div>
+						<h3 class="post-title">{post.title}</h3>
+						<p class="post-summary">{post.summary}</p>
+						<span class="read-more">
+							閱讀全文 <span class="arrow">&rarr;</span>
+						</span>
 					</a>
-				</article>
-			))
-		)}
+				))}
+			</div>
+		</div>
 	</div>
 </Layout>
 
@@ -72,22 +169,132 @@ const formatDate = (date: Date) => {
 		opacity: 0.6;
 	}
 
-	.articles-container {
+	.social-hub-layout {
+		display: flex;
+		flex-direction: column;
+		gap: 3.5rem;
+	}
+
+	.social-intro {
+		color: var(--text-muted);
+		font-size: 1.05rem;
+		line-height: 1.95;
+		font-weight: 300;
+		max-width: 750px;
+		margin-bottom: 1.5rem;
+	}
+
+	.social-grid {
+		display: grid;
+		grid-template-columns: repeat(2, 1fr);
+		gap: 2rem;
+	}
+
+	.social-card {
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		align-items: flex-start;
+		padding: 2.2rem;
+		height: 200px;
+		box-sizing: border-box;
+		text-decoration: none;
+	}
+
+	.social-card-header {
+		display: flex;
+		align-items: center;
+		gap: 0.75rem;
+	}
+
+	.social-icon {
+		color: var(--accent-color);
+		display: flex;
+		align-items: center;
+	}
+
+	.social-name {
+		font-size: 1.25rem;
+		font-weight: 300;
+		margin: 0;
+	}
+
+	.social-desc {
+		color: var(--text-muted);
+		font-size: 0.88rem;
+		line-height: 1.7;
+		margin: 0;
+	}
+
+	.social-action {
+		font-size: 0.8rem;
+		color: var(--accent-color);
+		letter-spacing: 1px;
+		transition: transform 0.4s ease;
+	}
+
+	.social-card:hover .social-action {
+		transform: translateX(4px);
+		color: var(--accent-hover);
+	}
+
+	.blogger-section {
+		margin-top: 2rem;
+		border-top: 1px solid var(--border-color);
+		padding-top: 3.5rem;
+	}
+
+	.section-subtitle {
+		font-size: 1.5rem;
+		font-weight: 300;
+		margin-top: 0;
+		margin-bottom: 2rem;
+		display: flex;
+		align-items: center;
+		gap: 1rem;
+	}
+
+	.sync-badge, .fallback-badge {
+		font-size: 0.7rem;
+		padding: 2px 8px;
+		border-radius: 2px;
+		font-family: var(--font-sans);
+		vertical-align: middle;
+	}
+
+	.sync-badge {
+		background: rgba(100, 200, 100, 0.08);
+		color: #64c864;
+		border: 1px solid rgba(100, 200, 100, 0.2);
+	}
+
+	.fallback-badge {
+		background: rgba(255, 255, 255, 0.04);
+		color: var(--text-muted);
+		border: 1px solid var(--border-color);
+	}
+
+	.blogger-setup-hint {
+		font-size: 0.85rem;
+		color: var(--text-muted);
+		background: rgba(255, 255, 255, 0.01);
+		border: 1px dashed var(--border-color);
+		padding: 1rem;
+		margin-bottom: 2rem;
+		font-style: italic;
+	}
+
+	.blogger-posts-list {
 		display: flex;
 		flex-direction: column;
 		gap: 2rem;
 	}
 
-	.no-posts {
-		color: var(--text-muted);
-		font-style: italic;
-		font-family: var(--font-serif);
-	}
-
-	.post-card {
+	.blogger-post-card {
 		display: flex;
 		flex-direction: column;
 		align-items: flex-start;
+		text-decoration: none;
 	}
 
 	.post-date {
@@ -101,12 +308,12 @@ const formatDate = (date: Date) => {
 	.post-title {
 		margin-top: 0;
 		margin-bottom: 1rem;
-		font-size: 1.5rem;
+		font-size: 1.4rem;
 		font-weight: 300;
 		line-height: 1.35;
 	}
 
-	.post-title a:hover {
+	.blogger-post-card:hover .post-title {
 		color: var(--accent-color);
 	}
 
@@ -115,6 +322,7 @@ const formatDate = (date: Date) => {
 		font-size: 0.95rem;
 		line-height: 1.8;
 		margin-bottom: 1.5rem;
+		margin-top: 0;
 	}
 
 	.read-more {
@@ -131,59 +339,18 @@ const formatDate = (date: Date) => {
 		transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 	}
 
-	.post-card:hover .read-more .arrow {
+	.blogger-post-card:hover .read-more .arrow {
 		transform: translateX(6px);
 	}
 
-	.draft-badge {
-		font-size: 0.7rem;
-		background: rgba(192, 176, 153, 0.12);
-		color: var(--accent-color);
-		border: 1px dashed var(--accent-color);
-		padding: 2px 8px;
-		border-radius: 2px;
-		margin-left: 1rem;
-		font-family: var(--font-sans);
-		vertical-align: middle;
-	}
-
-	.post-tags {
-		display: flex;
-		gap: 0.75rem;
-		margin-bottom: 1.5rem;
-		flex-wrap: wrap;
-	}
-
-	.tag {
-		font-size: 0.8rem;
-		color: var(--text-muted);
-		background: rgba(255, 255, 255, 0.01);
-		padding: 1px 8px;
-		border: 1px solid var(--border-color);
-		font-family: var(--font-serif);
-		transition: all 0.3s ease;
-	}
-
-	.post-card:hover .tag {
-		border-color: var(--border-hover);
-		color: var(--text-color);
-	}
-
-	.post-hero-image {
-		width: calc(100% + 6rem);
-		height: 200px;
-		object-fit: cover;
-		margin-top: -3rem;
-		margin-left: -3rem;
-		margin-right: -3rem;
-		margin-bottom: 2rem;
-		border-bottom: 1px solid var(--border-color);
-		filter: grayscale(0.5) contrast(1.05);
-		transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-	}
-
-	.post-card:hover .post-hero-image {
-		filter: grayscale(0) contrast(1);
+	@media (max-width: 768px) {
+		.social-grid {
+			grid-template-columns: 1fr;
+			gap: 1.5rem;
+		}
+		.social-card {
+			height: 180px;
+			padding: 1.8rem;
+		}
 	}
 </style>
-

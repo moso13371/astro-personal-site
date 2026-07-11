@@ -1,23 +1,23 @@
 {
   "links": [
     {
-      "label": "關於 / ABOUT",
+      "label": "關於 ABOUT",
       "href": "/"
     },
     {
-      "label": "文章 / ARTICLES",
+      "label": "社群 SOCIAL",
       "href": "/articles"
     },
     {
-      "label": "服務 / SERVICES",
+      "label": "服務 SERVICES",
       "href": "/service"
     },
     {
-      "label": "聯絡 / CONTACT",
+      "label": "聯絡 CONTACT",
       "href": "/contact"
     },
     {
-      "label": "演示 / DEMO",
+      "label": "演示 DEMO",
       "href": "/gravity-wave"
     }
   ]

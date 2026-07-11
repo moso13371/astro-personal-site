@@ -101,6 +101,18 @@ export default config({
           defaultValue: '1.15rem'
         })
       }
+    }),
+    social: singleton({
+      label: '社群與部落格連結',
+      path: 'src/content/social',
+      format: { data: 'json' },
+      schema: {
+        facebook: fields.text({ label: 'Facebook 專頁網址', defaultValue: '#' }),
+        instagram: fields.text({ label: 'Instagram 網址', defaultValue: '#' }),
+        threads: fields.text({ label: 'Threads 網址', defaultValue: '#' }),
+        x: fields.text({ label: 'X (Twitter) 網址', defaultValue: '#' }),
+        bloggerUrl: fields.text({ label: 'Blogger 部落格網址 (例如: parawongling.blogspot.com)', defaultValue: 'parawongling.blogspot.com' })
+      }
     })
   },
   collections: {
@@ -143,7 +155,7 @@ export default config({
   ui: {
     navigation: {
       '版面與選單配置': ['navigation', 'theme'],
-      '個人與服務頁面': ['about', 'service', 'contact'],
+      '個人與服務頁面': ['about', 'service', 'contact', 'social'],
       '專欄文章管理': ['posts']
     }
   }
