@@ -20,11 +20,33 @@ export default config({
           publicPath: '/images/about'
         }),
         intro: fields.text({ label: '關於研究簡介', multiline: true }),
-        focusAreas: fields.array(
-          fields.text({ label: '專注領域' }),
+        researchAreas: fields.array(
+          fields.object({
+            category: fields.text({ label: '領域名稱 (中文)' }),
+            categoryEn: fields.text({ label: '領域名稱 (英文)' }),
+            summary: fields.text({ label: '領域簡介描述', multiline: true }),
+            items: fields.array(
+              fields.text({ label: '子項目名稱 (含中英對照)' }),
+              {
+                label: '子項目清單',
+                itemLabel: props => props.value || '未命名項目'
+              }
+            )
+          }),
           {
-            label: '專注領域列表',
-            itemLabel: props => props.value || '未命名領域'
+            label: '研究領域與關注方向',
+            itemLabel: props => props.fields.category.value || '未命名領域'
+          }
+        ),
+        timeline: fields.array(
+          fields.object({
+            year: fields.text({ label: '年份 (例如: 2024)' }),
+            title: fields.text({ label: '里程碑主題' }),
+            desc: fields.text({ label: '里程碑詳細說明', multiline: true })
+          }),
+          {
+            label: '研究理論與發展里程碑',
+            itemLabel: props => `${props.fields.year.value || ''} - ${props.fields.title.value || '未命名里程碑'}`
           }
         )
       }

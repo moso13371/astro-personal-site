@@ -3,11 +3,77 @@
   "profession": "超心理學研究 ｜ Parapsychology Researcher\n未明現象調查 ｜ Unexplained Phenomena Investigator\n聲波系統工作 ｜ Sonic System Practitioner",
   "avatar": "/images/about/avatar.jpg",
   "intro": "嗨，我是往櫺 WONGLING，目前是一位超心理學研究者、未明現象調查員以及聲波系統工作者，我試圖透過不同宗教信仰與學派理論來探索意識與靈性，並且嘗試解構未明現象與超自然事件。\n\n我始終認為，當我們能夠理解其中成因及原理時，便能消解未知迷霧，找到相互啟發的連結。\n\n\nHello, I am WONGLING, currently a parapsychology researcher, an unexplained phenomena investigator, and a Sonic System Practitioner. I seek to explore consciousness and spirituality through the lens of diverse religious beliefs and theoretical frameworks, attempting to deconstruct anomalous phenomena and supernatural occurrences.\n\nI firmly believe that by understanding their underlying causes and mechanisms, we can clear the fog of the unknown and discover mutually inspiring connections.",
-  "focusAreas": [
-    "意識維度假說與異常感知 (Anomalous Cognition) 實證研究",
-    "瀕死體驗與離體狀態之「灰色領域」空間力學",
-    "量子隨機數生成器 (RNG) 與微觀心物交互作用 (Micro-PK)",
-    "框鼓聲音共振 (Frame Drum Resonance) 之生理調控與療癒效應",
-    "宗教學、民俗文化與靈異現象之跨學科理性解構"
+  "researchAreas": [
+    {
+      "category": "超心理學與未明現象",
+      "categoryEn": "Parapsychology & Unexplained Phenomena",
+      "summary": "專注於常態框架外的現象調查與機制探討。",
+      "items": [
+        "超心理學 (Parapsychology)",
+        "ESP 現象 (ESP Phenomena)",
+        "超常經驗 (Exceptional Human Experience / EHE)",
+        "靈媒模式實踐 (Mediumship Studies & Practices)",
+        "未明飛行物 (Unidentified Aerial Phenomena / UAP)",
+        "地外文明等跨領域調查 (Extraterrestrial Intelligence & Cosmic Studies)"
+      ]
+    },
+    {
+      "category": "意識與空間維度",
+      "categoryEn": "Consciousness & Dimensional Studies",
+      "summary": "探索意識的邊界、狀態轉換與底層運作機制。",
+      "items": [
+        "意識研究 (Consciousness Studies)",
+        "超個人心理學 (Transpersonal Psychology)",
+        "出體經驗 (Out-of-Body Experience / OBE)",
+        "瀕死經驗 (Near-Death Experience / NDE)",
+        "靈魂與化身假說 (Soul & Reincarnation Hypotheses)",
+        "迷幻研究與應用 (Psychedelic Studies & Applications)"
+      ]
+    },
+    {
+      "category": "宗教、民俗與儀式現象",
+      "categoryEn": "Religion, Folklore & Ritual Phenomena",
+      "summary": "從文化與現象學視角，客觀解構信仰系統與集體經驗。",
+      "items": [
+        "宗教學 (Religious Studies)",
+        "民俗學 (Folklore Studies)",
+        "惡魔學 (Demonology)",
+        "當代靈性比較 (Contemporary Comparative Spirituality)",
+        "鬼怪與靈異文化研究 (Ghosts & Supernatural Culture Studies)",
+        "儀式與集體經驗探討 (Rituals & Collective Experiences)"
+      ]
+    },
+    {
+      "category": "聲波系統與共振實踐",
+      "categoryEn": "Sonic Systems & Resonance Practices",
+      "summary": "探究環境頻率、聲響媒材與身心意識狀態的交互作用。",
+      "items": [
+        "當代身心靈系統架構 (Contemporary Body-Mind-Spirit Frameworks)",
+        "聲音系統工作 (Sonic System Practices)",
+        "環境聲景與文化現象之整合 (Environmental Soundscapes & Cultural Integration)"
+      ]
+    }
+  ],
+  "timeline": [
+    {
+      "year": "2024",
+      "title": "理論實驗與驗證",
+      "desc": "針對「意識維度假說」展開進階的相關理論實驗與驗證工作。"
+    },
+    {
+      "year": "2021",
+      "title": "提出「灰域」(Gray Realm) 空間理論",
+      "desc": "基於多年對瀕死經驗 (NDE) 與靈魂出竅經驗 (OBE) 的現象解析，建構並撰寫專屬空間理論。"
+    },
+    {
+      "year": "2018",
+      "title": "理論框架擴展與實證",
+      "desc": "進一步豐富「意識維度假說」的理論框架，並著手進行初步的實證研究探討。"
+    },
+    {
+      "year": "2016",
+      "title": "首次提出「意識維度假說」(Consciousness Dimension Hypothesis)",
+      "desc": "正式啟動多維度意識的理論建構與雛形驗證。"
+    }
   ]
 }
