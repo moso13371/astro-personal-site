@@ -3,8 +3,66 @@
 import Layout from '../layouts/Layout.astro';
 import aboutData from '../content/about.json';
 
-// Split the multiline profession string into an array of lines for bulletproof rendering
+// Split the multiline profession string into an array of lines
 const professions = aboutData.profession ? aboutData.profession.split('\n') : [];
+
+// Organized Research Domains for clean grid display (reduced density, highly structured)
+const researchDomains = [
+	{
+		id: "01",
+		category: "超心理學與異常現象",
+		categoryEn: "Parapsychology & Anomalous Phenomena",
+		items: ["超心理學 (Parapsychology)", "ESP現象", "出體經驗 (OBE)", "瀕死經驗研究 (NDE)", "超常經驗研究 (EHE)", "靈魂與化身研究", "靈媒模式實踐", "超自然與未明現象調查"]
+	},
+	{
+		id: "02",
+		category: "宗教、魔鬼學與靈性",
+		categoryEn: "Religious Studies & Demonology",
+		items: ["宗教學", "民俗學 (Folklore)", "惡魔學 (Demonology)", "當代靈性與比較", "儀式與集體經驗"]
+	},
+	{
+		id: "03",
+		category: "意識科學與超個人研究",
+		categoryEn: "Consciousness & Transpersonal Studies",
+		items: ["意識研究 (Consciousness Studies)", "超個人心理學", "迷幻研究與應用"]
+	},
+	{
+		id: "04",
+		category: "聲波系統與身心調控",
+		categoryEn: "Sonic Systems & Somatic Regulation",
+		items: ["聲音療癒 (Sound Healing)", "身心靈系統", "療癒文化與實踐"]
+	},
+	{
+		id: "05",
+		category: "宇宙探索與邊界文化",
+		categoryEn: "Border Sciences & Extraterrestrial Studies",
+		items: ["地外文明研究", "不明飛行物 (UAP) 研究", "鬼怪與超自然文化"]
+	}
+];
+
+// Research Timeline (Theory Milestones)
+const timeline = [
+	{
+		year: "2024",
+		title: "意識維度假說實證實驗",
+		desc: "啟動「意識維度假說」相關理論實驗，進行量子隨機數與微觀心物交互作用之實驗驗證。"
+	},
+	{
+		year: "2021",
+		title: "「灰域」空間理論建構",
+		desc: "基於瀕死經驗（NDE）與出體經驗（OBE）之空間拓撲結構進行「灰域 (Gray Realm)」空間理論撰寫。"
+	},
+	{
+		year: "2018",
+		title: "理論框架深化",
+		desc: "豐富「意識維度假說」理論框架，並開展初步實證性個案收集與質性研究。"
+	},
+	{
+		year: "2016",
+		title: "「意識維度假說」首次提出",
+		desc: "首次提出 Consciousness Dimension Hypothesis（意識維度假說）並啟動學術理論建構。"
+	}
+];
 ---
 
 <Layout title="關於 ABOUT">
@@ -19,27 +77,56 @@ const professions = aboutData.profession ? aboutData.profession.split('\n') : []
 		</div>
 		{aboutData.avatar && (
 			<div class="profile-avatar-container">
-				<!-- Forced color with no hover transformations -->
 				<img src={aboutData.avatar} class="profile-avatar" alt={aboutData.name} />
 			</div>
 		)}
 	</div>
 
+	<!-- Section renamed to '關於' (About) -->
 	<div class="content-block">
-		<h2>關於研究</h2>
+		<h2>關於</h2>
 		<p style="white-space: pre-line; line-height: 2.0; color: var(--text-color); font-weight: 400; font-size: 1.05rem;">{aboutData.intro}</p>
 	</div>
 
+	<!-- Optimized Research Fields Grid -->
 	<div class="content-block">
-		<h2>目前專注領域</h2>
-		<ul class="focus-list">
-			{aboutData.focusAreas.map((area) => (
-				<li>
-					<span class="focus-marker"></span>
-					<span class="focus-text">{area}</span>
-				</li>
+		<h2>研究領域與興趣</h2>
+		<div class="domain-grid">
+			{researchDomains.map((domain) => (
+				<div class="domain-card">
+					<div class="domain-card-header">
+						<span class="domain-number">{domain.id}</span>
+						<div class="domain-title-group">
+							<h3 class="domain-category">{domain.category}</h3>
+							<span class="domain-category-en">{domain.categoryEn}</span>
+						</div>
+					</div>
+					<div class="domain-tags">
+						{domain.items.map((item) => (
+							<span class="domain-tag">{item}</span>
+						))}
+					</div>
+				</div>
 			))}
-		</ul>
+		</div>
+	</div>
+
+	<!-- Structured Theory Timeline -->
+	<div class="content-block">
+		<h2>研究理論與歷程</h2>
+		<div class="timeline-container">
+			<div class="timeline-line"></div>
+			{timeline.map((item) => (
+				<div class="timeline-item">
+					<div class="timeline-dot"></div>
+					<div class="timeline-year">{item.year}</div>
+					<div class="timeline-content">
+						<h3 class="timeline-title">{item.title}</h3>
+						<p class="timeline-desc">{item.desc}</p>
+					</div>
+				</div>
+			))}
+		</div>
 	</div>
 </Layout>
 
@@ -63,54 +150,12 @@ const professions = aboutData.profession ? aboutData.profession.split('\n') : []
 	}
 
 	.about-subtitle-line {
-		display: block; /* Forces line break on each title line */
+		display: block;
 		margin-bottom: 0.45rem;
 	}
 
 	.about-subtitle-line:last-child {
 		margin-bottom: 0;
-	}
-
-	.focus-list {
-		list-style: none;
-		padding: 0;
-		margin: 0;
-		display: flex;
-		flex-direction: column;
-		gap: 1.2rem;
-	}
-
-	.focus-list li {
-		display: flex;
-		align-items: flex-start;
-		gap: 1rem;
-	}
-
-	.focus-marker {
-		width: 6px;
-		height: 6px;
-		border: 1px solid var(--accent-color);
-		transform: rotate(45deg);
-		margin-top: 10px;
-		flex-shrink: 0;
-		opacity: 0.7;
-		transition: transform 0.4s ease, background-color 0.4s ease;
-	}
-
-	.focus-list li:hover .focus-marker {
-		transform: rotate(135deg);
-		background-color: var(--accent-color);
-	}
-
-	.focus-text {
-		color: var(--text-muted);
-		line-height: 1.7;
-		font-size: 1rem;
-		transition: color 0.3s ease;
-	}
-
-	.focus-list li:hover .focus-text {
-		color: var(--text-color);
 	}
 
 	.profile-header {
@@ -135,9 +180,155 @@ const professions = aboutData.profession ? aboutData.profession.split('\n') : []
 		object-fit: cover;
 		border-radius: 50%;
 		border: 1px solid var(--border-color);
-		filter: none !important; /* Force color on all platforms and override any defaults */
+		filter: none !important;
 		box-shadow: 0 5px 25px rgba(0, 0, 0, 0.25);
-		/* No hover scale transitions or effects */
+	}
+
+	/* Domain Grid Styling */
+	.domain-grid {
+		display: flex;
+		flex-direction: column;
+		gap: 2rem;
+		margin-top: 2rem;
+	}
+
+	.domain-card {
+		border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+		padding-bottom: 1.8rem;
+	}
+
+	.domain-card:last-child {
+		border-bottom: none;
+		padding-bottom: 0;
+	}
+
+	.domain-card-header {
+		display: flex;
+		align-items: flex-start;
+		gap: 1.2rem;
+		margin-bottom: 1.2rem;
+	}
+
+	.domain-number {
+		font-family: var(--font-sans);
+		font-size: 0.9rem;
+		font-weight: 500;
+		color: var(--accent-color);
+		opacity: 0.8;
+		letter-spacing: 1px;
+		margin-top: 2px;
+	}
+
+	.domain-title-group {
+		display: flex;
+		flex-direction: column;
+	}
+
+	.domain-category {
+		font-size: 1.15rem;
+		font-weight: 400;
+		margin: 0;
+		color: #ffffff;
+		letter-spacing: 1.5px;
+	}
+
+	.domain-category-en {
+		font-size: 0.72rem;
+		color: var(--text-muted);
+		text-transform: uppercase;
+		letter-spacing: 1px;
+		margin-top: 0.25rem;
+	}
+
+	.domain-tags {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.6rem;
+		padding-left: 2.2rem; /* Indent tags under title text */
+	}
+
+	.domain-tag {
+		font-size: 0.88rem;
+		color: var(--text-color);
+		background: rgba(255, 255, 255, 0.03);
+		border: 1px solid rgba(255, 255, 255, 0.06);
+		padding: 5px 12px;
+		transition: all 0.3s ease;
+	}
+
+	.domain-tag:hover {
+		color: #ffffff;
+		border-color: rgba(255, 255, 255, 0.15);
+		background: rgba(255, 255, 255, 0.06);
+	}
+
+	/* Timeline Styling */
+	.timeline-container {
+		position: relative;
+		margin-top: 2.5rem;
+		padding-left: 1.5rem;
+	}
+
+	.timeline-line {
+		position: absolute;
+		left: 4.5px;
+		top: 8px;
+		bottom: 8px;
+		width: 1px;
+		background: rgba(255, 255, 255, 0.08);
+	}
+
+	.timeline-item {
+		position: relative;
+		display: flex;
+		gap: 2rem;
+		margin-bottom: 2.5rem;
+	}
+
+	.timeline-item:last-child {
+		margin-bottom: 0;
+	}
+
+	.timeline-dot {
+		position: absolute;
+		left: 1px;
+		top: 6px;
+		width: 8px;
+		height: 8px;
+		border-radius: 50%;
+		background: var(--accent-color);
+		border: 2px solid #000000;
+		z-index: 5;
+	}
+
+	.timeline-year {
+		font-family: var(--font-sans);
+		font-size: 1.05rem;
+		font-weight: 500;
+		color: var(--accent-color);
+		width: 50px;
+		flex-shrink: 0;
+		padding-left: 15px; /* Offset from dot */
+		line-height: 1.4;
+	}
+
+	.timeline-content {
+		flex: 1;
+	}
+
+	.timeline-title {
+		font-size: 1.05rem;
+		font-weight: 400;
+		margin: 0 0 0.5rem 0;
+		color: #ffffff;
+		line-height: 1.4;
+	}
+
+	.timeline-desc {
+		font-size: 0.92rem;
+		color: var(--text-muted);
+		line-height: 1.7;
+		margin: 0;
 	}
 
 	@media (max-width: 768px) {
@@ -148,6 +339,21 @@ const professions = aboutData.profession ? aboutData.profession.split('\n') : []
 		}
 		.profile-avatar-container {
 			align-self: center;
+		}
+		.domain-tags {
+			padding-left: 0;
+		}
+		.timeline-item {
+			flex-direction: column;
+			gap: 0.5rem;
+			padding-left: 1.5rem;
+		}
+		.timeline-dot {
+			left: 1px;
+		}
+		.timeline-year {
+			padding-left: 0;
+			width: auto;
 		}
 	}
 </style>
