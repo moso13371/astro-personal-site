@@ -30,10 +30,9 @@ const academicBackground = [
 	}
 ];
 
-// Re-structured Research Areas with full English translations for SEO and academic precision
+// Re-structured Research Areas with full English translations
 const researchAreas = [
 	{
-		id: "01",
 		category: "超心理學與未明現象",
 		categoryEn: "Parapsychology & Unexplained Phenomena",
 		summary: "專注於常態框架外的現象調查與機制探討。",
@@ -47,7 +46,6 @@ const researchAreas = [
 		]
 	},
 	{
-		id: "02",
 		category: "意識與空間維度",
 		categoryEn: "Consciousness & Dimensional Studies",
 		summary: "探索意識的邊界、狀態轉換與底層運作機制。",
@@ -61,7 +59,6 @@ const researchAreas = [
 		]
 	},
 	{
-		id: "03",
 		category: "宗教、民俗與儀式現象",
 		categoryEn: "Religion, Folklore & Ritual Phenomena",
 		summary: "從文化與現象學視角，客觀解構信仰系統與集體經驗。",
@@ -75,7 +72,6 @@ const researchAreas = [
 		]
 	},
 	{
-		id: "04",
 		category: "聲波系統與共振實踐",
 		categoryEn: "Sonic Systems & Resonance Practices",
 		summary: "探究環境頻率、聲響媒材與身心意識狀態的交互作用。",
@@ -129,15 +125,15 @@ const timeline = [
 		)}
 	</div>
 
-	<!-- [01] 關於 (About Biography) -->
+	<!-- Section: 關於 (About Biography - Serial prefix removed) -->
 	<div class="content-block">
-		<h2><span class="sec-num">[01]</span> 關於</h2>
+		<h2>關於</h2>
 		<p style="white-space: pre-line; line-height: 2.0; color: var(--text-color); font-weight: 400; font-size: 1.05rem;">{aboutData.intro}</p>
 	</div>
 
-	<!-- [02] 學經歷 (Academic & Professional Background) -->
+	<!-- Section: 學經歷 (Academic & Professional Background - Serial prefix removed) -->
 	<div class="content-block">
-		<h2><span class="sec-num">[02]</span> 學經歷</h2>
+		<h2>學經歷</h2>
 		<div class="background-list">
 			{academicBackground.map((item) => (
 				<div class="background-item">
@@ -151,21 +147,20 @@ const timeline = [
 		</div>
 	</div>
 
-	<!-- [03] 研究領域與關注方向 (Research Areas & Interests) -->
+	<!-- Section: 研究領域與關注方向 (Research Areas & Interests - Serial prefix removed) -->
 	<div class="content-block">
-		<h2><span class="sec-num">[03]</span> 研究領域與關注方向</h2>
+		<h2>研究領域與關注方向</h2>
 		<div class="domain-grid">
 			{researchAreas.map((domain) => (
 				<div class="domain-card">
 					<div class="domain-card-header">
-						<span class="domain-number">{domain.id}</span>
 						<div class="domain-title-group">
 							<h3 class="domain-category">{domain.category}</h3>
 							<span class="domain-category-en">{domain.categoryEn}</span>
 						</div>
 					</div>
 					<p class="domain-summary">{domain.summary}</p>
-					<!-- Plain text list separated by clean dots (No button-like box filters) -->
+					<!-- Plain text list separated by clean dots -->
 					<div class="domain-items">
 						{domain.items.map((item, idx) => (
 							<span class="domain-item-wrapper">
@@ -179,9 +174,9 @@ const timeline = [
 		</div>
 	</div>
 
-	<!-- [04] 研究理論與發展里程碑 (Theoretical Milestones) -->
+	<!-- Section: 研究理論與發展里程碑 (Theoretical Milestones - Serial prefix removed) -->
 	<div class="content-block">
-		<h2><span class="sec-num">[04]</span> 研究理論與發展里程碑</h2>
+		<h2>研究理論與發展里程碑</h2>
 		<div class="timeline-container">
 			<div class="timeline-line"></div>
 			{timeline.map((item) => (
@@ -252,16 +247,6 @@ const timeline = [
 		box-shadow: 0 5px 25px rgba(0, 0, 0, 0.25);
 	}
 
-	/* Section Numbers */
-	.sec-num {
-		font-family: var(--font-sans);
-		font-size: 0.95rem;
-		color: var(--text-muted);
-		margin-right: 0.5rem;
-		font-weight: 400;
-		letter-spacing: 1px;
-	}
-
 	/* Background List Styling */
 	.background-list {
 		display: flex;
@@ -288,8 +273,9 @@ const timeline = [
 	}
 
 	.background-title {
+		font-family: var(--font-serif); /* Forced Serif for academic consistency */
 		font-size: 1.05rem;
-		font-weight: 500;
+		font-weight: 400;
 		color: #ffffff;
 		line-height: 1.4;
 	}
@@ -336,73 +322,63 @@ const timeline = [
 		margin-bottom: 0.8rem;
 	}
 
-	.domain-number {
-		font-family: var(--font-sans);
-		font-size: 0.9rem;
-		font-weight: 500;
-		color: var(--accent-color);
-		opacity: 0.8;
-		letter-spacing: 1px;
-		margin-top: 2px;
-	}
-
 	.domain-title-group {
 		display: flex;
 		flex-direction: column;
 	}
 
 	.domain-category {
-		font-size: 1.15rem;
+		font-family: var(--font-serif); /* Explicitly forced Serif for academic standards */
+		font-size: 1.22rem; /* Slightly larger and highlighted */
 		font-weight: 400;
 		margin: 0;
-		color: #ffffff;
+		color: #ffffff; /* Bright Highlighted White */
 		letter-spacing: 1.5px;
 	}
 
 	.domain-category-en {
 		font-size: 0.72rem;
-		color: var(--text-muted);
+		color: var(--accent-color); /* Highlighted brighter steel gray */
 		text-transform: uppercase;
 		letter-spacing: 1px;
-		margin-top: 0.25rem;
+		margin-top: 0.3rem;
+		opacity: 0.95;
 	}
 
 	.domain-summary {
-		font-size: 0.92rem;
-		color: var(--text-muted);
-		padding-left: 2.2rem;
-		margin: 0 0 1rem 0;
-		line-height: 1.6;
+		font-size: 0.95rem;
+		color: rgba(255, 255, 255, 0.88); /* Highlighted brighter readable white */
+		padding-left: 0;
+		margin: 0.2rem 0 1.2rem 0;
+		line-height: 1.75;
+		font-weight: 400;
 	}
 
-	/* Plain text dot-separated list */
+	/* Muted plain text dot-separated list */
 	.domain-items {
 		font-size: 0.92rem;
-		color: var(--text-color);
 		line-height: 1.85;
-		padding-left: 2.2rem;
+		padding-left: 0;
 		letter-spacing: 0.5px;
 	}
 
 	.domain-item-wrapper {
 		display: inline-block;
-		white-space: nowrap; /* Prevent ugly inline wrapping of a single tag text */
 	}
 
 	.domain-item-text {
-		color: var(--text-color);
+		color: rgba(255, 255, 255, 0.52); /* Muted gray to create contrast with the highlighted summary */
 		transition: color 0.3s ease;
 	}
 
 	.domain-card:hover .domain-item-text {
-		color: #ffffff; /* Subtle light highlight on hover card */
+		color: rgba(255, 255, 255, 0.78); /* Subtle light highlight on hover */
 	}
 
 	.domain-item-separator {
-		color: var(--text-muted);
+		color: rgba(255, 255, 255, 0.22); /* Muted separator dot */
 		margin: 0 0.8rem;
 		font-weight: 300;
-		opacity: 0.6;
 		display: inline-block;
 	}
 
@@ -461,6 +437,7 @@ const timeline = [
 	}
 
 	.timeline-title {
+		font-family: var(--font-serif); /* Forced Serif */
 		font-size: 1.05rem;
 		font-weight: 400;
 		margin: 0 0 0.5rem 0;
@@ -484,11 +461,8 @@ const timeline = [
 		.profile-avatar-container {
 			align-self: center;
 		}
-		.domain-summary, .domain-items {
-			padding-left: 0;
-		}
 		.domain-item-wrapper {
-			white-space: normal; /* Normal wrap on mobile screens */
+			white-space: normal;
 		}
 		.timeline-item {
 			flex-direction: column;
