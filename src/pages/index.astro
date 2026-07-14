@@ -34,40 +34,6 @@ import Layout from '../layouts/Layout.astro';
 			<button id="info-btn" class="info-link-btn" aria-label="View binaural beats protocol description">BINAURAL BEATS PROTOCOL</button>
 		</div>
 	</div>
-
-	<!-- 雙耳波差原理說明彈窗 (Binaural Beats Info Modal Overlay - Absolute Centered) -->
-	<div id="info-modal" class="modal-overlay" aria-hidden="true">
-		<div class="modal-content">
-			<h2 class="modal-title">雙耳波差<br><span class="modal-sub">BINAURAL BEATS</span></h2>
-			<div class="modal-body">
-				<p class="intro-paragraph">我設定了雙耳波差聲音頻率，歡迎使用耳機進行體驗，點擊 SOUND 後一秒會有聲波出現，這裡提供兩個不同的頻率段，可以透過 PHASE 按鈕交互播放。</p>
-				
-				<section>
-					<h3>科學原理</h3>
-					<p>當雙耳分別輸入頻率微幅不同的正弦波時，大腦會整合出第三種虛擬差值頻率，引導意識狀態進入相應的腦波共振區間。</p>
-				</section>
-				<section>
-					<h3>頻率設定</h3>
-					<ul>
-						<li><strong>BASELINE 模式</strong>：左耳 130Hz，右耳 134Hz，激發 <strong>4Hz Delta/Theta 慢波</strong>，有助於冥想、深度潛意識連結。</li>
-						<li><strong>ALTERED 模式</strong>：左耳 180Hz，右耳 190Hz，激發 <strong>10Hz Alpha 波</strong>，有助於放鬆專注、激發非常規創意。</li>
-					</ul>
-				</section>
-				<section>
-					<h3>互動調諧</h3>
-					<p>滑鼠與手指在螢幕上游移會調和聲音明暗（低通濾波截止點）與右耳頻率差（動態改變腦波拍頻），產生隨機演變的聲景。</p>
-				</section>
-				<section>
-					<h3>體驗建議</h3>
-					<p class="recommend-text">本裝置完全依賴雙聲道相位差。<strong>推薦使用耳罩式耳機</strong>以獲得最佳相位共鳴體驗。</p>
-				</section>
-				<section class="footer-note-section">
-					<p class="modal-footer-note">如需更多體驗，可至「雙耳波差互動頁面」（後續將新增開放）</p>
-				</section>
-			</div>
-			<button id="close-modal-btn" class="modal-close-btn">CLOSE</button>
-		</div>
-	</div>
 </Layout>
 
 <script>
@@ -107,16 +73,18 @@ import Layout from '../layouts/Layout.astro';
 			});
 		}
 
-		// Modal Controls
+		// Modal Controls (Targets layout portal)
 		if (infoBtn && infoModal && closeModalBtn) {
 			infoBtn.addEventListener('click', () => {
 				infoModal.classList.add('show');
 				infoModal.setAttribute('aria-hidden', 'false');
+				document.body.style.overflow = 'hidden'; // Lock body scroll when open
 			});
 
 			closeModalBtn.addEventListener('click', () => {
 				infoModal.classList.remove('show');
 				infoModal.setAttribute('aria-hidden', 'true');
+				document.body.style.overflow = ''; // Unlock body scroll when closed
 			});
 
 			// Close on clicking overlay background
@@ -124,6 +92,7 @@ import Layout from '../layouts/Layout.astro';
 				if (e.target === infoModal) {
 					infoModal.classList.remove('show');
 					infoModal.setAttribute('aria-hidden', 'true');
+					document.body.style.overflow = ''; // Unlock
 				}
 			});
 		}
@@ -152,7 +121,8 @@ import Layout from '../layouts/Layout.astro';
 		font-weight: 300;
 		letter-spacing: 18px;
 		margin: 0;
-		color: var(--text-color); /* Matches the navbar menu & logo brightness */
+		margin-right: -18px; /* Negative margin offsets right-side letter-spacing for perfect centering */
+		color: var(--text-color);
 		text-transform: uppercase;
 		text-shadow: 0 0 30px rgba(200, 202, 208, 0.05);
 		text-align: center;
@@ -165,7 +135,7 @@ import Layout from '../layouts/Layout.astro';
 	.subtitles-wrapper {
 		position: relative;
 		width: 100%;
-		height: 3.5rem; /* Expanded to prevent wraps from shifting layouts */
+		height: 3.5rem;
 		margin-top: 2.2rem;
 	}
 
@@ -195,11 +165,13 @@ import Layout from '../layouts/Layout.astro';
 
 	.subtitle-zh {
 		font-family: var(--font-sans);
-		font-size: 0.88rem; /* Slightly larger for baseline 100% and phone screens */
+		font-size: 0.88rem;
 		font-weight: 300;
 		letter-spacing: 4px;
-		color: var(--text-color); /* Matches navbar menu & logo brightness */
-		margin: 0;
+		margin-right: -4px; /* Offset letter-spacing */
+		color: var(--text-color);
+		margin-top: 0;
+		margin-bottom: 0;
 		text-transform: uppercase;
 		transition: color 1s ease;
 	}
@@ -207,10 +179,10 @@ import Layout from '../layouts/Layout.astro';
 	.subtitle-en {
 		font-family: monospace;
 		font-style: normal;
-		font-size: 0.76rem; /* Slightly larger for baseline 100% and phone screens */
+		font-size: 0.76rem;
 		font-weight: 300;
 		letter-spacing: 1px;
-		color: var(--text-color); /* Matches navbar menu & logo brightness */
+		color: var(--text-color);
 		opacity: 0.85;
 		margin: 0;
 		transition: color 1s ease;
@@ -229,20 +201,20 @@ import Layout from '../layouts/Layout.astro';
 	.control-btn {
 		background: none;
 		border: none;
-		color: var(--text-color); /* Matches navbar menu & logo brightness */
+		color: var(--text-color);
 		font-family: var(--font-serif);
 		font-size: 0.72rem;
 		letter-spacing: 2px;
 		cursor: pointer;
 		padding: 0.4rem 0.8rem;
-		border: 1px solid rgba(200, 202, 208, 0.16); /* Slightly more prominent border */
+		border: 1px solid rgba(200, 202, 208, 0.16);
 		border-radius: 4px;
 		transition: all 0.4s ease;
 		background-color: rgba(255, 255, 255, 0.002);
 	}
 
 	.control-btn:hover {
-		color: var(--accent-hover); /* Matches navbar menu hover */
+		color: var(--accent-hover);
 		border-color: rgba(255, 255, 255, 0.6);
 		text-shadow: 0 0 10px rgba(255, 255, 255, 0.08);
 	}
@@ -264,7 +236,7 @@ import Layout from '../layouts/Layout.astro';
 	.info-link-btn {
 		background: none;
 		border: none;
-		color: var(--text-color); /* Matches navbar menu & logo brightness */
+		color: var(--text-color);
 		opacity: 0.75;
 		font-family: monospace;
 		font-size: 0.65rem;
@@ -282,7 +254,7 @@ import Layout from '../layouts/Layout.astro';
 
 	/* Phase shifted theme styling - Centered Violet alignments */
 	:global(body.phase-shifted) .home-title {
-		color: rgba(216, 180, 254, 0.95) !important; /* Brighter lavender */
+		color: rgba(216, 180, 254, 0.95) !important;
 		text-shadow: -1.5px 0 rgba(239, 68, 68, 0.6), 1.5px 0 rgba(16, 185, 129, 0.6), 0 0 35px rgba(168, 85, 247, 0.25) !important;
 	}
 
@@ -333,39 +305,39 @@ import Layout from '../layouts/Layout.astro';
 		text-shadow: 0 0 8px rgba(168, 85, 247, 0.15);
 	}
 
-	/* Modal Window styling with wabi-sabi glassmorphism */
-	.modal-overlay {
+	/* Modal Window Global Portal styling - Centered relative to screen viewport */
+	:global(.modal-overlay) {
 		position: fixed;
 		top: 0;
 		left: 0;
 		width: 100vw;
 		height: 100vh;
 		background-color: rgba(6, 6, 6, 0.82);
-		backdrop-filter: blur(12px);
-		-webkit-backdrop-filter: blur(12px);
+		backdrop-filter: blur(16px);
+		-webkit-backdrop-filter: blur(16px);
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		z-index: 9999;
+		z-index: 99999; /* Higher priority than navigation dropdown */
 		opacity: 0;
 		pointer-events: none;
 		transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 	}
 
-	.modal-overlay.show {
+	:global(.modal-overlay.show) {
 		opacity: 1;
 		pointer-events: auto;
 	}
 
-	.modal-content {
-		background-color: rgba(14, 14, 14, 0.85);
+	:global(.modal-content) {
+		background-color: rgba(14, 14, 14, 0.88);
 		border: 1px solid rgba(255, 255, 255, 0.06);
 		border-radius: 8px;
 		width: 90%;
 		max-width: 460px;
 		padding: 2.2rem;
 		box-sizing: border-box;
-		box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+		box-shadow: 0 20px 50px rgba(0, 0, 0, 0.65);
 		transform: scale(0.96);
 		transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 		display: flex;
@@ -373,11 +345,11 @@ import Layout from '../layouts/Layout.astro';
 		gap: 1.5rem;
 	}
 
-	.modal-overlay.show .modal-content {
+	:global(.modal-overlay.show .modal-content) {
 		transform: scale(1);
 	}
 
-	.modal-title {
+	:global(.modal-title) {
 		font-family: var(--font-sans);
 		font-size: 1.1rem;
 		font-weight: 350;
@@ -388,7 +360,7 @@ import Layout from '../layouts/Layout.astro';
 		line-height: 1.4;
 	}
 
-	.modal-sub {
+	:global(.modal-sub) {
 		font-family: monospace;
 		font-size: 0.7rem;
 		font-weight: 300;
@@ -396,7 +368,7 @@ import Layout from '../layouts/Layout.astro';
 		color: rgba(255, 255, 255, 0.28);
 	}
 
-	.modal-body {
+	:global(.modal-body) {
 		display: flex;
 		flex-direction: column;
 		gap: 1.2rem;
@@ -406,25 +378,38 @@ import Layout from '../layouts/Layout.astro';
 		padding-right: 6px;
 	}
 
-	/* Scrollbar custom styling */
-	.modal-body::-webkit-scrollbar {
+	:global(.modal-body::-webkit-scrollbar) {
 		width: 3px;
 	}
-	.modal-body::-webkit-scrollbar-track {
+	:global(.modal-body::-webkit-scrollbar-track) {
 		background: rgba(255, 255, 255, 0.01);
 	}
-	.modal-body::-webkit-scrollbar-thumb {
+	:global(.modal-body::-webkit-scrollbar-thumb) {
 		background: rgba(255, 255, 255, 0.08);
 		border-radius: 2px;
 	}
 
-	.modal-body section {
+	:global(.intro-paragraph) {
+		font-family: var(--font-serif);
+		font-size: 0.82rem;
+		line-height: 1.6;
+		color: rgba(255, 255, 255, 0.65) !important;
+		border-left: 2px solid rgba(255, 255, 255, 0.15);
+		padding-left: 10px;
+		margin: 0 0 0.5rem 0;
+	}
+
+	:global(body.phase-shifted .intro-paragraph) {
+		border-left-color: rgba(168, 85, 247, 0.35);
+	}
+
+	:global(.modal-body section) {
 		display: flex;
 		flex-direction: column;
 		gap: 0.4rem;
 	}
 
-	.modal-body h3 {
+	:global(.modal-body h3) {
 		font-family: var(--font-sans);
 		font-size: 0.76rem;
 		font-weight: 400;
@@ -435,7 +420,7 @@ import Layout from '../layouts/Layout.astro';
 		padding-bottom: 4px;
 	}
 
-	.modal-body p, .modal-body li {
+	:global(.modal-body p), :global(.modal-body li) {
 		font-family: var(--font-serif);
 		font-size: 0.8rem;
 		line-height: 1.6;
@@ -443,7 +428,7 @@ import Layout from '../layouts/Layout.astro';
 		margin: 0;
 	}
 
-	.modal-body ul {
+	:global(.modal-body ul) {
 		margin: 0;
 		padding-left: 1.2rem;
 		display: flex;
@@ -451,46 +436,32 @@ import Layout from '../layouts/Layout.astro';
 		gap: 0.4rem;
 	}
 
-	.recommend-text {
+	:global(.recommend-text) {
 		color: rgba(255, 255, 255, 0.6) !important;
 		font-style: italic;
 	}
 
-	.intro-paragraph {
-		font-family: var(--font-serif);
-		font-size: 0.82rem;
-		line-height: 1.6;
-		color: rgba(255, 255, 255, 0.65) !important;
-		border-left: 2px solid rgba(255, 255, 255, 0.15);
-		padding-left: 10px;
-		margin: 0 0 0.5rem 0;
-	}
-
-	:global(body.phase-shifted) .intro-paragraph {
-		border-left-color: rgba(168, 85, 247, 0.35);
-	}
-
-	.footer-note-section {
+	:global(.footer-note-section) {
 		margin-top: 0.5rem;
 		border-top: 1px solid rgba(255, 255, 255, 0.04);
 		padding-top: 0.8rem;
 	}
 
-	:global(body.phase-shifted) .footer-note-section {
+	:global(body.phase-shifted .footer-note-section) {
 		border-top-color: rgba(168, 85, 247, 0.08);
 	}
 
-	.modal-footer-note {
+	:global(.modal-footer-note) {
 		font-size: 0.76rem !important;
 		color: rgba(255, 255, 255, 0.32) !important;
 		text-align: center;
 	}
 
-	:global(body.phase-shifted) .modal-footer-note {
+	:global(body.phase-shifted .modal-footer-note) {
 		color: rgba(192, 132, 252, 0.5) !important;
 	}
 
-	.modal-close-btn {
+	:global(.modal-close-btn) {
 		background: none;
 		border: 1px solid rgba(255, 255, 255, 0.1);
 		border-radius: 4px;
@@ -505,29 +476,29 @@ import Layout from '../layouts/Layout.astro';
 		margin-top: 0.5rem;
 	}
 
-	.modal-close-btn:hover {
+	:global(.modal-close-btn:hover) {
 		color: rgba(255, 255, 255, 0.8);
 		border-color: rgba(255, 255, 255, 0.3);
 		background-color: rgba(255, 255, 255, 0.02);
 	}
 
 	/* Phase shifted modal styling */
-	:global(body.phase-shifted) .modal-content {
+	:global(body.phase-shifted .modal-content) {
 		border-color: rgba(168, 85, 247, 0.15);
 		box-shadow: 0 20px 50px rgba(168, 85, 247, 0.05);
 	}
-	:global(body.phase-shifted) .modal-title {
+	:global(body.phase-shifted .modal-title) {
 		color: rgba(192, 132, 252, 0.82);
 	}
-	:global(body.phase-shifted) .modal-body h3 {
+	:global(body.phase-shifted .modal-body h3) {
 		color: rgba(192, 132, 252, 0.65);
 		border-bottom-color: rgba(168, 85, 247, 0.08);
 	}
-	:global(body.phase-shifted) .modal-close-btn {
+	:global(body.phase-shifted .modal-close-btn) {
 		border-color: rgba(168, 85, 247, 0.25);
 		color: rgba(192, 132, 252, 0.7);
 	}
-	:global(body.phase-shifted) .modal-close-btn:hover {
+	:global(body.phase-shifted .modal-close-btn:hover) {
 		color: rgba(192, 132, 252, 0.95);
 		border-color: rgba(168, 85, 247, 0.55);
 		background-color: rgba(168, 85, 247, 0.03);
@@ -563,32 +534,49 @@ import Layout from '../layouts/Layout.astro';
 	}
 
 	@media (max-width: 768px) {
+		/* Lock vertical scrollable container overflow on mobile */
+		:global(body:has(.home-hero)) {
+			overflow: hidden !important;
+		}
+		
+		/* Reduce header margins to prevent mobile overflow */
+		:global(body:has(.home-hero) header) {
+			margin-bottom: 2rem !important;
+			padding-top: 1.8rem !important;
+		}
+
 		.home-hero {
-			height: 52vh;
+			height: auto;
+			min-height: 48vh;
 			padding: 0 1.5rem;
 		}
 		.home-title {
 			font-size: 1.8rem;
 			letter-spacing: 13px;
+			margin-right: -13px; /* Offset mobile letter spacing */
 		}
 		.subtitles-wrapper {
-			height: 3.8rem; /* expanded for larger mobile fonts */
+			height: 3.8rem;
 		}
 		.subtitle-zh {
 			font-size: 0.8rem;
 			letter-spacing: 2px;
+			margin-right: -2px; /* Offset mobile letter spacing */
 		}
 		.subtitle-en {
 			font-size: 0.72rem;
 			letter-spacing: 0.5px;
 		}
 		.home-controls {
-			margin-top: 5.5rem;
+			margin-top: 3.5rem; /* Reduced to pull buttons upwards and prevent mobile scrolling */
 			gap: 1rem;
 		}
 		.control-btn {
 			font-size: 0.68rem;
 			padding: 0.35rem 0.7rem;
+		}
+		.info-controls {
+			margin-top: 1.2rem; /* Reduced padding */
 		}
 	}
 </style>
