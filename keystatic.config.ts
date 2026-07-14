@@ -6,6 +6,51 @@ export default config({
     repo: 'moso13371/astro-personal-site',
   },
   singletons: {
+    homepage: singleton({
+      label: '首頁設定',
+      path: 'src/content/homepage',
+      format: { data: 'json' },
+      schema: {
+        // --- 副標題文字 ---
+        subtitleZhNormal: fields.text({
+          label: '正常維度副標題（中文）',
+          defaultValue: '往櫺 — 臺灣超心理學與未明現象研究調查員'
+        }),
+        subtitleEnNormal: fields.text({
+          label: '正常維度副標題（英文）',
+          defaultValue: 'Taiwanese researcher of parapsychology and unexplained phenomena'
+        }),
+        subtitleZhShifted: fields.text({
+          label: '切換維度副標題（中文）',
+          defaultValue: '迷幻、異常感知、聲波系統與靈性觀察研究'
+        }),
+        subtitleEnShifted: fields.text({
+          label: '切換維度副標題（英文）',
+          defaultValue: 'Psychedelic research, sound systems, and spiritual observation'
+        }),
+        // --- 雙耳波差頻率（直接填數字，單位 Hz）---
+        binauralBaselineLeft: fields.number({
+          label: 'BASELINE 模式 — 左耳頻率 (Hz)',
+          defaultValue: 130,
+          validation: { min: 20, max: 500 }
+        }),
+        binauralBaselineRight: fields.number({
+          label: 'BASELINE 模式 — 右耳頻率 (Hz)',
+          defaultValue: 134,
+          validation: { min: 20, max: 500 }
+        }),
+        binauralAlteredLeft: fields.number({
+          label: 'ALTERED 模式 — 左耳頻率 (Hz)',
+          defaultValue: 180,
+          validation: { min: 20, max: 500 }
+        }),
+        binauralAlteredRight: fields.number({
+          label: 'ALTERED 模式 — 右耳頻率 (Hz)',
+          defaultValue: 190,
+          validation: { min: 20, max: 500 }
+        }),
+      }
+    }),
     about: singleton({
       label: '關於頁面',
       path: 'src/content/about',
@@ -13,13 +58,24 @@ export default config({
       previewUrl: '/',
       schema: {
         name: fields.text({ label: '名字' }),
-        profession: fields.text({ label: '職業' }),
+        profession: fields.text({ label: '職業', multiline: true }),
         avatar: fields.image({
           label: '頭像/個人照片',
           directory: 'public/images/about',
           publicPath: '/images/about'
         }),
         intro: fields.text({ label: '關於研究簡介', multiline: true }),
+        academicBackground: fields.array(
+          fields.object({
+            title: fields.text({ label: '機構或學校名稱（中文）' }),
+            role: fields.text({ label: '職位或身份（可留空）', defaultValue: '' }),
+            en: fields.text({ label: '機構名稱與職位（英文）' })
+          }),
+          {
+            label: '學經歷',
+            itemLabel: props => `${props.fields.title.value || '未命名'}${props.fields.role.value ? ' ｜ ' + props.fields.role.value : ''}`
+          }
+        ),
         researchAreas: fields.array(
           fields.object({
             category: fields.text({ label: '領域名稱 (中文)' }),
@@ -176,11 +232,9 @@ export default config({
   },
   ui: {
     navigation: {
-      '版面與選單配置': ['navigation', 'theme'],
+      '首頁與版面配置': ['homepage', 'navigation', 'theme'],
       '個人與服務頁面': ['about', 'service', 'contact', 'social'],
       '專欄文章管理': ['posts']
     }
   }
 });
-
-

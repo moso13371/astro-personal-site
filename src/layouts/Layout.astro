@@ -132,16 +132,25 @@ const schemaData = isArticle ? {
 
 			function initAudio() {
 				audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
-				
-				// Left oscillator at 130 Hz (deep baritone, Bluetooth ANC safe)
+
+				// Read frequencies from CMS via data-attributes on the binaural-config meta element
+				const cfg = document.getElementById('binaural-config') as HTMLMetaElement | null;
+				const freqBL = cfg ? parseFloat(cfg.dataset.bl || '130') : 130;
+				const freqBR = cfg ? parseFloat(cfg.dataset.br || '134') : 134;
+				(window as any)._binauralBL = freqBL;
+				(window as any)._binauralBR = freqBR;
+				(window as any)._binauralAL = cfg ? parseFloat(cfg.dataset.al || '180') : 180;
+				(window as any)._binauralAR = cfg ? parseFloat(cfg.dataset.ar || '190') : 190;
+
+				// Left oscillator (baseline left frequency)
 				oscLeft = audioCtx.createOscillator();
 				oscLeft.type = 'sine';
-				oscLeft.frequency.value = 130;
+				oscLeft.frequency.value = freqBL;
 
-				// Right oscillator at 134 Hz (4Hz difference creates deep Delta/Theta waves)
+				// Right oscillator (baseline right frequency)
 				oscRight = audioCtx.createOscillator();
 				oscRight.type = 'sine';
-				oscRight.frequency.value = 134;
+				oscRight.frequency.value = freqBR;
 
 				// Create stereo panning
 				const pannerLeft = audioCtx.createStereoPanner ? audioCtx.createStereoPanner() : null;
@@ -190,14 +199,20 @@ const schemaData = isArticle ? {
 			function updateBinauralFrequencies(ny: number) {
 				if (!audioCtx || !isAudioActive || !oscLeft || !oscRight) return;
 				const isPhaseShifted = (window as any).isPhaseShifted || false;
+				const bl: number = (window as any)._binauralBL ?? 130;
+				const br: number = (window as any)._binauralBR ?? 134;
+				const al: number = (window as any)._binauralAL ?? 180;
+				const ar: number = (window as any)._binauralAR ?? 190;
+				const baseBeat = Math.abs(br - bl); // e.g. 4
+				const altBeat  = Math.abs(ar - al); // e.g. 10
 				if (isPhaseShifted) {
-					// 190Hz / 180Hz (10Hz Alpha beating modulated slightly by Y coordinate: 8Hz to 14Hz difference)
-					oscLeft.frequency.setTargetAtTime(180, audioCtx.currentTime, 0.1);
-					oscRight.frequency.setTargetAtTime(180 + (8.0 + ny * 6.0), audioCtx.currentTime, 0.1);
+					// Altered mode: modulate right ear around (al + altBeat) ± small Y variance
+					oscLeft.frequency.setTargetAtTime(al, audioCtx.currentTime, 0.1);
+					oscRight.frequency.setTargetAtTime(al + (altBeat * 0.8 + ny * altBeat * 0.4), audioCtx.currentTime, 0.1);
 				} else {
-					// 130Hz / 134Hz (4Hz Delta/Theta beating modulated slightly by Y coordinate: 1.5Hz to 7Hz difference)
-					oscLeft.frequency.setTargetAtTime(130, audioCtx.currentTime, 0.1);
-					oscRight.frequency.setTargetAtTime(130 + (1.5 + ny * 5.5), audioCtx.currentTime, 0.1);
+					// Baseline mode: modulate right ear around (bl + baseBeat) ± small Y variance
+					oscLeft.frequency.setTargetAtTime(bl, audioCtx.currentTime, 0.1);
+					oscRight.frequency.setTargetAtTime(bl + (baseBeat * 0.375 + ny * baseBeat * 1.375), audioCtx.currentTime, 0.1);
 				}
 			}
 

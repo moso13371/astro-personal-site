@@ -1,9 +1,28 @@
 ---
 // src/pages/index.astro
 import Layout from '../layouts/Layout.astro';
+import homepageData from '../content/homepage.json';
+
+// Binaural beat frequencies from CMS — used in both audio and modal display
+const bl = homepageData.binauralBaselineLeft ?? 130;
+const br = homepageData.binauralBaselineRight ?? 134;
+const al = homepageData.binauralAlteredLeft ?? 180;
+const ar = homepageData.binauralAlteredRight ?? 190;
+
+// Derived beat differences for display
+const baseBeat = Math.abs(br - bl);
+const altBeat = Math.abs(ar - al);
 ---
 
 <Layout title="首頁 HOME">
+	<!-- Frequency data attributes pass CMS values to the audio init script in Layout -->
+	<meta id="binaural-config"
+		data-bl={bl}
+		data-br={br}
+		data-al={al}
+		data-ar={ar}
+		slot="head-meta"
+	/>
 	<div class="home-hero">
 		<!-- Refined Minimalist Typography in grayer, elegant colors -->
 		<h1 class="home-title">WONGLING</h1>
@@ -12,14 +31,14 @@ import Layout from '../layouts/Layout.astro';
 		<div class="subtitles-wrapper">
 			<!-- 正常維度副標題 (Normal Phase Subtitles - Centered) -->
 			<div class="normal-subtitle-group">
-				<p class="subtitle-zh">往櫺 &mdash; 臺灣超心理學與未明現象研究調查員</p>
-				<p class="subtitle-en">Taiwanese researcher of parapsychology and unexplained phenomena</p>
+				<p class="subtitle-zh">{homepageData.subtitleZhNormal}</p>
+				<p class="subtitle-en">{homepageData.subtitleEnNormal}</p>
 			</div>
 
 			<!-- 切換維度副標題 (Shifted Phase Subtitles - Centered) -->
 			<div class="shifted-subtitle-group">
-				<p class="subtitle-zh">迷幻、異常感知、聲波系統與靈性觀察研究</p>
-				<p class="subtitle-en">Psychedelic research, sound systems, and spiritual observation</p>
+				<p class="subtitle-zh">{homepageData.subtitleZhShifted}</p>
+				<p class="subtitle-en">{homepageData.subtitleEnShifted}</p>
 			</div>
 		</div>
 
@@ -50,8 +69,8 @@ import Layout from '../layouts/Layout.astro';
 			<section>
 				<h3>頻率設定</h3>
 				<ul>
-					<li><strong>BASELINE 模式</strong>：左耳 130Hz，右耳 134Hz，激發 <strong>4Hz Delta/Theta 慢波</strong>，有助於冥想、深度潛意識連結。</li>
-					<li><strong>ALTERED 模式</strong>：左耳 180Hz，右耳 190Hz，激發 <strong>10Hz Alpha 波</strong>，有助於放鬆專注、激發非常規創意。</li>
+					<li><strong>BASELINE 模式</strong>：左耳 {bl}Hz，右耳 {br}Hz，激發 <strong>{baseBeat}Hz 腦波差</strong>，有助於冥想、深度潛意識連結。</li>
+					<li><strong>ALTERED 模式</strong>：左耳 {al}Hz，右耳 {ar}Hz，激發 <strong>{altBeat}Hz 腦波差</strong>，有助於放鬆專注、激發非常規創意。</li>
 				</ul>
 			</section>
 			<section>

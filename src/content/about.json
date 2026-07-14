@@ -2,6 +2,28 @@
   "name": "往櫺 WONGLING",
   "profession": "超心理學研究 ｜ Parapsychology Researcher\n未明現象調查 ｜ Unexplained Phenomena Investigator\n聲波系統工作 ｜ Sonic System Practitioner",
   "avatar": "/images/about/avatar.jpg",
+  "academicBackground": [
+    {
+      "title": "天主教輔仁大學 宗教學系",
+      "role": "",
+      "en": "Department of Religious Studies, Fu Jen Catholic University"
+    },
+    {
+      "title": "TAPARA 塔帕拉超心理學與未明現象研究中心",
+      "role": "召集人",
+      "en": "TAPARA Research Center — Convener"
+    },
+    {
+      "title": "臺灣靈異研究學會",
+      "role": "研究員 暨 第一屆會長",
+      "en": "Taiwan Society for Psychical Research — Researcher & Founding President"
+    },
+    {
+      "title": "福爾摩沙超自然事件調查小組",
+      "role": "組長",
+      "en": "Formosa Paranormal Investigation Team — Team Leader"
+    }
+  ],
   "intro": "嗨，我是往櫺 WONGLING，目前是一位超心理學研究者、未明現象調查員以及聲波系統工作者，我試圖透過不同宗教信仰與學派理論來探索意識與靈性，並且嘗試解構未明現象與超自然事件。\n\n我始終認為，當我們能夠理解其中成因及原理時，便能消解未知迷霧，找到相互啟發的連結。\n\n\nHello, I am WONGLING, currently a parapsychology researcher, an unexplained phenomena investigator, and a Sonic System Practitioner. I seek to explore consciousness and spirituality through the lens of diverse religious beliefs and theoretical frameworks, attempting to deconstruct anomalous phenomena and supernatural occurrences.\n\nI firmly believe that by understanding their underlying causes and mechanisms, we can clear the fog of the unknown and discover mutually inspiring connections.",
   "researchAreas": [
     {
