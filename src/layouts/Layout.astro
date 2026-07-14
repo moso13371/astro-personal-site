@@ -119,6 +119,97 @@ const schemaData = isArticle ? {
 		</div>
 
 		<script>
+			let audioCtx: any = null;
+			let oscLeft: any = null;
+			let oscRight: any = null;
+			let filter: any = null;
+			let delay: any = null;
+			let masterGain: any = null;
+			let isAudioActive = false;
+
+			function initAudio() {
+				audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
+				
+				// Left oscillator at 96 Hz
+				oscLeft = audioCtx.createOscillator();
+				oscLeft.type = 'sine';
+				oscLeft.frequency.value = 96;
+
+				// Right oscillator at 100 Hz (4Hz difference creates deep Delta waves)
+				oscRight = audioCtx.createOscillator();
+				oscRight.type = 'sine';
+				oscRight.frequency.value = 100;
+
+				// Create stereo panning
+				const pannerLeft = audioCtx.createStereoPanner ? audioCtx.createStereoPanner() : null;
+				const pannerRight = audioCtx.createStereoPanner ? audioCtx.createStereoPanner() : null;
+
+				// Warm, dark lowpass filter
+				filter = audioCtx.createBiquadFilter();
+				filter.type = 'lowpass';
+				filter.frequency.value = 150;
+				filter.Q.value = 1.0;
+
+				// Delay and feedback loop for spacey reverb
+				delay = audioCtx.createDelay();
+				delay.delayTime.value = 0.35;
+				const feedback = audioCtx.createGain();
+				feedback.gain.value = 0.42;
+
+				masterGain = audioCtx.createGain();
+				masterGain.gain.value = 0.0; // starts silent
+
+				// Connections
+				if (pannerLeft && pannerRight) {
+					pannerLeft.pan.value = -1.0;
+					pannerRight.pan.value = 1.0;
+					oscLeft.connect(pannerLeft).connect(filter);
+					oscRight.connect(pannerRight).connect(filter);
+				} else {
+					oscLeft.connect(filter);
+					oscRight.connect(filter);
+				}
+
+				filter.connect(masterGain);
+				filter.connect(delay);
+				delay.connect(feedback);
+				feedback.connect(delay);
+				delay.connect(masterGain);
+
+				masterGain.connect(audioCtx.destination);
+
+				oscLeft.start();
+				oscRight.start();
+
+				return masterGain;
+			}
+
+			// Expose sound toggle globally
+			(window as any).toggleBinauralSound = () => {
+				if (!audioCtx) {
+					initAudio();
+					isAudioActive = true;
+					masterGain.gain.setValueAtTime(0, audioCtx.currentTime);
+					masterGain.gain.linearRampToValueAtTime(0.06, audioCtx.currentTime + 1.5);
+					return true;
+				} else {
+					if (audioCtx.state === 'suspended') {
+						audioCtx.resume();
+						isAudioActive = true;
+						masterGain.gain.setValueAtTime(0, audioCtx.currentTime);
+						masterGain.gain.linearRampToValueAtTime(0.06, audioCtx.currentTime + 1.5);
+						return true;
+					} else if (audioCtx.state === 'running') {
+						isAudioActive = false;
+						masterGain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.5);
+						setTimeout(() => {
+							if (!isAudioActive && audioCtx) audioCtx.suspend();
+						}, 500);
+						return false;
+					}
+				}
+			};
+
 			class DustParticle {
 				x: number = 0;
 				y: number = 0;
@@ -133,6 +224,8 @@ const schemaData = isArticle ? {
 				canvasWidth: number;
 				canvasHeight: number;
 				isHome: boolean = false;
+				isArchive: boolean = false;
+				archiveLabel: string = "";
 
 				constructor(w: number, h: number, isHome: boolean) {
 					this.canvasWidth = w;
@@ -218,19 +311,48 @@ const schemaData = isArticle ? {
 					if (this.y > this.canvasHeight + 30) this.y = -30;
 				}
 
-				draw(ctx: CanvasRenderingContext2D) {
+				draw(ctx: CanvasRenderingContext2D, mouseX: number, mouseY: number, mouseActive: boolean, isPhaseShifted: boolean) {
 					if (this.alpha <= 0) return;
 					ctx.beginPath();
 					const grad = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.size);
 					
-					// Concrete gray particles
-					grad.addColorStop(0, `rgba(192, 196, 204, ${this.alpha})`);
-					grad.addColorStop(0.3, `rgba(192, 196, 204, ${this.alpha * 0.4})`);
+					// Particle color shifts during Phase Shift
+					if (isPhaseShifted) {
+						if (this.isArchive) {
+							grad.addColorStop(0, `rgba(168, 85, 247, ${this.alpha * 1.5})`); // Violet archives
+							grad.addColorStop(0.3, `rgba(168, 85, 247, ${this.alpha * 0.5})`);
+						} else {
+							grad.addColorStop(0, `rgba(52, 211, 153, ${this.alpha})`); // Emerald dust
+							grad.addColorStop(0.3, `rgba(52, 211, 153, ${this.alpha * 0.4})`);
+						}
+					} else {
+						// Standard steel gray wabi dust
+						grad.addColorStop(0, `rgba(192, 196, 204, ${this.alpha})`);
+						grad.addColorStop(0.3, `rgba(192, 196, 204, ${this.alpha * 0.4})`);
+					}
 					grad.addColorStop(1, 'rgba(192, 196, 204, 0)');
 					
 					ctx.fillStyle = grad;
 					ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
 					ctx.fill();
+
+					// Draw archive metadata label if hovered close on home page
+					if (this.isArchive && mouseActive && this.isHome) {
+						const dx = this.x - mouseX;
+						const dy = this.y - mouseY;
+						const dist = Math.sqrt(dx * dx + dy * dy);
+						if (dist < 75) {
+							ctx.font = '300 9px monospace';
+							ctx.fillStyle = isPhaseShifted ? `rgba(168, 85, 247, 0.45)` : `rgba(255, 255, 255, 0.35)`;
+							ctx.fillText(this.archiveLabel, this.x + 12, this.y + 4);
+							
+							// Glowing indicator ring
+							ctx.beginPath();
+							ctx.arc(this.x, this.y, this.size + 4, 0, Math.PI * 2);
+							ctx.strokeStyle = isPhaseShifted ? `rgba(168, 85, 247, 0.15)` : `rgba(255, 255, 255, 0.12)`;
+							ctx.stroke();
+						}
+					}
 				}
 			}
 
@@ -250,30 +372,57 @@ const schemaData = isArticle ? {
 				let particles: DustParticle[] = [];
 				const particleCount = Math.min(maxCount, Math.floor((w * h) / densityDivider));
 				
+				const archiveLabels = [
+					"1973 Stanford SRI Project",
+					"Delta Wave Induction",
+					"Grey Space Interface",
+					"Binaural Resonator",
+					"UAP Detection Archive",
+					"Psi-Field Qualitative",
+					"Out-of-Body Gateway",
+					"Acoustic Drum Resonance"
+				];
+
 				for (let i = 0; i < particleCount; i++) {
-					particles.push(new DustParticle(w, h, isHome));
+					const p = new DustParticle(w, h, isHome);
+					if (isHome && i < 8) {
+						p.isArchive = true;
+						p.archiveLabel = archiveLabels[i];
+						p.baseAlpha = 0.45; // slightly brighter
+						p.alpha = p.baseAlpha;
+					}
+					particles.push(p);
 				}
 
 				let mouse = { x: 0, y: 0, active: false };
 				let isTransitioning = false;
 				let transitionTarget = '';
+				let shockwaves: { x: number, y: number, r: number, maxR: number, active: boolean }[] = [];
 
 				window.addEventListener('mousemove', (e) => {
 					mouse.x = e.clientX;
 					mouse.y = e.clientY;
 					mouse.active = true;
+
+					// Audio synthesizer dynamic modulation (Concept 2)
+					if (audioCtx && isAudioActive && filter && oscRight) {
+						const nx = mouse.x / window.innerWidth;
+						const ny = mouse.y / window.innerHeight;
+						// X axis modulates low-pass filter cutoff (110Hz to 310Hz)
+						filter.frequency.setTargetAtTime(110 + nx * 200, audioCtx.currentTime, 0.1);
+						// Y axis modulates Delta beat frequency (from 1.5Hz to 7Hz difference)
+						oscRight.frequency.setTargetAtTime(96 + (1.5 + ny * 5.5), audioCtx.currentTime, 0.1);
+					}
 				});
 
 				window.addEventListener('mouseleave', () => {
 					mouse.active = false;
 				});
 
-				// Custom event listener for page transitions (excludes header)
 				window.addEventListener('page-transition', (e: any) => {
 					isTransitioning = true;
 					transitionTarget = e.detail.targetUrl;
 					
-					// Fade out ONLY the main content element, leaving header fixed!
 					const mainContent = document.querySelector('main');
 					if (mainContent) {
 						(mainContent as HTMLElement).style.transition = 'opacity 0.22s cubic-bezier(0.16, 1, 0.3, 1), transform 0.22s cubic-bezier(0.16, 1, 0.3, 1)';
@@ -281,7 +430,6 @@ const schemaData = isArticle ? {
 						(mainContent as HTMLElement).style.transform = 'scale(0.99)';
 					}
 
-					// Fast, crisp page redirection after 220ms
 					setTimeout(() => {
 						window.location.href = transitionTarget;
 					}, 220);
@@ -296,15 +444,31 @@ const schemaData = isArticle ? {
 					});
 				});
 
-				// Pulse touch/click shockwave
+				// Pulse touch/click shockwave (Concept 1)
 				window.addEventListener('mousedown', (e) => {
 					if (isTransitioning) return;
+					
+					// Trigger audio destination unlock if suspend state on first click
+					if (audioCtx && audioCtx.state === 'suspended' && isAudioActive) {
+						audioCtx.resume();
+					}
+
+					// Store click shockwave
+					shockwaves.push({
+						x: e.clientX,
+						y: e.clientY,
+						r: 0,
+						maxR: 240,
+						active: true
+					});
+
+					// Repel particles
 					particles.forEach(p => {
 						const dx = p.x - e.clientX;
 						const dy = p.y - e.clientY;
 						const dist = Math.sqrt(dx * dx + dy * dy);
-						if (dist < 200) {
-							const impulse = (200 - dist) / 200 * 5;
+						if (dist < 240) {
+							const impulse = (240 - dist) / 240 * 4.5;
 							p.vx += (dx / (dist + 1)) * impulse;
 							p.vy += (dy / (dist + 1)) * impulse;
 						}
@@ -315,10 +479,53 @@ const schemaData = isArticle ? {
 					if (!ctx || !canvas) return;
 					ctx.clearRect(0, 0, w, h);
 
+					const isPhaseShifted = (window as any).isPhaseShifted || false;
+
+					// Draw connecting constellation lines (Concept 3)
+					for (let i = 0; i < particles.length; i++) {
+						for (let j = i + 1; j < particles.length; j++) {
+							const dx = particles[i].x - particles[j].x;
+							const dy = particles[i].y - particles[j].y;
+							const dist = Math.sqrt(dx * dx + dy * dy);
+							const maxDist = isHome ? 54 : 35;
+							if (dist < maxDist) {
+								const alphaVal = (1.0 - (dist / maxDist)) * 0.08 * (particles[i].alpha + particles[j].alpha);
+								ctx.beginPath();
+								ctx.moveTo(particles[i].x, particles[i].y);
+								ctx.lineTo(particles[j].x, particles[j].y);
+								if (isPhaseShifted) {
+									ctx.strokeStyle = `rgba(168, 85, 247, ${alphaVal * 1.5})`; // Purple constellation
+								} else {
+									ctx.strokeStyle = `rgba(192, 196, 204, ${alphaVal})`;
+								}
+								ctx.lineWidth = 0.5;
+								ctx.stroke();
+							}
+						}
+					}
+
+					// Update & Draw particles
 					particles.forEach(p => {
 						p.update(mouse.x, mouse.y, mouse.active, isTransitioning);
-						p.draw(ctx);
+						p.draw(ctx, mouse.x, mouse.y, mouse.active, isPhaseShifted);
 					});
+
+					// Draw concentric shockwave rings (Concept 1)
+					shockwaves.forEach((sw) => {
+						if (!sw.active) return;
+						sw.r += 4.5;
+						if (sw.r >= sw.maxR) {
+							sw.active = false;
+							return;
+						}
+						ctx.beginPath();
+						ctx.arc(sw.x, sw.y, sw.r, 0, Math.PI * 2);
+						const waveAlpha = (1.0 - (sw.r / sw.maxR)) * 0.08;
+						ctx.strokeStyle = isPhaseShifted ? `rgba(168, 85, 247, ${waveAlpha * 1.5})` : `rgba(255, 255, 255, ${waveAlpha})`;
+						ctx.lineWidth = 1.5;
+						ctx.stroke();
+					});
+					shockwaves = shockwaves.filter(sw => sw.active);
 
 					requestAnimationFrame(animate);
 				}

@@ -11,51 +11,91 @@ import Layout from '../layouts/Layout.astro';
 		<!-- 電影謝幕垂直滾動關鍵字 (Movie Credits Style Rolling Subtitle - Left Aligned & Multi-line) -->
 		<div class="subtitle-scroller">
 			<div class="scroller-inner">
-				<!-- List 1 (Simplified / Refined) -->
-				<span>Parapsychology</span>
-				<span>Unexplained</span>
-				<span>Exceptional Experience</span>
-				<span>Mediumship</span>
-				<span>Aerial Phenomena</span>
-				<span>Extraterrestrial</span>
-				<span>Consciousness</span>
-				<span>Dimensional</span>
-				<span>Out-of-Body</span>
-				<span>Soul</span>
-				<span>Psychedelic</span>
-				<span>Religion</span>
-				<span>Folklore</span>
-				<span>Ghosts</span>
-				<span>Supernatural</span>
-				<span>Sonic Systems</span>
-				<span>Soundscape</span>
-				<span>Research</span>
-				<span>Investigation</span>
+				<!-- List 1 (Simplified / Refined - Normal & Shifted Pairs) -->
+				<span class="normal-word">Parapsychology</span><span class="shifted-word">Occult</span>
+				<span class="normal-word">Unexplained</span><span class="shifted-word">DMT Visuals</span>
+				<span class="normal-word">Exceptional Experience</span><span class="shifted-word">Altered Consciousness</span>
+				<span class="normal-word">Mediumship</span><span class="shifted-word">Esoteric Resonance</span>
+				<span class="normal-word">Aerial Phenomena</span><span class="shifted-word">Sacred Geometry</span>
+				<span class="normal-word">Extraterrestrial</span><span class="shifted-word">Astral Travel</span>
+				<span class="normal-word">Consciousness</span><span class="shifted-word">Sigil Magic</span>
+				<span class="normal-word">Dimensional</span><span class="shifted-word">Ritual Sound</span>
+				<span class="normal-word">Out-of-Body</span><span class="shifted-word">Grey Space Portal</span>
+				<span class="normal-word">Soul</span><span class="shifted-word">Spiritual Gateway</span>
+				<span class="normal-word">Psychedelic</span><span class="shifted-word">Shamanic Beats</span>
+				<span class="normal-word">Religion</span><span class="shifted-word">Mysticism</span>
+				<span class="normal-word">Folklore</span><span class="shifted-word">Demonology</span>
+				<span class="normal-word">Ghosts</span><span class="shifted-word">Phantasm</span>
+				<span class="normal-word">Supernatural</span><span class="shifted-word">High Magic</span>
+				<span class="normal-word">Sonic Systems</span><span class="shifted-word">Vibrational Field</span>
+				<span class="normal-word">Soundscape</span><span class="shifted-word">Frequencies</span>
+				<span class="normal-word">Research</span><span class="shifted-word">Gnosis</span>
+				<span class="normal-word">Investigation</span><span class="shifted-word">Theurgy</span>
 				
 				<!-- List 2 (Duplicate for infinite seamless scroll) -->
-				<span>Parapsychology</span>
-				<span>Unexplained</span>
-				<span>Exceptional Experience</span>
-				<span>Mediumship</span>
-				<span>Aerial Phenomena</span>
-				<span>Extraterrestrial</span>
-				<span>Consciousness</span>
-				<span>Dimensional</span>
-				<span>Out-of-Body</span>
-				<span>Soul</span>
-				<span>Psychedelic</span>
-				<span>Religion</span>
-				<span>Folklore</span>
-				<span>Ghosts</span>
-				<span>Supernatural</span>
-				<span>Sonic Systems</span>
-				<span>Soundscape</span>
-				<span>Research</span>
-				<span>Investigation</span>
+				<span class="normal-word">Parapsychology</span><span class="shifted-word">Occult</span>
+				<span class="normal-word">Unexplained</span><span class="shifted-word">DMT Visuals</span>
+				<span class="normal-word">Exceptional Experience</span><span class="shifted-word">Altered Consciousness</span>
+				<span class="normal-word">Mediumship</span><span class="shifted-word">Esoteric Resonance</span>
+				<span class="normal-word">Aerial Phenomena</span><span class="shifted-word">Sacred Geometry</span>
+				<span class="normal-word">Extraterrestrial</span><span class="shifted-word">Astral Travel</span>
+				<span class="normal-word">Consciousness</span><span class="shifted-word">Sigil Magic</span>
+				<span class="normal-word">Dimensional</span><span class="shifted-word">Ritual Sound</span>
+				<span class="normal-word">Out-of-Body</span><span class="shifted-word">Grey Space Portal</span>
+				<span class="normal-word">Soul</span><span class="shifted-word">Spiritual Gateway</span>
+				<span class="normal-word">Psychedelic</span><span class="shifted-word">Shamanic Beats</span>
+				<span class="normal-word">Religion</span><span class="shifted-word">Mysticism</span>
+				<span class="normal-word">Folklore</span><span class="shifted-word">Demonology</span>
+				<span class="normal-word">Ghosts</span><span class="shifted-word">Phantasm</span>
+				<span class="normal-word">Supernatural</span><span class="shifted-word">High Magic</span>
+				<span class="normal-word">Sonic Systems</span><span class="shifted-word">Vibrational Field</span>
+				<span class="normal-word">Soundscape</span><span class="shifted-word">Frequencies</span>
+				<span class="normal-word">Research</span><span class="shifted-word">Gnosis</span>
+				<span class="normal-word">Investigation</span><span class="shifted-word">Theurgy</span>
 			</div>
+		</div>
+
+		<!-- 沉浸式控制按鈕 (Environment Controls) -->
+		<div class="home-controls">
+			<button id="sound-btn" class="control-btn" aria-label="Toggle binaural ambient sounds">[ SOUND: OFF ]</button>
+			<button id="phase-btn" class="control-btn" aria-label="Shift dimension phase">[ PHASE: NORMAL ]</button>
 		</div>
 	</div>
 </Layout>
+
+<script>
+	document.addEventListener('DOMContentLoaded', () => {
+		const soundBtn = document.getElementById('sound-btn');
+		const phaseBtn = document.getElementById('phase-btn');
+
+		if (soundBtn) {
+			soundBtn.addEventListener('click', () => {
+				if ((window as any).toggleBinauralSound) {
+					const isActive = (window as any).toggleBinauralSound();
+					soundBtn.textContent = isActive ? '[ SOUND: ON ]' : '[ SOUND: OFF ]';
+					if (isActive) {
+						soundBtn.classList.add('btn-active');
+					} else {
+						soundBtn.classList.remove('btn-active');
+					}
+				}
+			});
+		}
+
+		if (phaseBtn) {
+			phaseBtn.addEventListener('click', () => {
+				const isShifted = document.body.classList.toggle('phase-shifted');
+				(window as any).isPhaseShifted = isShifted;
+				phaseBtn.textContent = isShifted ? '[ PHASE: SHIFTED ]' : '[ PHASE: NORMAL ]';
+				if (isShifted) {
+					phaseBtn.classList.add('btn-active');
+				} else {
+					phaseBtn.classList.remove('btn-active');
+				}
+			});
+		}
+	});
+</script>
 
 <style>
 	.home-hero {
@@ -79,6 +119,7 @@ import Layout from '../layouts/Layout.astro';
 		text-transform: uppercase;
 		text-shadow: 0 0 30px rgba(255, 255, 255, 0.02);
 		animation: fadeInTitle 2.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; /* Reverted to fast load */
+		transition: all 1s ease;
 	}
 
 	/* Subtitle Scroller Container */
@@ -118,6 +159,71 @@ import Layout from '../layouts/Layout.astro';
 		text-shadow: 0 0 10px rgba(255, 255, 255, 0.01);
 		white-space: nowrap;
 		text-align: left; /* LEFT ALIGNED */
+		transition: color 1s ease;
+	}
+
+	/* Environment Controls */
+	.home-controls {
+		display: flex;
+		gap: 1.5rem;
+		margin-top: 3.8rem;
+		animation: fadeInScroller 2.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+		z-index: 10;
+	}
+
+	.control-btn {
+		background: none;
+		border: none;
+		color: rgba(255, 255, 255, 0.22);
+		font-family: var(--font-serif);
+		font-size: 0.72rem;
+		letter-spacing: 2px;
+		cursor: pointer;
+		padding: 0.4rem 0.8rem;
+		border: 1px solid rgba(255, 255, 255, 0.04);
+		border-radius: 4px;
+		transition: all 0.4s ease;
+		background-color: rgba(255, 255, 255, 0.002);
+	}
+
+	.control-btn:hover {
+		color: rgba(255, 255, 255, 0.65);
+		border-color: rgba(255, 255, 255, 0.15);
+		text-shadow: 0 0 10px rgba(255, 255, 255, 0.05);
+	}
+
+	.control-btn.btn-active {
+		color: rgba(255, 255, 255, 0.72);
+		border-color: rgba(255, 255, 255, 0.25);
+		background-color: rgba(255, 255, 255, 0.015);
+	}
+
+	/* Word switching logic for Phase Shift */
+	.shifted-word {
+		display: none !important;
+	}
+
+	.normal-word {
+		display: block !important;
+	}
+
+	:global(body.phase-shifted) .shifted-word {
+		display: block !important;
+		color: rgba(168, 85, 247, 0.45) !important; /* purple tint for shifted terms */
+	}
+
+	:global(body.phase-shifted) .normal-word {
+		display: none !important;
+	}
+
+	/* Phase shifted title distortion styling */
+	:global(body.phase-shifted) .home-title {
+		color: rgba(168, 85, 247, 0.75) !important;
+		text-shadow: -1.5px 0 rgba(239, 68, 68, 0.6), 1.5px 0 rgba(16, 185, 129, 0.6), 0 0 35px rgba(168, 85, 247, 0.25) !important;
+	}
+
+	:global(body.phase-shifted) .scroller-inner span {
+		text-shadow: 0 0 8px rgba(168, 85, 247, 0.15) !important;
 	}
 
 	/* Movie credits crawl loop animation */
@@ -179,6 +285,14 @@ import Layout from '../layouts/Layout.astro';
 		.scroller-inner span {
 			font-size: 0.8rem;
 			letter-spacing: 2px;
+		}
+		.home-controls {
+			margin-top: 3.2rem;
+			gap: 1rem;
+		}
+		.control-btn {
+			font-size: 0.68rem;
+			padding: 0.35rem 0.7rem;
 		}
 	}
 </style>
