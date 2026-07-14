@@ -1,0 +1,192 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="旗下計劃 PROJECTS">
+	<h1 class="page-title">旗下計劃 PROJECTS</h1>
+	
+	<div class="projects-layout">
+		<p class="projects-intro">
+			探索往櫺的各個實驗性與實踐性子計畫，通往不同的研究、體驗、商城與訂閱專區。
+		</p>
+		
+		<div class="brand-grid">
+			<a href="https://tapara.parawongling.com" target="_blank" class="brand-card">
+				<div class="card-num">01</div>
+				<div class="card-title">TAPARA 塔帕拉研究中心</div>
+				<p class="card-desc">前沿超心理學獨立研究單位，結合 AI 數據分析突破邊界科學，解構超自然現象。</p>
+				<span class="card-link">進入學術研究站 →</span>
+			</a>
+			
+			<a href="https://alcove.parawongling.com" target="_blank" class="brand-card">
+				<div class="card-num">02</div>
+				<div class="card-title">隅禺 ALCOVE</div>
+				<p class="card-desc">科學輔助靈性與聲音共振（框鼓、頌缽、雙耳波差）空間，個案預約與產品銷售中心。</p>
+				<span class="card-link">預約諮詢 / 療癒商城 →</span>
+			</a>
+			
+			<a href="https://vati.parawongling.com" target="_blank" class="brand-card">
+				<div class="card-num">03</div>
+				<div class="card-title">泛地 VATI</div>
+				<p class="card-desc">現代宗教藝術與虛實神聖空間。主辦「椽枋」無目的性地景走讀體驗。</p>
+				<span class="card-link">欣賞線上藝術 →</span>
+			</a>
+			
+			<a href="https://chang.parawongling.com" target="_blank" class="brand-card">
+				<div class="card-num">04</div>
+				<div class="card-title">常場 CHANGCHANG</div>
+				<p class="card-desc">超常邊緣藝術線上空間。展示迷幻視覺、惡魔學、魔法等前衛性與衝擊性創作。</p>
+				<span class="card-link">進入線上藝廊 →</span>
+			</a>
+			
+			<a href="https://lab.parawongling.com" target="_blank" class="brand-card">
+				<div class="card-num">05</div>
+				<div class="card-title">個人實驗室 LAB</div>
+				<p class="card-desc">非公開深度研究、實驗個案日誌與專屬贊助訂閱專區，串接專屬 Discord 社群。</p>
+				<span class="card-link">訂閱成員專區 →</span>
+			</a>
+			
+			<a href="https://blog.parawongling.com" target="_blank" class="brand-card">
+				<div class="card-num">06</div>
+				<div class="card-title">往櫺部落格 BLOG</div>
+				<p class="card-desc">深度學術文章長文積累，探討意識維度假說與灰域空間理論的知識庫。</p>
+				<span class="card-link">閱讀長篇文章 →</span>
+			</a>
+		</div>
+	</div>
+</Layout>
+
+<style>
+	.page-title {
+		margin-bottom: 4rem;
+		font-family: var(--font-serif);
+		font-size: 2.2rem;
+		font-weight: 300;
+		position: relative;
+	}
+
+	.page-title::after {
+		content: '';
+		display: block;
+		width: 40px;
+		height: 1px;
+		background-color: var(--accent-color);
+		margin-top: 1rem;
+		opacity: 0.6;
+	}
+
+	.projects-layout {
+		display: flex;
+		flex-direction: column;
+		gap: 2.5rem;
+	}
+
+	.projects-intro {
+		color: var(--text-muted);
+		font-size: 1.05rem;
+		line-height: 1.95;
+		font-weight: 300;
+		max-width: 750px;
+		margin-bottom: 2rem;
+	}
+
+	.brand-grid {
+		display: grid;
+		grid-template-columns: repeat(2, 1fr);
+		gap: 2rem;
+	}
+
+	.brand-card {
+		display: flex;
+		flex-direction: column;
+		padding: 2.2rem;
+		border: 1px solid rgba(255, 255, 255, 0.04);
+		background-color: rgba(255, 255, 255, 0.003);
+		border-radius: 4px;
+		transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+		cursor: pointer;
+		position: relative;
+		overflow: hidden;
+	}
+
+	.brand-card::after {
+		content: "";
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background: linear-gradient(180deg, rgba(255, 255, 255, 0.015) 0%, rgba(255, 255, 255, 0) 100%);
+		opacity: 0;
+		transition: opacity 0.6s ease;
+	}
+
+	.brand-card:hover {
+		border-color: rgba(255, 255, 255, 0.15);
+		transform: translateY(-4px);
+		box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+	}
+
+	.brand-card:hover::after {
+		opacity: 1;
+	}
+
+	.card-num {
+		font-family: var(--font-serif);
+		font-size: 1.5rem;
+		color: rgba(255, 255, 255, 0.15);
+		margin-bottom: 0.8rem;
+		transition: color 0.4s ease;
+	}
+
+	.brand-card:hover .card-num {
+		color: rgba(255, 255, 255, 0.45);
+	}
+
+	.card-title {
+		font-family: var(--font-serif);
+		font-size: 1.15rem;
+		font-weight: 300;
+		color: rgba(255, 255, 255, 0.82);
+		margin-bottom: 1rem;
+		letter-spacing: 1px;
+	}
+
+	.card-desc {
+		font-size: 0.85rem;
+		line-height: 1.8;
+		color: rgba(255, 255, 255, 0.45);
+		margin: 0 0 1.8rem 0;
+		flex-grow: 1;
+		font-weight: 300;
+		transition: color 0.4s ease;
+	}
+
+	.brand-card:hover .card-desc {
+		color: rgba(255, 255, 255, 0.72);
+	}
+
+	.card-link {
+		font-size: 0.75rem;
+		letter-spacing: 2px;
+		color: rgba(255, 255, 255, 0.35);
+		transition: all 0.4s ease;
+		text-transform: uppercase;
+		display: inline-block;
+	}
+
+	.brand-card:hover .card-link {
+		color: #ffffff;
+		padding-left: 6px;
+	}
+
+	@media (max-width: 768px) {
+		.brand-grid {
+			grid-template-columns: 1fr;
+			gap: 1.5rem;
+		}
+		.brand-card {
+			padding: 1.8rem;
+		}
+	}
+</style>

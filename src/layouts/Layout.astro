@@ -39,7 +39,7 @@ const schemaData = isArticle ? {
 	"@type": "WebSite",
 	"name": "WONGLING",
 	"alternateName": "WONGLING - 超心理學研究工作者",
-	"url": "http://localhost:4321/",
+	"url": "https://parawongling.com/",
 	"description": description
 };
 ---
@@ -132,10 +132,12 @@ const schemaData = isArticle ? {
 				pulseSpeed: number = 0;
 				canvasWidth: number;
 				canvasHeight: number;
+				isHome: boolean = false;
 
-				constructor(w: number, h: number) {
+				constructor(w: number, h: number, isHome: boolean) {
 					this.canvasWidth = w;
 					this.canvasHeight = h;
+					this.isHome = isHome;
 					this.reset(true);
 				}
 
@@ -144,21 +146,23 @@ const schemaData = isArticle ? {
 					this.y = initiallyRandomY ? Math.random() * this.canvasHeight : this.canvasHeight + 20;
 					
 					const rand = Math.random();
+					const sizeMultiplier = this.isHome ? 1.5 : 1.0;
 					if (rand > 0.88) {
-						this.baseSize = 6 + Math.random() * 12; // big out of focus dust
+						this.baseSize = (6 + Math.random() * 12) * sizeMultiplier; // big out of focus dust
 						this.baseAlpha = 0.08 + Math.random() * 0.10;
 					} else {
-						this.baseSize = 1.2 + Math.random() * 3.5; // small sharp dust
+						this.baseSize = (1.2 + Math.random() * 3.5) * sizeMultiplier; // small sharp dust
 						this.baseAlpha = 0.22 + Math.random() * 0.28;
 					}
 
 					this.alpha = this.baseAlpha;
-					// Meditative slower drift speeds
-					this.vx = (Math.random() - 0.5) * 0.06;
-					this.vy = (Math.random() - 0.5) * 0.06;
+					// Meditative slower drift speeds (0.5x speed on home page)
+					const speedMultiplier = this.isHome ? 0.5 : 1.0;
+					this.vx = (Math.random() - 0.5) * 0.06 * speedMultiplier;
+					this.vy = (Math.random() - 0.5) * 0.06 * speedMultiplier;
 					
 					this.pulsePhase = Math.random() * Math.PI * 2;
-					this.pulseSpeed = 0.005 + Math.random() * 0.01;
+					this.pulseSpeed = (0.005 + Math.random() * 0.01) * (this.isHome ? 0.6 : 1.0);
 				}
 
 				update(mouseX: number, mouseY: number, mouseActive: boolean, isTransitioning: boolean) {
@@ -187,8 +191,9 @@ const schemaData = isArticle ? {
 					this.vy += (Math.random() - 0.5) * 0.004;
 
 					// Slower speed caps
-					this.vx = Math.max(-0.20, Math.min(0.20, this.vx));
-					this.vy = Math.max(-0.20, Math.min(0.20, this.vy));
+					const speedCap = this.isHome ? 0.10 : 0.20;
+					this.vx = Math.max(-speedCap, Math.min(speedCap, this.vx));
+					this.vy = Math.max(-speedCap, Math.min(speedCap, this.vy));
 
 					// Pronounced size breathing (pulsating size change is more obvious)
 					this.pulsePhase += this.pulseSpeed;
@@ -238,11 +243,15 @@ const schemaData = isArticle ? {
 				let w = canvas.width = window.innerWidth;
 				let h = canvas.height = window.innerHeight;
 
+				const isHome = window.location.pathname === '/' || window.location.pathname === '';
+				const densityDivider = isHome ? 2750 : 11000;
+				const maxCount = isHome ? 520 : 130;
+
 				let particles: DustParticle[] = [];
-				const particleCount = Math.min(130, Math.floor((w * h) / 11000));
+				const particleCount = Math.min(maxCount, Math.floor((w * h) / densityDivider));
 				
 				for (let i = 0; i < particleCount; i++) {
-					particles.push(new DustParticle(w, h));
+					particles.push(new DustParticle(w, h, isHome));
 				}
 
 				let mouse = { x: 0, y: 0, active: false };

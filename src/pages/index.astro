@@ -7,7 +7,53 @@ import Layout from '../layouts/Layout.astro';
 	<div class="home-hero">
 		<!-- Refined Minimalist Typography in grayer, elegant colors -->
 		<h1 class="home-title">WONGLING</h1>
-		<p class="home-subtitle">Research on Parapsychology and Unexplained Phenomena</p>
+		
+		<!-- 電影謝幕垂直滾動關鍵字 (Movie Credits Style Rolling Subtitle - Left Aligned & Multi-line) -->
+		<div class="subtitle-scroller">
+			<div class="scroller-inner">
+				<!-- List 1 (Simplified / Refined) -->
+				<span>Parapsychology</span>
+				<span>Unexplained</span>
+				<span>Exceptional Experience</span>
+				<span>Mediumship</span>
+				<span>Aerial Phenomena</span>
+				<span>Extraterrestrial</span>
+				<span>Consciousness</span>
+				<span>Dimensional</span>
+				<span>Out-of-Body</span>
+				<span>Soul</span>
+				<span>Psychedelic</span>
+				<span>Religion</span>
+				<span>Folklore</span>
+				<span>Ghosts</span>
+				<span>Supernatural</span>
+				<span>Sonic Systems</span>
+				<span>Soundscape</span>
+				<span>Research</span>
+				<span>Investigation</span>
+				
+				<!-- List 2 (Duplicate for infinite seamless scroll) -->
+				<span>Parapsychology</span>
+				<span>Unexplained</span>
+				<span>Exceptional Experience</span>
+				<span>Mediumship</span>
+				<span>Aerial Phenomena</span>
+				<span>Extraterrestrial</span>
+				<span>Consciousness</span>
+				<span>Dimensional</span>
+				<span>Out-of-Body</span>
+				<span>Soul</span>
+				<span>Psychedelic</span>
+				<span>Religion</span>
+				<span>Folklore</span>
+				<span>Ghosts</span>
+				<span>Supernatural</span>
+				<span>Sonic Systems</span>
+				<span>Soundscape</span>
+				<span>Research</span>
+				<span>Investigation</span>
+			</div>
+		</div>
 	</div>
 </Layout>
 
@@ -25,28 +71,91 @@ import Layout from '../layouts/Layout.astro';
 
 	.home-title {
 		font-family: var(--font-sans);
-		font-size: 2.4rem; /* Refined, smaller size */
-		font-weight: 400;
-		letter-spacing: 10px;
-		margin: 0;
-		color: rgba(255, 255, 255, 0.72); /* Understated, darker steel gray */
-		text-transform: uppercase;
-		text-shadow: 0 0 20px rgba(255, 255, 255, 0.03);
-	}
-
-	.home-subtitle {
-		font-family: var(--font-serif);
-		font-size: 0.95rem; /* Understated, elegant size */
+		font-size: 2.3rem;
 		font-weight: 300;
-		letter-spacing: 2px;
-		color: rgba(255, 255, 255, 0.42); /* Softer gray color */
-		margin-top: 1.2rem;
-		margin-bottom: 0;
+		letter-spacing: 14px; /* Balanced letter-spacing */
+		margin: 0;
+		color: rgba(255, 255, 255, 0.65);
+		text-transform: uppercase;
+		text-shadow: 0 0 30px rgba(255, 255, 255, 0.02);
+		animation: fadeInTitle 2.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; /* Reverted to fast load */
 	}
 
-	@keyframes fadeIn {
-		from { opacity: 0; transform: scale(0.98) translateY(6px); }
-		to { opacity: 1; transform: scale(1) translateY(0); }
+	/* Subtitle Scroller Container */
+	.subtitle-scroller {
+		height: 192px; /* Taller vertically to display ~6 items at a time */
+		overflow: hidden;
+		position: relative;
+		margin-top: 3.2rem; /* Airy spacing under title */
+		width: 100%;
+		max-width: 280px; /* Constrained width centered under title */
+		margin-left: auto;
+		margin-right: auto;
+		/* Fade out effect on top and bottom edges (10% fade zone fits 192px taller height) */
+		mask-image: linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%);
+		-webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%);
+		animation: fadeInScroller 2.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; /* Follows immediately after title */
+	}
+
+	.scroller-inner {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start; /* LEFT ALIGNED */
+		padding-left: 24px; /* Centering offset for left-aligned text blocks */
+		animation: creditScroll 64s linear infinite; /* Meditative slow crawl */
+	}
+
+	.scroller-inner span {
+		font-family: var(--font-serif);
+		font-style: normal;
+		font-size: 0.88rem; /* Premium small-caps labels aesthetic */
+		font-weight: 300;
+		letter-spacing: 3px;
+		color: rgba(255, 255, 255, 0.42);
+		height: 32px; /* Predictable line offset spacing */
+		line-height: 32px;
+		text-transform: uppercase;
+		text-shadow: 0 0 10px rgba(255, 255, 255, 0.01);
+		white-space: nowrap;
+		text-align: left; /* LEFT ALIGNED */
+	}
+
+	/* Movie credits crawl loop animation */
+	@keyframes creditScroll {
+		0% {
+			transform: translateY(0);
+		}
+		100% {
+			transform: translateY(-50%); /* Wraps perfectly back to the duplicated first item */
+		}
+	}
+
+	/* Staggered load animations */
+	@keyframes fadeInTitle {
+		0% {
+			opacity: 0;
+			letter-spacing: 8px;
+			transform: scale(0.97) translateY(4px);
+		}
+		100% {
+			opacity: 1;
+			letter-spacing: 14px;
+			transform: scale(1) translateY(0);
+		}
+	}
+
+	@keyframes fadeInScroller {
+		0% {
+			opacity: 0;
+			transform: translateY(2px);
+		}
+		45% {
+			opacity: 0;
+		}
+		100% {
+			opacity: 1;
+			transform: translateY(0);
+		}
 	}
 
 	/* Hide footer on home page for pure splash style */
@@ -60,13 +169,20 @@ import Layout from '../layouts/Layout.astro';
 		}
 		.home-title {
 			font-size: 1.8rem;
-			letter-spacing: 6px;
+			letter-spacing: 10px;
+			animation: fadeInTitle 2.5s cubic-bezier(0.16, 1, 0.3, 1);
 		}
-		.home-subtitle {
+		.subtitle-scroller {
+			height: 192px; /* Maintain 6 labels height on mobile */
+			margin-top: 2.8rem;
+			animation: fadeInScroller 2.8s cubic-bezier(0.16, 1, 0.3, 1);
+		}
+		.scroller-inner {
+			padding-left: 18px; /* Slightly tighter offset for mobile viewports */
+		}
+		.scroller-inner span {
 			font-size: 0.8rem;
-			letter-spacing: 1px;
-			padding: 0 1.5rem;
-			line-height: 1.5;
+			letter-spacing: 2px;
 		}
 	}
 </style>

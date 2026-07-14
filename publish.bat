@@ -14,8 +14,8 @@ echo [2/3] Uploading changes to GitHub...
 echo.
 echo ==========================================
 echo   [3/3] Success!
-echo   Vercel will update your live site in 60s:
-echo   https://parawongling.vercel.app/
+echo   Netlify will update your live site in 60s:
+echo   https://parawongling.com/
 echo ==========================================
 echo.
 pause

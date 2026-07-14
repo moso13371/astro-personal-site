@@ -7,7 +7,7 @@ import sitemap from '@astrojs/sitemap';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://parawongling.netlify.app', // Temporary Netlify site URL for sitemap.xml
+  site: 'https://parawongling.com', // Official site URL
   adapter: netlify(),
   integrations: [react(), mdx(), keystatic(), sitemap()]
 });
