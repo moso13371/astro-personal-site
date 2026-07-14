@@ -130,15 +130,15 @@ const schemaData = isArticle ? {
 			function initAudio() {
 				audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
 				
-				// Left oscillator at 96 Hz
+				// Left oscillator at 130 Hz (deep baritone, Bluetooth ANC safe)
 				oscLeft = audioCtx.createOscillator();
 				oscLeft.type = 'sine';
-				oscLeft.frequency.value = 96;
+				oscLeft.frequency.value = 130;
 
-				// Right oscillator at 100 Hz (4Hz difference creates deep Delta waves)
+				// Right oscillator at 134 Hz (4Hz difference creates deep Delta/Theta waves)
 				oscRight = audioCtx.createOscillator();
 				oscRight.type = 'sine';
-				oscRight.frequency.value = 100;
+				oscRight.frequency.value = 134;
 
 				// Create stereo panning
 				const pannerLeft = audioCtx.createStereoPanner ? audioCtx.createStereoPanner() : null;
@@ -147,7 +147,7 @@ const schemaData = isArticle ? {
 				// Warm, dark lowpass filter
 				filter = audioCtx.createBiquadFilter();
 				filter.type = 'lowpass';
-				filter.frequency.value = 150;
+				filter.frequency.value = 200;
 				filter.Q.value = 1.0;
 
 				// Delay and feedback loop for spacey reverb
@@ -184,6 +184,20 @@ const schemaData = isArticle ? {
 				return masterGain;
 			}
 
+			function updateBinauralFrequencies(ny: number) {
+				if (!audioCtx || !isAudioActive || !oscLeft || !oscRight) return;
+				const isPhaseShifted = (window as any).isPhaseShifted || false;
+				if (isPhaseShifted) {
+					// 190Hz / 180Hz (10Hz Alpha beating modulated slightly by Y coordinate: 8Hz to 14Hz difference)
+					oscLeft.frequency.setTargetAtTime(180, audioCtx.currentTime, 0.1);
+					oscRight.frequency.setTargetAtTime(180 + (8.0 + ny * 6.0), audioCtx.currentTime, 0.1);
+				} else {
+					// 130Hz / 134Hz (4Hz Delta/Theta beating modulated slightly by Y coordinate: 1.5Hz to 7Hz difference)
+					oscLeft.frequency.setTargetAtTime(130, audioCtx.currentTime, 0.1);
+					oscRight.frequency.setTargetAtTime(130 + (1.5 + ny * 5.5), audioCtx.currentTime, 0.1);
+				}
+			}
+
 			// Expose sound toggle globally
 			(window as any).toggleBinauralSound = () => {
 				if (!audioCtx) {
@@ -210,6 +224,14 @@ const schemaData = isArticle ? {
 				}
 			};
 
+			// Listen to dimension phase toggle event to update frequencies immediately
+			window.addEventListener('phase-change', (e: any) => {
+				const isShifted = e.detail?.isShifted || false;
+				(window as any).isPhaseShifted = isShifted;
+				const currentY = (window as any).lastMouseY !== undefined ? (window as any).lastMouseY : 0.5;
+				updateBinauralFrequencies(currentY);
+			});
+
 			class DustParticle {
 				x: number = 0;
 				y: number = 0;
@@ -226,6 +248,7 @@ const schemaData = isArticle ? {
 				isHome: boolean = false;
 				isArchive: boolean = false;
 				archiveLabel: string = "";
+				shiftedLabel: string = "";
 
 				constructor(w: number, h: number, isHome: boolean) {
 					this.canvasWidth = w;
@@ -292,15 +315,24 @@ const schemaData = isArticle ? {
 					this.pulsePhase += this.pulseSpeed;
 					this.size = Math.max(0.1, this.baseSize * (0.50 + 0.65 * Math.sin(this.pulsePhase)));
 
-					// Mouse repulsion
+					// Mouse attraction / repulsion (Concept 1 & 3)
 					if (mouseActive) {
 						const dx = this.x - mouseX;
 						const dy = this.y - mouseY;
 						const dist = Math.sqrt(dx * dx + dy * dy);
 						if (dist < 180) {
-							const force = (180 - dist) / 180 * 0.08;
-							this.vx += (dx / (dist + 1)) * force;
-							this.vy += (dy / (dist + 1)) * force;
+							if (this.isArchive && this.isHome) {
+								if (dist < 120) {
+									// Keyword node: freeze position when hovered so they don't drift/shake away
+									this.vx = 0;
+									this.vy = 0;
+								}
+							} else {
+								// Regular Dust: organic repulsion
+								const force = (180 - dist) / 180 * 0.08;
+								this.vx += (dx / (dist + 1)) * force;
+								this.vy += (dy / (dist + 1)) * force;
+							}
 						}
 					}
 
@@ -336,21 +368,39 @@ const schemaData = isArticle ? {
 					ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
 					ctx.fill();
 
-					// Draw archive metadata label if hovered close on home page
-					if (this.isArchive && mouseActive && this.isHome) {
-						const dx = this.x - mouseX;
-						const dy = this.y - mouseY;
-						const dist = Math.sqrt(dx * dx + dy * dy);
-						if (dist < 75) {
-							ctx.font = '300 9px monospace';
-							ctx.fillStyle = isPhaseShifted ? `rgba(168, 85, 247, 0.45)` : `rgba(255, 255, 255, 0.35)`;
-							ctx.fillText(this.archiveLabel, this.x + 12, this.y + 4);
+					// Draw archive metadata label on home page particles
+					if (this.isArchive && this.isHome) {
+						const labelText = isPhaseShifted ? this.shiftedLabel : this.archiveLabel;
+						if (labelText) {
+							const dx = this.x - mouseX;
+							const dy = this.y - mouseY;
+							const dist = mouseActive ? Math.sqrt(dx * dx + dy * dy) : 999;
 							
-							// Glowing indicator ring
-							ctx.beginPath();
-							ctx.arc(this.x, this.y, this.size + 4, 0, Math.PI * 2);
-							ctx.strokeStyle = isPhaseShifted ? `rgba(168, 85, 247, 0.15)` : `rgba(255, 255, 255, 0.12)`;
-							ctx.stroke();
+							// Opacity calculation: ambient (0.15) rising to clear (0.70) when mouse is within 120px
+							let labelAlpha = 0.15;
+							if (dist < 120) {
+								labelAlpha = 0.15 + (1.0 - dist / 120) * 0.55;
+							}
+							
+							ctx.font = '300 9px monospace';
+							if (isPhaseShifted) {
+								ctx.fillStyle = `rgba(192, 132, 252, ${labelAlpha * 1.45})`; // Brighter lavender/violet tint
+							} else {
+								ctx.fillStyle = `rgba(255, 255, 255, ${labelAlpha})`; // White tint
+							}
+							
+							// Draw text offset slightly
+							ctx.fillText(labelText, this.x + 12, this.y + 4);
+							
+							// Faint indicator ring when mouse is very close
+							if (dist < 70) {
+								ctx.beginPath();
+								ctx.arc(this.x, this.y, this.size + 4, 0, Math.PI * 2);
+								ctx.strokeStyle = isPhaseShifted 
+									? `rgba(192, 132, 252, ${0.16 * (1.0 - dist/70)})` 
+									: `rgba(255, 255, 255, ${0.09 * (1.0 - dist/70)})`;
+								ctx.stroke();
+							}
 						}
 					}
 				}
@@ -373,22 +423,67 @@ const schemaData = isArticle ? {
 				const particleCount = Math.min(maxCount, Math.floor((w * h) / densityDivider));
 				
 				const archiveLabels = [
-					"1973 Stanford SRI Project",
-					"Delta Wave Induction",
-					"Grey Space Interface",
-					"Binaural Resonator",
-					"UAP Detection Archive",
-					"Psi-Field Qualitative",
-					"Out-of-Body Gateway",
-					"Acoustic Drum Resonance"
+					"Parapsychology",
+					"Binaural Resonance",
+					"Psi-Field Theory",
+					"Mediumship Research",
+					"Aerial Phenomena",
+					"Extraterrestrial",
+					"Consciousness Studies",
+					"Out-of-Body",
+					"Quantum Brain",
+					"Psychedelic Research",
+					"Supernatural Culture",
+					"Sonic Healing",
+					"Soundscape Dynamics",
+					"Acoustic Resonance",
+					"Telepathy Experiments",
+					"Clairvoyance Trials",
+					"Near-Death Experience",
+					"Altered States",
+					"Micro-PK Trials",
+					"Hypnosis Studies",
+					"Mind-Matter Coupling",
+					"EHE Archives",
+					"Folklore Traditions",
+					"Anomalous Cognition"
 				];
 
+				const shiftedLabels = [
+					"Esoteric Systems",
+					"DMT Synthesia",
+					"Sacred Geometry",
+					"Astral Projection",
+					"Gnostic Frequencies",
+					"Shamanic Trance",
+					"Occult Philosophies",
+					"Archetypal Magic",
+					"Theurgical Studies",
+					"Mystical Theology",
+					"Vibrational Medicine",
+					"Alchemical Principles",
+					"Solomon Seals",
+					"Hermeticism",
+					"Kabbalah Geometry",
+					"Sigil Cognition",
+					"Chakra Harmonics",
+					"Entheogen Studies",
+					"Spiritism Archives",
+					"Runic Linguistics",
+					"Daemonology Studies",
+					"Preternatural Field",
+					"Divine Geometry",
+					"Ethereal Vectors"
+				];
+
+				const labelNodesCount = Math.min(24, particleCount);
 				for (let i = 0; i < particleCount; i++) {
 					const p = new DustParticle(w, h, isHome);
-					if (isHome && i < 8) {
+					if (isHome && i < labelNodesCount) {
 						p.isArchive = true;
 						p.archiveLabel = archiveLabels[i];
-						p.baseAlpha = 0.45; // slightly brighter
+						p.shiftedLabel = shiftedLabels[i];
+						p.baseAlpha = 0.40; // slightly brighter node
 						p.alpha = p.baseAlpha;
 					}
 					particles.push(p);
@@ -397,23 +492,44 @@ const schemaData = isArticle ? {
 				let mouse = { x: 0, y: 0, active: false };
 				let isTransitioning = false;
 				let transitionTarget = '';
-				let shockwaves: { x: number, y: number, r: number, maxR: number, active: boolean }[] = [];
 
+				// Unified Mouse Handler
 				window.addEventListener('mousemove', (e) => {
 					mouse.x = e.clientX;
 					mouse.y = e.clientY;
 					mouse.active = true;
+					(window as any).lastMouseY = e.clientY;
 
 					// Audio synthesizer dynamic modulation (Concept 2)
 					if (audioCtx && isAudioActive && filter && oscRight) {
 						const nx = mouse.x / window.innerWidth;
 						const ny = mouse.y / window.innerHeight;
-						// X axis modulates low-pass filter cutoff (110Hz to 310Hz)
-						filter.frequency.setTargetAtTime(110 + nx * 200, audioCtx.currentTime, 0.1);
-						// Y axis modulates Delta beat frequency (from 1.5Hz to 7Hz difference)
-						oscRight.frequency.setTargetAtTime(96 + (1.5 + ny * 5.5), audioCtx.currentTime, 0.1);
+						// X axis modulates low-pass filter cutoff (100Hz to 250Hz)
+						filter.frequency.setTargetAtTime(100 + nx * 150, audioCtx.currentTime, 0.1);
+						
+						updateBinauralFrequencies(ny);
 					}
 				});
+
+				// Unified Mobile Touch Handlers to support phone testing
+				const handleTouch = (e: TouchEvent) => {
+					if (e.touches && e.touches.length > 0) {
+						mouse.x = e.touches[0].clientX;
+						mouse.y = e.touches[0].clientY;
+						mouse.active = true;
+						(window as any).lastMouseY = e.touches[0].clientY;
+						
+						if (audioCtx && isAudioActive && filter && oscRight) {
+							const nx = mouse.x / window.innerWidth;
+							const ny = mouse.y / window.innerHeight;
+							filter.frequency.setTargetAtTime(100 + nx * 150, audioCtx.currentTime, 0.1);
+							updateBinauralFrequencies(ny);
+						}
+					}
+				};
+
+				window.addEventListener('touchstart', handleTouch);
+				window.addEventListener('touchmove', handleTouch, { passive: true });
 
 				window.addEventListener('mouseleave', () => {
 					mouse.active = false;
@@ -444,35 +560,12 @@ const schemaData = isArticle ? {
 					});
 				});
 
-				// Pulse touch/click shockwave (Concept 1)
-				window.addEventListener('mousedown', (e) => {
+				// Simple audio unlock on mouse down
+				window.addEventListener('mousedown', () => {
 					if (isTransitioning) return;
-					
-					// Trigger audio destination unlock if suspend state on first click
 					if (audioCtx && audioCtx.state === 'suspended' && isAudioActive) {
 						audioCtx.resume();
 					}
-
-					// Store click shockwave
-					shockwaves.push({
-						x: e.clientX,
-						y: e.clientY,
-						r: 0,
-						maxR: 240,
-						active: true
-					});
-
-					// Repel particles
-					particles.forEach(p => {
-						const dx = p.x - e.clientX;
-						const dy = p.y - e.clientY;
-						const dist = Math.sqrt(dx * dx + dy * dy);
-						if (dist < 240) {
-							const impulse = (240 - dist) / 240 * 4.5;
-							p.vx += (dx / (dist + 1)) * impulse;
-							p.vy += (dy / (dist + 1)) * impulse;
-						}
-					});
 				});
 
 				function animate() {
@@ -481,7 +574,23 @@ const schemaData = isArticle ? {
 
 					const isPhaseShifted = (window as any).isPhaseShifted || false;
 
-					// Draw connecting constellation lines (Concept 3)
+					// Find the currently hovered concept node (within 120px)
+					let hoveredNode: DustParticle | null = null;
+					if (mouse.active) {
+						let closestDist = 120;
+						particles.forEach(p => {
+							if (!p.isArchive) return;
+							const dx = p.x - mouse.x;
+							const dy = p.y - mouse.y;
+							const dist = Math.sqrt(dx * dx + dy * dy);
+							if (dist < closestDist) {
+								closestDist = dist;
+								hoveredNode = p;
+							}
+						});
+					}
+
+					// 1. Draw normal background constellation lines (up to 54px)
 					for (let i = 0; i < particles.length; i++) {
 						for (let j = i + 1; j < particles.length; j++) {
 							const dx = particles[i].x - particles[j].x;
@@ -489,18 +598,82 @@ const schemaData = isArticle ? {
 							const dist = Math.sqrt(dx * dx + dy * dy);
 							const maxDist = isHome ? 54 : 35;
 							if (dist < maxDist) {
-								const alphaVal = (1.0 - (dist / maxDist)) * 0.08 * (particles[i].alpha + particles[j].alpha);
+								let alphaVal = (1.0 - (dist / maxDist)) * 0.18 * (particles[i].alpha + particles[j].alpha); // Increased visibility
+								let lineWidth = 0.5;
+
+								const isConnectedToHover = hoveredNode && (particles[i] === hoveredNode || particles[j] === hoveredNode);
+								if (isConnectedToHover) {
+									alphaVal *= 4.5;
+									lineWidth = 1.0;
+								}
+
 								ctx.beginPath();
 								ctx.moveTo(particles[i].x, particles[i].y);
 								ctx.lineTo(particles[j].x, particles[j].y);
+								
 								if (isPhaseShifted) {
-									ctx.strokeStyle = `rgba(168, 85, 247, ${alphaVal * 1.5})`; // Purple constellation
+									ctx.strokeStyle = isConnectedToHover 
+										? `rgba(192, 132, 252, ${Math.min(0.9, alphaVal * 1.5)})` 
+										: `rgba(168, 85, 247, ${alphaVal * 1.5})`; // Purple constellation
 								} else {
-									ctx.strokeStyle = `rgba(192, 196, 204, ${alphaVal})`;
+									ctx.strokeStyle = isConnectedToHover 
+										? `rgba(255, 255, 255, ${Math.min(0.7, alphaVal)})` 
+										: `rgba(192, 196, 204, ${alphaVal})`;
 								}
-								ctx.lineWidth = 0.5;
+								ctx.lineWidth = lineWidth;
 								ctx.stroke();
 							}
+						}
+					}
+
+					// 2. Draw special concept connections: nearby nodes (up to 240px) + exactly one infinite long-range dashed bridge
+					if (hoveredNode) {
+						let closestFarNode: DustParticle | null = null;
+						let closestFarDist = 999999;
+
+						particles.forEach(p => {
+							if (!p.isArchive || p === hoveredNode) return;
+							const dx = p.x - hoveredNode.x;
+							const dy = p.y - hoveredNode.y;
+							const dist = Math.sqrt(dx * dx + dy * dy);
+
+							if (dist < 240) {
+								const alphaVal = (1.0 - (dist / 240)) * 0.55; // Brighter thread
+								ctx.beginPath();
+								ctx.moveTo(hoveredNode.x, hoveredNode.y);
+								ctx.lineTo(p.x, p.y);
+								if (isPhaseShifted) {
+									ctx.strokeStyle = `rgba(192, 132, 252, ${alphaVal})`; // Brighter lavender
+								} else {
+									ctx.strokeStyle = `rgba(255, 255, 255, ${alphaVal * 0.95})`; // Crisp white
+								}
+								ctx.lineWidth = 1.0;
+								ctx.stroke();
+							} else {
+								// Track node outside 240px to find the closest far jump
+								if (dist < closestFarDist) {
+									closestFarDist = dist;
+									closestFarNode = p;
+								}
+							}
+						});
+
+						// Draw one long-range dashed tunnel to the next closest concept node beyond 240px
+						if (closestFarNode) {
+							ctx.beginPath();
+							ctx.moveTo(hoveredNode.x, hoveredNode.y);
+							ctx.lineTo(closestFarNode.x, closestFarNode.y);
+							
+							const alphaVal = 0.32; // Soft glowing long-distance thread
+							if (isPhaseShifted) {
+								ctx.strokeStyle = `rgba(192, 132, 252, ${alphaVal})`;
+							} else {
+								ctx.strokeStyle = `rgba(255, 255, 255, ${alphaVal})`;
+							}
+							ctx.lineWidth = 0.85;
+							ctx.setLineDash([2, 4]); // Dashed bridge pattern for quantum tunneling look
+							ctx.stroke();
+							ctx.setLineDash([]); // Reset immediately
 						}
 					}
 
@@ -509,23 +682,6 @@ const schemaData = isArticle ? {
 						p.update(mouse.x, mouse.y, mouse.active, isTransitioning);
 						p.draw(ctx, mouse.x, mouse.y, mouse.active, isPhaseShifted);
 					});
-
-					// Draw concentric shockwave rings (Concept 1)
-					shockwaves.forEach((sw) => {
-						if (!sw.active) return;
-						sw.r += 4.5;
-						if (sw.r >= sw.maxR) {
-							sw.active = false;
-							return;
-						}
-						ctx.beginPath();
-						ctx.arc(sw.x, sw.y, sw.r, 0, Math.PI * 2);
-						const waveAlpha = (1.0 - (sw.r / sw.maxR)) * 0.08;
-						ctx.strokeStyle = isPhaseShifted ? `rgba(168, 85, 247, ${waveAlpha * 1.5})` : `rgba(255, 255, 255, ${waveAlpha})`;
-						ctx.lineWidth = 1.5;
-						ctx.stroke();
-					});
-					shockwaves = shockwaves.filter(sw => sw.active);
 
 					requestAnimationFrame(animate);
 				}
@@ -586,4 +742,3 @@ const schemaData = isArticle ? {
 		</script>
 	</body>
 </html>
-

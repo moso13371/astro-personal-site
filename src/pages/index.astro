@@ -8,57 +8,64 @@ import Layout from '../layouts/Layout.astro';
 		<!-- Refined Minimalist Typography in grayer, elegant colors -->
 		<h1 class="home-title">WONGLING</h1>
 		
-		<!-- 電影謝幕垂直滾動關鍵字 (Movie Credits Style Rolling Subtitle - Left Aligned & Multi-line) -->
-		<div class="subtitle-scroller">
-			<div class="scroller-inner">
-				<!-- List 1 (Simplified / Refined - Normal & Shifted Pairs) -->
-				<span class="normal-word">Parapsychology</span><span class="shifted-word">Occult</span>
-				<span class="normal-word">Unexplained</span><span class="shifted-word">DMT Visuals</span>
-				<span class="normal-word">Exceptional Experience</span><span class="shifted-word">Altered Consciousness</span>
-				<span class="normal-word">Mediumship</span><span class="shifted-word">Esoteric Resonance</span>
-				<span class="normal-word">Aerial Phenomena</span><span class="shifted-word">Sacred Geometry</span>
-				<span class="normal-word">Extraterrestrial</span><span class="shifted-word">Astral Travel</span>
-				<span class="normal-word">Consciousness</span><span class="shifted-word">Sigil Magic</span>
-				<span class="normal-word">Dimensional</span><span class="shifted-word">Ritual Sound</span>
-				<span class="normal-word">Out-of-Body</span><span class="shifted-word">Grey Space Portal</span>
-				<span class="normal-word">Soul</span><span class="shifted-word">Spiritual Gateway</span>
-				<span class="normal-word">Psychedelic</span><span class="shifted-word">Shamanic Beats</span>
-				<span class="normal-word">Religion</span><span class="shifted-word">Mysticism</span>
-				<span class="normal-word">Folklore</span><span class="shifted-word">Demonology</span>
-				<span class="normal-word">Ghosts</span><span class="shifted-word">Phantasm</span>
-				<span class="normal-word">Supernatural</span><span class="shifted-word">High Magic</span>
-				<span class="normal-word">Sonic Systems</span><span class="shifted-word">Vibrational Field</span>
-				<span class="normal-word">Soundscape</span><span class="shifted-word">Frequencies</span>
-				<span class="normal-word">Research</span><span class="shifted-word">Gnosis</span>
-				<span class="normal-word">Investigation</span><span class="shifted-word">Theurgy</span>
-				
-				<!-- List 2 (Duplicate for infinite seamless scroll) -->
-				<span class="normal-word">Parapsychology</span><span class="shifted-word">Occult</span>
-				<span class="normal-word">Unexplained</span><span class="shifted-word">DMT Visuals</span>
-				<span class="normal-word">Exceptional Experience</span><span class="shifted-word">Altered Consciousness</span>
-				<span class="normal-word">Mediumship</span><span class="shifted-word">Esoteric Resonance</span>
-				<span class="normal-word">Aerial Phenomena</span><span class="shifted-word">Sacred Geometry</span>
-				<span class="normal-word">Extraterrestrial</span><span class="shifted-word">Astral Travel</span>
-				<span class="normal-word">Consciousness</span><span class="shifted-word">Sigil Magic</span>
-				<span class="normal-word">Dimensional</span><span class="shifted-word">Ritual Sound</span>
-				<span class="normal-word">Out-of-Body</span><span class="shifted-word">Grey Space Portal</span>
-				<span class="normal-word">Soul</span><span class="shifted-word">Spiritual Gateway</span>
-				<span class="normal-word">Psychedelic</span><span class="shifted-word">Shamanic Beats</span>
-				<span class="normal-word">Religion</span><span class="shifted-word">Mysticism</span>
-				<span class="normal-word">Folklore</span><span class="shifted-word">Demonology</span>
-				<span class="normal-word">Ghosts</span><span class="shifted-word">Phantasm</span>
-				<span class="normal-word">Supernatural</span><span class="shifted-word">High Magic</span>
-				<span class="normal-word">Sonic Systems</span><span class="shifted-word">Vibrational Field</span>
-				<span class="normal-word">Soundscape</span><span class="shifted-word">Frequencies</span>
-				<span class="normal-word">Research</span><span class="shifted-word">Gnosis</span>
-				<span class="normal-word">Investigation</span><span class="shifted-word">Theurgy</span>
+		<!-- 零位移原地切換副標題容器 (Zero-Displacement Subtitle Wrapper) -->
+		<div class="subtitles-wrapper">
+			<!-- 正常維度副標題 (Normal Phase Subtitles - Centered) -->
+			<div class="normal-subtitle-group">
+				<p class="subtitle-zh">往櫺 &mdash; 臺灣超心理學與未明現象研究調查員</p>
+				<p class="subtitle-en">Taiwanese researcher of parapsychology and unexplained phenomena</p>
+			</div>
+
+			<!-- 切換維度副標題 (Shifted Phase Subtitles - Centered) -->
+			<div class="shifted-subtitle-group">
+				<p class="subtitle-zh">迷幻、異常感知、聲波系統與靈性觀察研究</p>
+				<p class="subtitle-en">Psychedelic research, sound systems, and spiritual observation</p>
 			</div>
 		</div>
 
 		<!-- 沉浸式控制按鈕 (Environment Controls) -->
 		<div class="home-controls">
 			<button id="sound-btn" class="control-btn" aria-label="Toggle binaural ambient sounds">[ SOUND: OFF ]</button>
-			<button id="phase-btn" class="control-btn" aria-label="Shift dimension phase">[ PHASE: NORMAL ]</button>
+			<button id="phase-btn" class="control-btn" aria-label="Shift dimension phase">[ PHASE: BASELINE ]</button>
+		</div>
+
+		<!-- 說明按鈕 (Info Button Below Controls) -->
+		<div class="info-controls">
+			<button id="info-btn" class="info-link-btn" aria-label="View binaural beats protocol description">[ BINAURAL BEATS PROTOCOL ]</button>
+		</div>
+	</div>
+
+	<!-- 雙耳波差原理說明彈窗 (Binaural Beats Info Modal Overlay - Absolute Centered) -->
+	<div id="info-modal" class="modal-overlay" aria-hidden="true">
+		<div class="modal-content">
+			<h2 class="modal-title">雙耳波差<br><span class="modal-sub">BINAURAL BEATS</span></h2>
+			<div class="modal-body">
+				<p class="intro-paragraph">我設定了雙耳波差聲音頻率，歡迎使用耳機進行體驗，點擊 SOUND 後一秒會有聲波出現，這裡提供兩個不同的頻率段，可以透過 PHASE 按鈕交互播放。</p>
+				
+				<section>
+					<h3>科學原理</h3>
+					<p>當雙耳分別輸入頻率微幅不同的正弦波時，大腦會整合出第三種虛擬差值頻率，引導意識狀態進入相應的腦波共振區間。</p>
+				</section>
+				<section>
+					<h3>頻率設定</h3>
+					<ul>
+						<li><strong>BASELINE 模式</strong>：左耳 130Hz，右耳 134Hz，激發 <strong>4Hz Delta/Theta 慢波</strong>，有助於冥想、深度潛意識連結。</li>
+						<li><strong>ALTERED 模式</strong>：左耳 180Hz，右耳 190Hz，激發 <strong>10Hz Alpha 波</strong>，有助於放鬆專注、激發非常規創意。</li>
+					</ul>
+				</section>
+				<section>
+					<h3>互動調諧</h3>
+					<p>滑鼠與手指在螢幕上游移會調和聲音明暗（低通濾波截止點）與右耳頻率差（動態改變腦波拍頻），產生隨機演變的聲景。</p>
+				</section>
+				<section>
+					<h3>體驗建議</h3>
+					<p class="recommend-text">本裝置完全依賴雙聲道相位差。<strong>推薦使用耳罩式耳機</strong>以獲得最佳相位共鳴體驗。</p>
+				</section>
+				<section class="footer-note-section">
+					<p class="modal-footer-note">如需更多體驗，可至「雙耳波差互動頁面」（後續將新增開放）</p>
+				</section>
+			</div>
+			<button id="close-modal-btn" class="modal-close-btn">[ CLOSE ]</button>
 		</div>
 	</div>
 </Layout>
@@ -67,6 +74,9 @@ import Layout from '../layouts/Layout.astro';
 	document.addEventListener('DOMContentLoaded', () => {
 		const soundBtn = document.getElementById('sound-btn');
 		const phaseBtn = document.getElementById('phase-btn');
+		const infoBtn = document.getElementById('info-btn');
+		const infoModal = document.getElementById('info-modal');
+		const closeModalBtn = document.getElementById('close-modal-btn');
 
 		if (soundBtn) {
 			soundBtn.addEventListener('click', () => {
@@ -86,11 +96,34 @@ import Layout from '../layouts/Layout.astro';
 			phaseBtn.addEventListener('click', () => {
 				const isShifted = document.body.classList.toggle('phase-shifted');
 				(window as any).isPhaseShifted = isShifted;
-				phaseBtn.textContent = isShifted ? '[ PHASE: SHIFTED ]' : '[ PHASE: NORMAL ]';
+				phaseBtn.textContent = isShifted ? '[ PHASE: ALTERED ]' : '[ PHASE: BASELINE ]';
 				if (isShifted) {
 					phaseBtn.classList.add('btn-active');
 				} else {
 					phaseBtn.classList.remove('btn-active');
+				}
+				// Dispatch custom phase-change event so audio adjusts immediately
+				window.dispatchEvent(new CustomEvent('phase-change', { detail: { isShifted } }));
+			});
+		}
+
+		// Modal Controls
+		if (infoBtn && infoModal && closeModalBtn) {
+			infoBtn.addEventListener('click', () => {
+				infoModal.classList.add('show');
+				infoModal.setAttribute('aria-hidden', 'false');
+			});
+
+			closeModalBtn.addEventListener('click', () => {
+				infoModal.classList.remove('show');
+				infoModal.setAttribute('aria-hidden', 'true');
+			});
+
+			// Close on clicking overlay background
+			infoModal.addEventListener('click', (e) => {
+				if (e.target === infoModal) {
+					infoModal.classList.remove('show');
+					infoModal.setAttribute('aria-hidden', 'true');
 				}
 			});
 		}
@@ -102,9 +135,13 @@ import Layout from '../layouts/Layout.astro';
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
-		align-items: center;
-		height: 52vh; /* Centered in standard viewport under header without causing overflow */
-		text-align: center;
+		align-items: stretch;
+		height: 58vh;
+		width: 100%;
+		max-width: 580px;
+		margin-left: auto;
+		margin-right: auto;
+		padding: 0 2.2rem;
 		box-sizing: border-box;
 		animation: fadeIn 2.5s cubic-bezier(0.16, 1, 0.3, 1);
 	}
@@ -113,61 +150,78 @@ import Layout from '../layouts/Layout.astro';
 		font-family: var(--font-sans);
 		font-size: 2.3rem;
 		font-weight: 300;
-		letter-spacing: 18px; /* Taller/wider modern art letter-spacing */
+		letter-spacing: 18px;
 		margin: 0;
 		color: rgba(255, 255, 255, 0.65);
 		text-transform: uppercase;
 		text-shadow: 0 0 30px rgba(255, 255, 255, 0.02);
-		animation: fadeInTitle 2.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; /* Reverted to fast load */
-		transition: all 1s ease;
-	}
-
-	/* Subtitle Scroller Container */
-	.subtitle-scroller {
-		height: 192px; /* Taller vertically to display ~6 items at a time */
-		overflow: hidden;
-		position: relative;
-		margin-top: 3.2rem; /* Airy spacing under title */
-		width: 100%;
-		max-width: 280px; /* Constrained width centered under title */
-		margin-left: auto;
-		margin-right: auto;
-		/* Fade out effect on top and bottom edges (10% fade zone fits 192px taller height) */
-		mask-image: linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%);
-		-webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%);
-		animation: fadeInScroller 2.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; /* Follows immediately after title */
-	}
-
-	.scroller-inner {
-		display: flex;
-		flex-direction: column;
-		align-items: flex-start; /* LEFT ALIGNED */
-		padding-left: 24px; /* Centering offset for left-aligned text blocks */
-		animation: creditScroll 64s linear infinite; /* Meditative slow crawl */
-	}
-
-	.scroller-inner span {
-		font-family: var(--font-serif);
-		font-style: normal;
-		font-size: 0.88rem; /* Premium small-caps labels aesthetic */
-		font-weight: 300;
-		letter-spacing: 3px;
-		color: rgba(255, 255, 255, 0.42);
-		height: 32px; /* Predictable line offset spacing */
-		line-height: 32px;
-		text-transform: uppercase;
-		text-shadow: 0 0 10px rgba(255, 255, 255, 0.01);
-		white-space: nowrap;
-		text-align: left; /* LEFT ALIGNED */
+		text-align: center;
+		align-self: center;
+		animation: fadeInTitle 2.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 		transition: color 1s ease;
 	}
 
-	/* Environment Controls */
+	/* Zero-Displacement Wrapper to prevent layout jump of elements below */
+	.subtitles-wrapper {
+		position: relative;
+		width: 100%;
+		height: 3.2rem; /* Fix height to prevent controls moving */
+		margin-top: 2.2rem;
+	}
+
+	.normal-subtitle-group,
+	.shifted-subtitle-group {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		display: flex;
+		flex-direction: column;
+		gap: 0.6rem;
+		align-items: center;
+		text-align: center;
+		transition: opacity 0.6s ease-in-out;
+	}
+
+	.normal-subtitle-group {
+		opacity: 1;
+		pointer-events: auto;
+	}
+
+	.shifted-subtitle-group {
+		opacity: 0;
+		pointer-events: none;
+	}
+
+	.subtitle-zh {
+		font-family: var(--font-sans);
+		font-size: 0.78rem;
+		font-weight: 300;
+		letter-spacing: 4px;
+		color: rgba(255, 255, 255, 0.38);
+		margin: 0;
+		text-transform: uppercase;
+		transition: color 1s ease;
+	}
+
+	.subtitle-en {
+		font-family: monospace;
+		font-style: normal;
+		font-size: 0.65rem;
+		font-weight: 300;
+		letter-spacing: 1px;
+		color: rgba(255, 255, 255, 0.26);
+		margin: 0;
+		transition: color 1s ease;
+	}
+
+	/* Environment Controls - Positioned lower for balance */
 	.home-controls {
 		display: flex;
 		gap: 1.5rem;
-		margin-top: 3.8rem;
-		animation: fadeInScroller 2.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+		margin-top: 7.5rem;
+		align-self: center;
+		animation: fadeInControls 3.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 		z-index: 10;
 	}
 
@@ -198,42 +252,279 @@ import Layout from '../layouts/Layout.astro';
 		background-color: rgba(255, 255, 255, 0.015);
 	}
 
-	/* Word switching logic for Phase Shift */
-	.shifted-word {
-		display: none !important;
+	/* Info controls button below sound toggles */
+	.info-controls {
+		margin-top: 1.6rem;
+		align-self: center;
+		animation: fadeInControls 3.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+		z-index: 10;
 	}
 
-	.normal-word {
-		display: block !important;
+	.info-link-btn {
+		background: none;
+		border: none;
+		color: rgba(255, 255, 255, 0.16);
+		font-family: monospace;
+		font-size: 0.65rem;
+		letter-spacing: 1px;
+		cursor: pointer;
+		padding: 0.3rem 0.6rem;
+		transition: all 0.4s ease;
 	}
 
-	:global(body.phase-shifted) .shifted-word {
-		display: block !important;
-		color: rgba(168, 85, 247, 0.45) !important; /* purple tint for shifted terms */
+	.info-link-btn:hover {
+		color: rgba(255, 255, 255, 0.45);
+		text-shadow: 0 0 8px rgba(255, 255, 255, 0.05);
 	}
 
-	:global(body.phase-shifted) .normal-word {
-		display: none !important;
-	}
-
-	/* Phase shifted title distortion styling */
+	/* Phase shifted theme styling - Title stays centered */
 	:global(body.phase-shifted) .home-title {
-		color: rgba(168, 85, 247, 0.75) !important;
+		color: rgba(192, 132, 252, 0.75) !important;
 		text-shadow: -1.5px 0 rgba(239, 68, 68, 0.6), 1.5px 0 rgba(16, 185, 129, 0.6), 0 0 35px rgba(168, 85, 247, 0.25) !important;
 	}
 
-	:global(body.phase-shifted) .scroller-inner span {
-		text-shadow: 0 0 8px rgba(168, 85, 247, 0.15) !important;
+	:global(body.phase-shifted) .normal-subtitle-group {
+		opacity: 0;
+		pointer-events: none;
 	}
 
-	/* Movie credits crawl loop animation */
-	@keyframes creditScroll {
-		0% {
-			transform: translateY(0);
-		}
-		100% {
-			transform: translateY(-50%); /* Wraps perfectly back to the duplicated first item */
-		}
+	:global(body.phase-shifted) .shifted-subtitle-group {
+		opacity: 1;
+		pointer-events: auto;
+	}
+
+	:global(body.phase-shifted) .subtitle-zh {
+		color: rgba(192, 132, 252, 0.45) !important;
+	}
+
+	:global(body.phase-shifted) .subtitle-en {
+		color: rgba(192, 132, 252, 0.32) !important;
+	}
+
+	:global(body.phase-shifted) .control-btn {
+		color: rgba(168, 85, 247, 0.42);
+		border-color: rgba(168, 85, 247, 0.12);
+	}
+
+	:global(body.phase-shifted) .control-btn:hover {
+		color: rgba(192, 132, 252, 0.85);
+		border-color: rgba(168, 85, 247, 0.42);
+		text-shadow: 0 0 10px rgba(168, 85, 247, 0.25);
+	}
+
+	:global(body.phase-shifted) .control-btn.btn-active {
+		color: rgba(192, 132, 252, 0.9);
+		border-color: rgba(168, 85, 247, 0.48);
+		background-color: rgba(168, 85, 247, 0.03);
+	}
+
+	:global(body.phase-shifted) .info-link-btn {
+		color: rgba(168, 85, 247, 0.32);
+	}
+
+	:global(body.phase-shifted) .info-link-btn:hover {
+		color: rgba(192, 132, 252, 0.72);
+		text-shadow: 0 0 8px rgba(168, 85, 247, 0.15);
+	}
+
+	/* Modal Window styling - Centered on screen */
+	.modal-overlay {
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100vw;
+		height: 100vh;
+		background-color: rgba(6, 6, 6, 0.82);
+		backdrop-filter: blur(12px);
+		-webkit-backdrop-filter: blur(12px);
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		z-index: 9999;
+		opacity: 0;
+		pointer-events: none;
+		transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+	}
+
+	.modal-overlay.show {
+		opacity: 1;
+		pointer-events: auto;
+	}
+
+	.modal-content {
+		background-color: rgba(14, 14, 14, 0.85);
+		border: 1px solid rgba(255, 255, 255, 0.06);
+		border-radius: 8px;
+		width: 90%;
+		max-width: 460px;
+		padding: 2.2rem;
+		box-sizing: border-box;
+		box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+		transform: scale(0.96);
+		transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+		display: flex;
+		flex-direction: column;
+		gap: 1.5rem;
+	}
+
+	.modal-overlay.show .modal-content {
+		transform: scale(1);
+	}
+
+	.modal-title {
+		font-family: var(--font-sans);
+		font-size: 1.1rem;
+		font-weight: 350;
+		letter-spacing: 3px;
+		color: rgba(255, 255, 255, 0.72);
+		margin: 0;
+		text-align: center;
+		line-height: 1.4;
+	}
+
+	.modal-sub {
+		font-family: monospace;
+		font-size: 0.7rem;
+		font-weight: 300;
+		letter-spacing: 1px;
+		color: rgba(255, 255, 255, 0.28);
+	}
+
+	.modal-body {
+		display: flex;
+		flex-direction: column;
+		gap: 1.2rem;
+		max-height: 55vh;
+		overflow-y: auto;
+		text-align: left;
+		padding-right: 6px;
+	}
+
+	/* Scrollbar custom styling */
+	.modal-body::-webkit-scrollbar {
+		width: 3px;
+	}
+	.modal-body::-webkit-scrollbar-track {
+		background: rgba(255, 255, 255, 0.01);
+	}
+	.modal-body::-webkit-scrollbar-thumb {
+		background: rgba(255, 255, 255, 0.08);
+		border-radius: 2px;
+	}
+
+	.intro-paragraph {
+		font-family: var(--font-serif);
+		font-size: 0.82rem;
+		line-height: 1.6;
+		color: rgba(255, 255, 255, 0.65) !important;
+		border-left: 2px solid rgba(255, 255, 255, 0.15);
+		padding-left: 10px;
+		margin: 0 0 0.5rem 0;
+	}
+
+	:global(body.phase-shifted) .intro-paragraph {
+		border-left-color: rgba(168, 85, 247, 0.35);
+	}
+
+	.modal-body section {
+		display: flex;
+		flex-direction: column;
+		gap: 0.4rem;
+	}
+
+	.modal-body h3 {
+		font-family: var(--font-sans);
+		font-size: 0.76rem;
+		font-weight: 400;
+		letter-spacing: 1px;
+		color: rgba(255, 255, 255, 0.55);
+		margin: 0;
+		border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+		padding-bottom: 4px;
+	}
+
+	.modal-body p, .modal-body li {
+		font-family: var(--font-serif);
+		font-size: 0.8rem;
+		line-height: 1.6;
+		color: rgba(255, 255, 255, 0.42);
+		margin: 0;
+	}
+
+	.modal-body ul {
+		margin: 0;
+		padding-left: 1.2rem;
+		display: flex;
+		flex-direction: column;
+		gap: 0.4rem;
+	}
+
+	.recommend-text {
+		color: rgba(255, 255, 255, 0.6) !important;
+		font-style: italic;
+	}
+
+	.footer-note-section {
+		margin-top: 0.5rem;
+		border-top: 1px solid rgba(255, 255, 255, 0.04);
+		padding-top: 0.8rem;
+	}
+
+	:global(body.phase-shifted) .footer-note-section {
+		border-top-color: rgba(168, 85, 247, 0.08);
+	}
+
+	.modal-footer-note {
+		font-size: 0.76rem !important;
+		color: rgba(255, 255, 255, 0.32) !important;
+		text-align: center;
+	}
+
+	:global(body.phase-shifted) .modal-footer-note {
+		color: rgba(192, 132, 252, 0.5) !important;
+	}
+
+	.modal-close-btn {
+		background: none;
+		border: 1px solid rgba(255, 255, 255, 0.1);
+		border-radius: 4px;
+		color: rgba(255, 255, 255, 0.45);
+		font-family: monospace;
+		font-size: 0.72rem;
+		letter-spacing: 2px;
+		padding: 0.5rem 1rem;
+		cursor: pointer;
+		transition: all 0.4s ease;
+		align-self: center;
+		margin-top: 0.5rem;
+	}
+
+	.modal-close-btn:hover {
+		color: rgba(255, 255, 255, 0.8);
+		border-color: rgba(255, 255, 255, 0.3);
+		background-color: rgba(255, 255, 255, 0.02);
+	}
+
+	/* Phase shifted modal styling */
+	:global(body.phase-shifted) .modal-content {
+		border-color: rgba(168, 85, 247, 0.15);
+		box-shadow: 0 20px 50px rgba(168, 85, 247, 0.05);
+	}
+	:global(body.phase-shifted) .modal-title {
+		color: rgba(192, 132, 252, 0.82);
+	}
+	:global(body.phase-shifted) .modal-body h3 {
+		color: rgba(192, 132, 252, 0.65);
+		border-bottom-color: rgba(168, 85, 247, 0.08);
+	}
+	:global(body.phase-shifted) .modal-close-btn {
+		border-color: rgba(168, 85, 247, 0.25);
+		color: rgba(192, 132, 252, 0.7);
+	}
+	:global(body.phase-shifted) .modal-close-btn:hover {
+		color: rgba(192, 132, 252, 0.95);
+		border-color: rgba(168, 85, 247, 0.55);
+		background-color: rgba(168, 85, 247, 0.03);
 	}
 
 	/* Staggered load animations */
@@ -246,12 +537,12 @@ import Layout from '../layouts/Layout.astro';
 		}
 	}
 
-	@keyframes fadeInScroller {
+	@keyframes fadeInControls {
 		0% {
 			opacity: 0;
 			transform: translateY(2px);
 		}
-		45% {
+		60% {
 			opacity: 0;
 		}
 		100% {
@@ -267,27 +558,26 @@ import Layout from '../layouts/Layout.astro';
 
 	@media (max-width: 768px) {
 		.home-hero {
-			height: 48vh;
+			height: 52vh;
+			padding: 0 1.5rem;
 		}
 		.home-title {
 			font-size: 1.8rem;
-			letter-spacing: 13px; /* Larger letter-spacing on mobile */
-			animation: fadeInTitle 2.5s cubic-bezier(0.16, 1, 0.3, 1);
+			letter-spacing: 13px;
 		}
-		.subtitle-scroller {
-			height: 192px; /* Maintain 6 labels height on mobile */
-			margin-top: 2.8rem;
-			animation: fadeInScroller 2.8s cubic-bezier(0.16, 1, 0.3, 1);
+		.subtitles-wrapper {
+			height: 3.5rem; /* slightly taller for wrap on mobile */
 		}
-		.scroller-inner {
-			padding-left: 18px; /* Slightly tighter offset for mobile viewports */
-		}
-		.scroller-inner span {
-			font-size: 0.8rem;
+		.subtitle-zh {
+			font-size: 0.72rem;
 			letter-spacing: 2px;
 		}
+		.subtitle-en {
+			font-size: 0.6rem;
+			letter-spacing: 0.5px;
+		}
 		.home-controls {
-			margin-top: 3.2rem;
+			margin-top: 5.5rem;
 			gap: 1rem;
 		}
 		.control-btn {
