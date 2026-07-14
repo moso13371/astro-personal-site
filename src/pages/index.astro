@@ -34,6 +34,40 @@ import Layout from '../layouts/Layout.astro';
 			<button id="info-btn" class="info-link-btn" aria-label="View binaural beats protocol description">BINAURAL BEATS PROTOCOL</button>
 		</div>
 	</div>
+
+	<!-- 雙耳波差原理說明彈窗 (Centered fixed modal - homepage only) -->
+	<div id="info-modal" class="modal-overlay" aria-hidden="true">
+		<div class="modal-content">
+			<h2 class="modal-title">雙耳波差<br><span class="modal-sub">BINAURAL BEATS</span></h2>
+			<div class="modal-body">
+				<p class="intro-paragraph">我設定了雙耳波差聲音頻率，歡迎使用耳機進行體驗，點擊 SOUND 後一秒會有聲波出現，這裡提供兩個不同的頻率段，可以透過 PHASE 按鈕交互播放。</p>
+
+				<section>
+					<h3>科學原理</h3>
+					<p>當雙耳分別輸入頻率微幅不同的正弦波時，大腦會整合出第三種虛擬差值頻率，引導意識狀態進入相應的腦波共振區間。</p>
+				</section>
+				<section>
+					<h3>頻率設定</h3>
+					<ul>
+						<li><strong>BASELINE 模式</strong>：左耳 130Hz，右耳 134Hz，激發 <strong>4Hz Delta/Theta 慢波</strong>，有助於冥想、深度潛意識連結。</li>
+						<li><strong>ALTERED 模式</strong>：左耳 180Hz，右耳 190Hz，激發 <strong>10Hz Alpha 波</strong>，有助於放鬆專注、激發非常規創意。</li>
+					</ul>
+				</section>
+				<section>
+					<h3>互動調諧</h3>
+					<p>滑鼠與手指在螢幕上游移會調和聲音明暗（低通濾波截止點）與右耳頻率差（動態改變腦波拍頻），產生隨機演變的聲景。</p>
+				</section>
+				<section>
+					<h3>體驗建議</h3>
+					<p class="recommend-text">本裝置完全依賴雙聲道相位差。<strong>推薦使用耳罩式耳機</strong>以獲得最佳相位共鳴體驗。</p>
+				</section>
+				<section class="footer-note-section">
+					<p class="modal-footer-note">如需更多體驗，可至「雙耳波差互動頁面」（後續將新增開放）</p>
+				</section>
+			</div>
+			<button id="close-modal-btn" class="modal-close-btn">CLOSE</button>
+		</div>
+	</div>
 </Layout>
 
 <script>
