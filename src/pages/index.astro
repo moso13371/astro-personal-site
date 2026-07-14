@@ -23,15 +23,15 @@ import Layout from '../layouts/Layout.astro';
 			</div>
 		</div>
 
-		<!-- 沉浸式控制按鈕 (Environment Controls) -->
+		<!-- 沉浸式控制按鈕 (Environment Controls - Brackets Removed) -->
 		<div class="home-controls">
-			<button id="sound-btn" class="control-btn" aria-label="Toggle binaural ambient sounds">[ SOUND: OFF ]</button>
-			<button id="phase-btn" class="control-btn" aria-label="Shift dimension phase">[ PHASE: BASELINE ]</button>
+			<button id="sound-btn" class="control-btn" aria-label="Toggle binaural ambient sounds">SOUND: OFF</button>
+			<button id="phase-btn" class="control-btn" aria-label="Shift dimension phase">PHASE: BASELINE</button>
 		</div>
 
-		<!-- 說明按鈕 (Info Button Below Controls) -->
+		<!-- 說明按鈕 (Info Button Below Controls - Brackets Removed) -->
 		<div class="info-controls">
-			<button id="info-btn" class="info-link-btn" aria-label="View binaural beats protocol description">[ BINAURAL BEATS PROTOCOL ]</button>
+			<button id="info-btn" class="info-link-btn" aria-label="View binaural beats protocol description">BINAURAL BEATS PROTOCOL</button>
 		</div>
 	</div>
 
@@ -65,7 +65,7 @@ import Layout from '../layouts/Layout.astro';
 					<p class="modal-footer-note">如需更多體驗，可至「雙耳波差互動頁面」（後續將新增開放）</p>
 				</section>
 			</div>
-			<button id="close-modal-btn" class="modal-close-btn">[ CLOSE ]</button>
+			<button id="close-modal-btn" class="modal-close-btn">CLOSE</button>
 		</div>
 	</div>
 </Layout>
@@ -82,7 +82,7 @@ import Layout from '../layouts/Layout.astro';
 			soundBtn.addEventListener('click', () => {
 				if ((window as any).toggleBinauralSound) {
 					const isActive = (window as any).toggleBinauralSound();
-					soundBtn.textContent = isActive ? '[ SOUND: ON ]' : '[ SOUND: OFF ]';
+					soundBtn.textContent = isActive ? 'SOUND: ON' : 'SOUND: OFF';
 					if (isActive) {
 						soundBtn.classList.add('btn-active');
 					} else {
@@ -96,7 +96,7 @@ import Layout from '../layouts/Layout.astro';
 			phaseBtn.addEventListener('click', () => {
 				const isShifted = document.body.classList.toggle('phase-shifted');
 				(window as any).isPhaseShifted = isShifted;
-				phaseBtn.textContent = isShifted ? '[ PHASE: ALTERED ]' : '[ PHASE: BASELINE ]';
+				phaseBtn.textContent = isShifted ? 'PHASE: ALTERED' : 'PHASE: BASELINE';
 				if (isShifted) {
 					phaseBtn.classList.add('btn-active');
 				} else {
@@ -152,20 +152,20 @@ import Layout from '../layouts/Layout.astro';
 		font-weight: 300;
 		letter-spacing: 18px;
 		margin: 0;
-		color: rgba(255, 255, 255, 0.65);
+		color: var(--text-color); /* Matches the navbar menu & logo brightness */
 		text-transform: uppercase;
-		text-shadow: 0 0 30px rgba(255, 255, 255, 0.02);
+		text-shadow: 0 0 30px rgba(200, 202, 208, 0.05);
 		text-align: center;
 		align-self: center;
 		animation: fadeInTitle 2.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 		transition: color 1s ease;
 	}
 
-	/* Zero-Displacement Wrapper to prevent layout jump of elements below */
+	/* Zero-Displacement Wrapper - stable height for centered subtitles */
 	.subtitles-wrapper {
 		position: relative;
 		width: 100%;
-		height: 3.2rem; /* Fix height to prevent controls moving */
+		height: 3.5rem; /* Expanded to prevent wraps from shifting layouts */
 		margin-top: 2.2rem;
 	}
 
@@ -195,10 +195,10 @@ import Layout from '../layouts/Layout.astro';
 
 	.subtitle-zh {
 		font-family: var(--font-sans);
-		font-size: 0.82rem;
+		font-size: 0.88rem; /* Slightly larger for baseline 100% and phone screens */
 		font-weight: 300;
 		letter-spacing: 4px;
-		color: rgba(255, 255, 255, 0.38);
+		color: var(--text-color); /* Matches navbar menu & logo brightness */
 		margin: 0;
 		text-transform: uppercase;
 		transition: color 1s ease;
@@ -207,10 +207,11 @@ import Layout from '../layouts/Layout.astro';
 	.subtitle-en {
 		font-family: monospace;
 		font-style: normal;
-		font-size: 0.72rem;
+		font-size: 0.76rem; /* Slightly larger for baseline 100% and phone screens */
 		font-weight: 300;
 		letter-spacing: 1px;
-		color: rgba(255, 255, 255, 0.26);
+		color: var(--text-color); /* Matches navbar menu & logo brightness */
+		opacity: 0.85;
 		margin: 0;
 		transition: color 1s ease;
 	}
@@ -228,27 +229,27 @@ import Layout from '../layouts/Layout.astro';
 	.control-btn {
 		background: none;
 		border: none;
-		color: rgba(255, 255, 255, 0.45);
+		color: var(--text-color); /* Matches navbar menu & logo brightness */
 		font-family: var(--font-serif);
 		font-size: 0.72rem;
 		letter-spacing: 2px;
 		cursor: pointer;
 		padding: 0.4rem 0.8rem;
-		border: 1px solid rgba(255, 255, 255, 0.08);
+		border: 1px solid rgba(200, 202, 208, 0.16); /* Slightly more prominent border */
 		border-radius: 4px;
 		transition: all 0.4s ease;
 		background-color: rgba(255, 255, 255, 0.002);
 	}
 
 	.control-btn:hover {
-		color: rgba(255, 255, 255, 0.85);
-		border-color: rgba(255, 255, 255, 0.28);
+		color: var(--accent-hover); /* Matches navbar menu hover */
+		border-color: rgba(255, 255, 255, 0.6);
 		text-shadow: 0 0 10px rgba(255, 255, 255, 0.08);
 	}
 
 	.control-btn.btn-active {
-		color: rgba(255, 255, 255, 0.9);
-		border-color: rgba(255, 255, 255, 0.38);
+		color: var(--accent-hover);
+		border-color: rgba(255, 255, 255, 0.6);
 		background-color: rgba(255, 255, 255, 0.015);
 	}
 
@@ -263,7 +264,8 @@ import Layout from '../layouts/Layout.astro';
 	.info-link-btn {
 		background: none;
 		border: none;
-		color: rgba(255, 255, 255, 0.35);
+		color: var(--text-color); /* Matches navbar menu & logo brightness */
+		opacity: 0.75;
 		font-family: monospace;
 		font-size: 0.65rem;
 		letter-spacing: 1px;
@@ -273,13 +275,14 @@ import Layout from '../layouts/Layout.astro';
 	}
 
 	.info-link-btn:hover {
-		color: rgba(255, 255, 255, 0.75);
-		text-shadow: 0 0 8px rgba(255, 255, 255, 0.05);
+		color: var(--accent-hover);
+		opacity: 1;
+		text-shadow: 0 0 8px rgba(255, 255, 255, 0.08);
 	}
 
-	/* Phase shifted theme styling - Title stays centered */
+	/* Phase shifted theme styling - Centered Violet alignments */
 	:global(body.phase-shifted) .home-title {
-		color: rgba(192, 132, 252, 0.75) !important;
+		color: rgba(216, 180, 254, 0.95) !important; /* Brighter lavender */
 		text-shadow: -1.5px 0 rgba(239, 68, 68, 0.6), 1.5px 0 rgba(16, 185, 129, 0.6), 0 0 35px rgba(168, 85, 247, 0.25) !important;
 	}
 
@@ -294,40 +297,43 @@ import Layout from '../layouts/Layout.astro';
 	}
 
 	:global(body.phase-shifted) .subtitle-zh {
-		color: rgba(192, 132, 252, 0.45) !important;
+		color: rgba(216, 180, 254, 0.95) !important;
 	}
 
 	:global(body.phase-shifted) .subtitle-en {
-		color: rgba(192, 132, 252, 0.32) !important;
+		color: rgba(216, 180, 254, 0.95) !important;
+		opacity: 0.85;
 	}
 
 	:global(body.phase-shifted) .control-btn {
-		color: rgba(192, 132, 252, 0.65);
-		border-color: rgba(168, 85, 247, 0.22);
+		color: rgba(216, 180, 254, 0.95);
+		border-color: rgba(168, 85, 247, 0.32);
 	}
 
 	:global(body.phase-shifted) .control-btn:hover {
-		color: rgba(216, 180, 254, 0.95);
-		border-color: rgba(168, 85, 247, 0.55);
+		color: #ffffff;
+		border-color: rgba(192, 132, 252, 0.8);
 		text-shadow: 0 0 10px rgba(168, 85, 247, 0.25);
 	}
 
 	:global(body.phase-shifted) .control-btn.btn-active {
-		color: rgba(216, 180, 254, 0.98);
-		border-color: rgba(168, 85, 247, 0.65);
+		color: #ffffff;
+		border-color: rgba(192, 132, 252, 0.8);
 		background-color: rgba(168, 85, 247, 0.03);
 	}
 
 	:global(body.phase-shifted) .info-link-btn {
-		color: rgba(192, 132, 252, 0.55);
+		color: rgba(216, 180, 254, 0.95);
+		opacity: 0.8;
 	}
 
 	:global(body.phase-shifted) .info-link-btn:hover {
-		color: rgba(216, 180, 254, 0.9);
+		color: #ffffff;
+		opacity: 1;
 		text-shadow: 0 0 8px rgba(168, 85, 247, 0.15);
 	}
 
-	/* Modal Window styling - Centered on screen */
+	/* Modal Window styling with wabi-sabi glassmorphism */
 	.modal-overlay {
 		position: fixed;
 		top: 0;
@@ -412,20 +418,6 @@ import Layout from '../layouts/Layout.astro';
 		border-radius: 2px;
 	}
 
-	.intro-paragraph {
-		font-family: var(--font-serif);
-		font-size: 0.82rem;
-		line-height: 1.6;
-		color: rgba(255, 255, 255, 0.65) !important;
-		border-left: 2px solid rgba(255, 255, 255, 0.15);
-		padding-left: 10px;
-		margin: 0 0 0.5rem 0;
-	}
-
-	:global(body.phase-shifted) .intro-paragraph {
-		border-left-color: rgba(168, 85, 247, 0.35);
-	}
-
 	.modal-body section {
 		display: flex;
 		flex-direction: column;
@@ -462,6 +454,20 @@ import Layout from '../layouts/Layout.astro';
 	.recommend-text {
 		color: rgba(255, 255, 255, 0.6) !important;
 		font-style: italic;
+	}
+
+	.intro-paragraph {
+		font-family: var(--font-serif);
+		font-size: 0.82rem;
+		line-height: 1.6;
+		color: rgba(255, 255, 255, 0.65) !important;
+		border-left: 2px solid rgba(255, 255, 255, 0.15);
+		padding-left: 10px;
+		margin: 0 0 0.5rem 0;
+	}
+
+	:global(body.phase-shifted) .intro-paragraph {
+		border-left-color: rgba(168, 85, 247, 0.35);
 	}
 
 	.footer-note-section {
@@ -566,14 +572,14 @@ import Layout from '../layouts/Layout.astro';
 			letter-spacing: 13px;
 		}
 		.subtitles-wrapper {
-			height: 3.5rem; /* slightly taller for wrap on mobile */
+			height: 3.8rem; /* expanded for larger mobile fonts */
 		}
 		.subtitle-zh {
-			font-size: 0.76rem;
+			font-size: 0.8rem;
 			letter-spacing: 2px;
 		}
 		.subtitle-en {
-			font-size: 0.68rem;
+			font-size: 0.72rem;
 			letter-spacing: 0.5px;
 		}
 		.home-controls {
