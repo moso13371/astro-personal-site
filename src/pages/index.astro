@@ -73,7 +73,7 @@ import Layout from '../layouts/Layout.astro';
 		font-family: var(--font-sans);
 		font-size: 2.3rem;
 		font-weight: 300;
-		letter-spacing: 14px; /* Balanced letter-spacing */
+		letter-spacing: 18px; /* Taller/wider modern art letter-spacing */
 		margin: 0;
 		color: rgba(255, 255, 255, 0.65);
 		text-transform: uppercase;
@@ -134,13 +134,9 @@ import Layout from '../layouts/Layout.astro';
 	@keyframes fadeInTitle {
 		0% {
 			opacity: 0;
-			letter-spacing: 8px;
-			transform: scale(0.97) translateY(4px);
 		}
 		100% {
 			opacity: 1;
-			letter-spacing: 14px;
-			transform: scale(1) translateY(0);
 		}
 	}
 
@@ -169,7 +165,7 @@ import Layout from '../layouts/Layout.astro';
 		}
 		.home-title {
 			font-size: 1.8rem;
-			letter-spacing: 10px;
+			letter-spacing: 13px; /* Larger letter-spacing on mobile */
 			animation: fadeInTitle 2.5s cubic-bezier(0.16, 1, 0.3, 1);
 		}
 		.subtitle-scroller {
