@@ -8,7 +8,6 @@ import sitemap from '@astrojs/sitemap';
 // https://astro.build/config
 export default defineConfig({
   site: 'https://parawongling.com', // Official site URL
-  output: 'server', // Ensures API/Keystatic routes deploy as dynamic serverless functions on Netlify
   adapter: netlify(),
   integrations: [react(), mdx(), keystatic(), sitemap()]
 });
