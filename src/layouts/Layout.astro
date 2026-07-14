@@ -118,6 +118,9 @@ const schemaData = isArticle ? {
             </footer>
 		</div>
 
+		<!-- Portal slot: content here renders directly under <body>, outside .container -->
+		<slot name="portal" />
+
 		<script>
 			let audioCtx: any = null;
 			let oscLeft: any = null;
