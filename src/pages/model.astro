@@ -3,243 +3,103 @@ import Layout from '../layouts/Layout.astro';
 ---
 
 <Layout title="模型 MODEL">
-	<div class="model-hero">
-		<h1 class="model-title">MODEL LAB</h1>
-		<p class="model-subtitle">有機流體微塵與正弦正態流場 (Tranquil Fluid Dust Field)</p>
-		
-		<div class="model-controls">
-			<button id="flow-mode-btn" class="control-btn">FLOW: PERLIN SINUSOID</button>
-			<button id="count-btn" class="control-btn">PARTICLES: 2,500 FINE DUST</button>
-		</div>
+	<div class="model-page" aria-label="TAPARA particle field model">
+		<canvas id="model-ripple-canvas"></canvas>
 	</div>
-
-	<!-- 專屬 2,500 顆有機流體微塵 Canvas -->
-	<canvas id="model-fluid-canvas"></canvas>
 </Layout>
 
 <style>
-	.model-hero {
-		position: relative;
-		z-index: 10;
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		justify-content: center;
-		min-height: 80vh;
-		text-align: center;
-		pointer-events: none;
-	}
-
-	.model-title {
-		font-family: 'Inter', sans-serif;
-		font-size: 3rem;
-		font-weight: 300;
-		letter-spacing: 0.35em;
-		color: #e2e4e9;
-		margin-bottom: 0.8rem;
-		text-indent: 0.35em;
-	}
-
-	.model-subtitle {
-		font-family: 'Noto Serif TC', serif;
-		font-size: 1.05rem;
-		font-weight: 300;
-		color: #9499a6;
-		letter-spacing: 0.14em;
-		margin-bottom: 2.2rem;
-	}
-
-	.model-controls {
-		pointer-events: auto;
-		display: flex;
-		gap: 1.2rem;
-	}
-
-	.control-btn {
-		background: rgba(255, 255, 255, 0.04);
-		border: 1px solid rgba(255, 255, 255, 0.15);
-		color: #c8cad0;
-		padding: 0.6rem 1.4rem;
-		font-family: monospace;
-		font-size: 0.82rem;
-		letter-spacing: 0.1em;
-		cursor: pointer;
-		transition: all 0.25s ease;
-		border-radius: 2px;
-	}
-
-	.control-btn:hover {
-		background: rgba(255, 255, 255, 0.12);
-		border-color: rgba(255, 255, 255, 0.35);
-		color: #ffffff;
-	}
-
-	#model-fluid-canvas {
-		position: fixed;
-		top: 0;
-		left: 0;
-		width: 100vw;
-		height: 100vh;
-		z-index: 1;
-		pointer-events: none;
-		background: #000000;
-	}
+	.model-page { position: fixed !important; inset: 0 !important; width: 100vw !important; height: 100vh !important; overflow: hidden; background: #050505; z-index: 0; }
+	#model-ripple-canvas { position: absolute; inset: 0; width: 100% !important; height: 100% !important; display: block; }
+	:global(.container footer) { display: none; }
+	:global(body:has(.model-page) header) { background: transparent; backdrop-filter: none; -webkit-backdrop-filter: none; border-bottom: 0; }
+	@media (prefers-reduced-motion: reduce) { #model-ripple-canvas { opacity: .65; } }
 </style>
 
-<script>
-	document.addEventListener('DOMContentLoaded', () => {
-		const canvas = document.getElementById('model-fluid-canvas') as HTMLCanvasElement;
-		if (!canvas) return;
-		const ctx = canvas.getContext('2d');
-		if (!ctx) return;
-
-		let w = canvas.width = window.innerWidth;
-		let h = canvas.height = window.innerHeight;
-
-		// 1. Particle Definition matching Gemini Spec
-		const PARTICLE_COUNT = 2500;
-
-		class FluidParticle {
-			x: number = 0;
-			y: number = 0;
-			vx: number = 0;
-			vy: number = 0;
-			radius: number = 1.0;
-			baseAlpha: number = 0.2;
-			alpha: number = 0.2;
-			pulsePhase: number = 0;
-			pulseSpeed: number = 0;
-			colorType: number = 0; // 0: Pure White, 1: Pale Cold Blue
-
-			constructor(canvasW: number, canvasH: number) {
-				this.reset(canvasW, canvasH, true);
-			}
-
-			reset(canvasW: number, canvasH: number, initialRandom = false) {
-				this.x = Math.random() * canvasW;
-				this.y = initialRandom ? Math.random() * canvasH : canvasH + 10;
-				this.vx = (Math.random() - 0.5) * 0.1;
-				this.vy = (Math.random() - 0.5) * 0.1;
-
-				// Fine 1-2 pixels particles, no border
-				this.radius = 0.75 + Math.random() * 0.95;
-
-				this.baseAlpha = 0.15 + Math.random() * 0.35;
-				this.alpha = this.baseAlpha;
-
-				this.pulsePhase = Math.random() * Math.PI * 2;
-				this.pulseSpeed = 0.003 + Math.random() * 0.006;
-				
-				// 70% pure white, 30% faint cold blue
-				this.colorType = Math.random() > 0.3 ? 0 : 1;
-			}
-
-			update(time: number, canvasW: number, canvasH: number, mouseX: number, mouseY: number, mouseActive: boolean) {
-				// 2. Perlin Noise / Sine Harmonic Flow Field Engine
-				// Slow, organic fluid motion like breathing dust in space
-				const freqX = 0.0018;
-				const freqY = 0.0018;
-				const timeSpeed = time * 0.00035;
-
-				// Multi-layered harmonic wave angles
-				const angle1 = Math.sin(this.x * freqX + timeSpeed) * Math.cos(this.y * freqY + timeSpeed * 0.8) * Math.PI * 2;
-				const angle2 = Math.sin((this.x + this.y) * 0.0012 - timeSpeed * 1.2) * Math.PI;
-				const flowAngle = (angle1 + angle2) * 0.5;
-
-				const force = 0.035;
-				this.vx += Math.cos(flowAngle) * force;
-				this.vy += Math.sin(flowAngle) * force;
-
-				// Smooth velocity dampening (fluid drag)
-				this.vx *= 0.965;
-				this.vy *= 0.965;
-
-				this.x += this.vx;
-				this.y += this.vy;
-
-				// Breathing pulse for opacity
-				this.pulsePhase += this.pulseSpeed;
-				this.alpha = this.baseAlpha * (0.65 + 0.35 * Math.sin(this.pulsePhase));
-
-				// 3. Subtle, Tranquil Mouse Interaction (soft water-wave deflection)
-				if (mouseActive) {
-					const dx = this.x - mouseX;
-					const dy = this.y - mouseY;
-					const dist = Math.sqrt(dx * dx + dy * dy);
-					const maxDist = 180;
-					if (dist < maxDist && dist > 0) {
-						// Extremely gentle push to preserve peacefulness
-						const pushForce = (1.0 - dist / maxDist) * 0.025;
-						this.vx += (dx / dist) * pushForce;
-						this.vy += (dy / dist) * pushForce;
+	<script>
+		const initModel = () => {
+			const canvas = document.getElementById('model-ripple-canvas') as HTMLCanvasElement | null;
+			const ctx = canvas?.getContext('2d');
+			if (!canvas || !ctx) return;
+			const modelPage = canvas.closest('.model-page');
+			if (modelPage && modelPage.parentElement !== document.body) document.body.appendChild(modelPage);
+			const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+			const isMobile = window.matchMedia('(max-width: 768px)').matches;
+			const frameInterval = 1000 / (isMobile ? 24 : 30);
+			let w = 0, h = 0, dpr = 1, time = 0;
+			let lastFrame = 0;
+			let animationFrame = 0;
+			let particles: Array<{ x: number; y: number; phase: number; size: number; alpha: number }> = [];
+			const resize = () => {
+				dpr = Math.min(window.devicePixelRatio || 1, 2); w = window.innerWidth; h = window.innerHeight;
+				canvas.width = w * dpr; canvas.height = h * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+				const particleCount = reducedMotion
+					? Math.min(1800, Math.max(900, Math.floor(w * h / 700)))
+					: isMobile
+						? Math.min(4500, Math.max(2800, Math.floor(w * h / 260)))
+						: Math.min(8000, Math.max(5000, Math.floor(w * h / 190)));
+				particles = Array.from({ length: particleCount }, () => ({
+					x: Math.random() * w, y: Math.random() * h, phase: Math.random() * Math.PI * 2,
+					size: .55 + Math.random() * .75, alpha: .08 + Math.random() * .32
+				}));
+			};
+			resize(); window.addEventListener('resize', resize);
+			const draw = () => {
+				time += 0.003;
+				ctx.fillStyle = 'rgba(0, 0, 0, 0.28)'; ctx.fillRect(0, 0, w, h);
+				const sources = [
+					{ x: w * (.26 + Math.sin(time * .19) * .08), y: h * (.30 + Math.cos(time * .15) * .06), phase: 0 },
+					{ x: w * (.73 + Math.cos(time * .14) * .07), y: h * (.58 + Math.sin(time * .17) * .07), phase: 2.4 },
+					{ x: w * (.48 + Math.sin(time * .11) * .05), y: h * (.80 + Math.cos(time * .13) * .04), phase: 4.7 }
+				];
+				for (const particle of particles) {
+					let pushX = Math.sin(particle.y * .004 + time + particle.phase) * 1.5;
+					let pushY = Math.cos(particle.x * .004 - time + particle.phase) * 1.5;
+					let resonance = 0;
+					for (const source of sources) {
+						const dx = particle.x - source.x, dy = particle.y - source.y;
+						const distance = Math.hypot(dx, dy) + 1;
+						const wave = Math.sin(distance * .028 - time * 1.35 + source.phase);
+						const envelope = .42 + .58 * Math.exp(-distance / 560);
+						const force = wave * envelope * 8;
+						pushX += dx / distance * force;
+						pushY += dy / distance * force;
+						resonance += (wave + 1) * envelope * .16;
 					}
+					const x = particle.x + pushX;
+					const y = particle.y + pushY;
+					const alpha = Math.min(.58, particle.alpha + resonance * .8);
+					ctx.fillStyle = `rgba(0, ${105 + resonance * 70}, ${145 + resonance * 45}, ${alpha})`;
+					ctx.fillRect(x, y, particle.size, particle.size);
 				}
+			};
 
-				// Screen Wrap
-				if (this.x < -20) this.x = canvasW + 20;
-				if (this.x > canvasW + 20) this.x = -20;
-				if (this.y < -20) this.y = canvasH + 20;
-				if (this.y > canvasH + 20) this.y = -20;
-			}
-
-			draw(ctx: CanvasRenderingContext2D) {
-				if (this.alpha <= 0) return;
-				ctx.beginPath();
-				ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-
-				if (this.colorType === 0) {
-					// Pure White with semi-transparency
-					ctx.fillStyle = `rgba(255, 255, 255, ${this.alpha})`;
-				} else {
-					// Faint Cold Blue (rgb(205, 225, 245))
-					ctx.fillStyle = `rgba(205, 225, 245, ${this.alpha * 1.15})`;
+			const animate = (now: number) => {
+				if (now - lastFrame >= frameInterval) {
+					draw();
+					lastFrame = now;
 				}
-				ctx.fill();
-			}
+				animationFrame = requestAnimationFrame(animate);
+			};
+
+			const updateVisibility = () => {
+				if (document.hidden) {
+					cancelAnimationFrame(animationFrame);
+					animationFrame = 0;
+				} else if (!reducedMotion && !animationFrame) {
+					lastFrame = performance.now();
+					animationFrame = requestAnimationFrame(animate);
+				}
+			};
+
+			document.addEventListener('visibilitychange', updateVisibility);
+			if (reducedMotion) draw();
+			else animationFrame = requestAnimationFrame(animate);
+		};
+
+		if (document.readyState === 'loading') {
+			document.addEventListener('DOMContentLoaded', initModel, { once: true });
+		} else {
+			initModel();
 		}
-
-		// Initialize 2,500 particles
-		let particles: FluidParticle[] = [];
-		for (let i = 0; i < PARTICLE_COUNT; i++) {
-			particles.push(new FluidParticle(w, h));
-		}
-
-		let mouse = { x: -999, y: -999, active: false };
-
-		window.addEventListener('mousemove', (e) => {
-			mouse.x = e.clientX;
-			mouse.y = e.clientY;
-			mouse.active = true;
-		});
-
-		window.addEventListener('mouseleave', () => {
-			mouse.active = false;
-		});
-
-		window.addEventListener('resize', () => {
-			w = canvas.width = window.innerWidth;
-			h = canvas.height = window.innerHeight;
-		});
-
-		// Render Loop
-		let startTime = performance.now();
-		function animate() {
-			if (!ctx || !canvas) return;
-
-			// Ultra-pure black background with very subtle trailing motion blur
-			ctx.fillStyle = 'rgba(0, 0, 0, 0.22)';
-			ctx.fillRect(0, 0, w, h);
-
-			const currentTime = performance.now() - startTime;
-
-			particles.forEach(p => {
-				p.update(currentTime, w, h, mouse.x, mouse.y, mouse.active);
-				p.draw(ctx);
-			});
-
-			requestAnimationFrame(animate);
-		}
-
-		animate();
-	});
-</script>
+	</script>

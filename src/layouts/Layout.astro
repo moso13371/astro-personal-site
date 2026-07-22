@@ -107,11 +107,16 @@ const schemaData = isArticle ? {
 									const isActive = link.href === '/' 
 										? currentPath === '/' 
 										: currentPath === link.href || currentPath.startsWith(link.href + '/');
-									return (
+									return link.href === '/model' ? (
+										<li class="menu-group">
+											<button class="model-submenu-toggle" type="button" aria-expanded="false">{link.label}</button>
+											<ul class="model-submenu">
+												<li><a href="/model/sarasvati" class={currentPath === '/model/sarasvati' ? 'active' : ''}>SARASVATI</a></li>
+											</ul>
+										</li>
+									) : (
 										<li>
-											<a href={link.href} class={isActive ? 'active' : ''}>
-												{link.label}
-											</a>
+											<a href={link.href} class={isActive ? 'active' : ''}>{link.label}</a>
 										</li>
 									);
 								})}
@@ -738,6 +743,8 @@ const schemaData = isArticle ? {
 				const links = document.querySelectorAll('header nav a, .logo a');
 				const content = document.querySelector('.menu-dropdown-content');
 				const trigger = document.querySelector('.menu-trigger');
+				const modelGroup = document.querySelector('.menu-group');
+				const modelSubmenuToggle = document.querySelector('.model-submenu-toggle');
 
 				links.forEach(link => {
 					link.addEventListener('click', (e) => {
@@ -773,6 +780,16 @@ const schemaData = isArticle ? {
 					document.addEventListener('click', () => {
 						content.classList.remove('show');
 						trigger.setAttribute('aria-expanded', 'false');
+						modelGroup?.classList.remove('open');
+						modelSubmenuToggle?.setAttribute('aria-expanded', 'false');
+					});
+				}
+
+				if (modelGroup && modelSubmenuToggle) {
+					modelSubmenuToggle.addEventListener('click', (e) => {
+						e.stopPropagation();
+						const isOpen = modelGroup.classList.toggle('open');
+						modelSubmenuToggle.setAttribute('aria-expanded', String(isOpen));
 					});
 				}
 			});
