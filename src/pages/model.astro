@@ -1,0 +1,245 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="模型 MODEL">
+	<div class="model-hero">
+		<h1 class="model-title">MODEL LAB</h1>
+		<p class="model-subtitle">有機流體微塵與正弦正態流場 (Tranquil Fluid Dust Field)</p>
+		
+		<div class="model-controls">
+			<button id="flow-mode-btn" class="control-btn">FLOW: PERLIN SINUSOID</button>
+			<button id="count-btn" class="control-btn">PARTICLES: 2,500 FINE DUST</button>
+		</div>
+	</div>
+
+	<!-- 專屬 2,500 顆有機流體微塵 Canvas -->
+	<canvas id="model-fluid-canvas"></canvas>
+</Layout>
+
+<style>
+	.model-hero {
+		position: relative;
+		z-index: 10;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		min-height: 80vh;
+		text-align: center;
+		pointer-events: none;
+	}
+
+	.model-title {
+		font-family: 'Inter', sans-serif;
+		font-size: 3rem;
+		font-weight: 300;
+		letter-spacing: 0.35em;
+		color: #e2e4e9;
+		margin-bottom: 0.8rem;
+		text-indent: 0.35em;
+	}
+
+	.model-subtitle {
+		font-family: 'Noto Serif TC', serif;
+		font-size: 1.05rem;
+		font-weight: 300;
+		color: #9499a6;
+		letter-spacing: 0.14em;
+		margin-bottom: 2.2rem;
+	}
+
+	.model-controls {
+		pointer-events: auto;
+		display: flex;
+		gap: 1.2rem;
+	}
+
+	.control-btn {
+		background: rgba(255, 255, 255, 0.04);
+		border: 1px solid rgba(255, 255, 255, 0.15);
+		color: #c8cad0;
+		padding: 0.6rem 1.4rem;
+		font-family: monospace;
+		font-size: 0.82rem;
+		letter-spacing: 0.1em;
+		cursor: pointer;
+		transition: all 0.25s ease;
+		border-radius: 2px;
+	}
+
+	.control-btn:hover {
+		background: rgba(255, 255, 255, 0.12);
+		border-color: rgba(255, 255, 255, 0.35);
+		color: #ffffff;
+	}
+
+	#model-fluid-canvas {
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100vw;
+		height: 100vh;
+		z-index: 1;
+		pointer-events: none;
+		background: #000000;
+	}
+</style>
+
+<script>
+	document.addEventListener('DOMContentLoaded', () => {
+		const canvas = document.getElementById('model-fluid-canvas') as HTMLCanvasElement;
+		if (!canvas) return;
+		const ctx = canvas.getContext('2d');
+		if (!ctx) return;
+
+		let w = canvas.width = window.innerWidth;
+		let h = canvas.height = window.innerHeight;
+
+		// 1. Particle Definition matching Gemini Spec
+		const PARTICLE_COUNT = 2500;
+
+		class FluidParticle {
+			x: number = 0;
+			y: number = 0;
+			vx: number = 0;
+			vy: number = 0;
+			radius: number = 1.0;
+			baseAlpha: number = 0.2;
+			alpha: number = 0.2;
+			pulsePhase: number = 0;
+			pulseSpeed: number = 0;
+			colorType: number = 0; // 0: Pure White, 1: Pale Cold Blue
+
+			constructor(canvasW: number, canvasH: number) {
+				this.reset(canvasW, canvasH, true);
+			}
+
+			reset(canvasW: number, canvasH: number, initialRandom = false) {
+				this.x = Math.random() * canvasW;
+				this.y = initialRandom ? Math.random() * canvasH : canvasH + 10;
+				this.vx = (Math.random() - 0.5) * 0.1;
+				this.vy = (Math.random() - 0.5) * 0.1;
+
+				// Fine 1-2 pixels particles, no border
+				this.radius = 0.75 + Math.random() * 0.95;
+
+				this.baseAlpha = 0.15 + Math.random() * 0.35;
+				this.alpha = this.baseAlpha;
+
+				this.pulsePhase = Math.random() * Math.PI * 2;
+				this.pulseSpeed = 0.003 + Math.random() * 0.006;
+				
+				// 70% pure white, 30% faint cold blue
+				this.colorType = Math.random() > 0.3 ? 0 : 1;
+			}
+
+			update(time: number, canvasW: number, canvasH: number, mouseX: number, mouseY: number, mouseActive: boolean) {
+				// 2. Perlin Noise / Sine Harmonic Flow Field Engine
+				// Slow, organic fluid motion like breathing dust in space
+				const freqX = 0.0018;
+				const freqY = 0.0018;
+				const timeSpeed = time * 0.00035;
+
+				// Multi-layered harmonic wave angles
+				const angle1 = Math.sin(this.x * freqX + timeSpeed) * Math.cos(this.y * freqY + timeSpeed * 0.8) * Math.PI * 2;
+				const angle2 = Math.sin((this.x + this.y) * 0.0012 - timeSpeed * 1.2) * Math.PI;
+				const flowAngle = (angle1 + angle2) * 0.5;
+
+				const force = 0.035;
+				this.vx += Math.cos(flowAngle) * force;
+				this.vy += Math.sin(flowAngle) * force;
+
+				// Smooth velocity dampening (fluid drag)
+				this.vx *= 0.965;
+				this.vy *= 0.965;
+
+				this.x += this.vx;
+				this.y += this.vy;
+
+				// Breathing pulse for opacity
+				this.pulsePhase += this.pulseSpeed;
+				this.alpha = this.baseAlpha * (0.65 + 0.35 * Math.sin(this.pulsePhase));
+
+				// 3. Subtle, Tranquil Mouse Interaction (soft water-wave deflection)
+				if (mouseActive) {
+					const dx = this.x - mouseX;
+					const dy = this.y - mouseY;
+					const dist = Math.sqrt(dx * dx + dy * dy);
+					const maxDist = 180;
+					if (dist < maxDist && dist > 0) {
+						// Extremely gentle push to preserve peacefulness
+						const pushForce = (1.0 - dist / maxDist) * 0.025;
+						this.vx += (dx / dist) * pushForce;
+						this.vy += (dy / dist) * pushForce;
+					}
+				}
+
+				// Screen Wrap
+				if (this.x < -20) this.x = canvasW + 20;
+				if (this.x > canvasW + 20) this.x = -20;
+				if (this.y < -20) this.y = canvasH + 20;
+				if (this.y > canvasH + 20) this.y = -20;
+			}
+
+			draw(ctx: CanvasRenderingContext2D) {
+				if (this.alpha <= 0) return;
+				ctx.beginPath();
+				ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+
+				if (this.colorType === 0) {
+					// Pure White with semi-transparency
+					ctx.fillStyle = `rgba(255, 255, 255, ${this.alpha})`;
+				} else {
+					// Faint Cold Blue (rgb(205, 225, 245))
+					ctx.fillStyle = `rgba(205, 225, 245, ${this.alpha * 1.15})`;
+				}
+				ctx.fill();
+			}
+		}
+
+		// Initialize 2,500 particles
+		let particles: FluidParticle[] = [];
+		for (let i = 0; i < PARTICLE_COUNT; i++) {
+			particles.push(new FluidParticle(w, h));
+		}
+
+		let mouse = { x: -999, y: -999, active: false };
+
+		window.addEventListener('mousemove', (e) => {
+			mouse.x = e.clientX;
+			mouse.y = e.clientY;
+			mouse.active = true;
+		});
+
+		window.addEventListener('mouseleave', () => {
+			mouse.active = false;
+		});
+
+		window.addEventListener('resize', () => {
+			w = canvas.width = window.innerWidth;
+			h = canvas.height = window.innerHeight;
+		});
+
+		// Render Loop
+		let startTime = performance.now();
+		function animate() {
+			if (!ctx || !canvas) return;
+
+			// Ultra-pure black background with very subtle trailing motion blur
+			ctx.fillStyle = 'rgba(0, 0, 0, 0.22)';
+			ctx.fillRect(0, 0, w, h);
+
+			const currentTime = performance.now() - startTime;
+
+			particles.forEach(p => {
+				p.update(currentTime, w, h, mouse.x, mouse.y, mouse.active);
+				p.draw(ctx);
+			});
+
+			requestAnimationFrame(animate);
+		}
+
+		animate();
+	});
+</script>
