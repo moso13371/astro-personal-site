@@ -10,5 +10,5 @@ echo - Frontend: http://127.0.0.1:4321/
 echo - Backend:  http://127.0.0.1:4321/keystatic
 echo.
 echo ==========================================
-cd C:\Users\admin\.gemini\antigravity\scratch\astro-personal-site
+cd C:\Users\admin\wongling\astro-personal-site
 npm run dev
